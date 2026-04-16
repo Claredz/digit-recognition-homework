@@ -1,18 +1,18 @@
 # Handwritten Digit Recognition Homework
 
-This repository is a learning-oriented baseline for recognizing handwritten digits.
+A learning-oriented handwritten digit recognition baseline for an AI introduction course.
 
-## What this repo will do
+## What this repository will do
 
-- Provide a clean project skeleton with configuration and reproducible defaults
-- Train a baseline model on MNIST and evaluate it
-- Save outputs (checkpoints, logs, figures, predictions) in a consistent structure
-- Offer a simple, testable code layout that can be extended step by step
+- Train a small CNN on handwritten digits
+- Save checkpoints, logs, and learning curves
+- Generate confusion matrices and misclassification artifacts
+- Export predictions for unlabeled test images later
 
-## What you should learn
+## What you should learn from this project
 
-- How to structure an ML homework repo for maintainability
-- How to encode experiment defaults in a config module
-- How to write small unit tests that lock in behavior
-- How to keep outputs/data out of version control
-- How to iterate from a baseline toward improvements with minimal refactors
+1. How image data enters a classification pipeline
+2. How a CNN turns images into class logits
+3. How training, validation, and overfitting show up in metrics
+4. How to read confusion matrices and misclassified samples
+5. How to tune experiments systematically instead of editing code at random

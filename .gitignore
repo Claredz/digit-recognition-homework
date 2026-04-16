@@ -1,17 +1,7 @@
-
 .worktrees/
-
-# Python
 __pycache__/
-*.py[cod]
-*.pyd
 .pytest_cache/
-
-# Virtual environments
 .venv/
-venv/
-ENV/
-
-# Project outputs & data
 outputs/
 data/
+*.pyc
