@@ -3,6 +3,17 @@ from pathlib import Path
 
 import matplotlib.pyplot as plt
 import torch
+
+
+def _configure_matplotlib_chinese_font():
+    plt.rcParams["font.sans-serif"] = [
+        "Microsoft YaHei",
+        "SimHei",
+        "SimSun",
+        "DejaVu Sans",
+    ]
+    plt.rcParams["axes.unicode_minus"] = False
+
 from torch import nn
 
 from src.config import ExperimentConfig, ProjectPaths
@@ -55,6 +66,7 @@ def save_history(history: dict, path: Path):
 
 def plot_history(history: dict, figure_path: Path):
     """将 loss/accuracy 曲线保存为 PNG 图片。"""
+    _configure_matplotlib_chinese_font()
     epochs = range(1, len(history["train_loss"]) + 1)
     fig, axes = plt.subplots(1, 2, figsize=(10, 4))
 

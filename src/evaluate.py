@@ -5,6 +5,17 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import numpy as np
 import torch
+
+
+def _configure_matplotlib_chinese_font():
+    plt.rcParams["font.sans-serif"] = [
+        "Microsoft YaHei",
+        "SimHei",
+        "SimSun",
+        "DejaVu Sans",
+    ]
+    plt.rcParams["axes.unicode_minus"] = False
+
 from sklearn.metrics import accuracy_score, confusion_matrix
 
 from src.config import ExperimentConfig, ensure_project_paths
@@ -17,12 +28,16 @@ def save_evaluation_bundle(
     y_true: torch.Tensor,
     y_pred: torch.Tensor,
     output_dir: Path,
+    num_classes: int = 10,
 ):
+    _configure_matplotlib_chinese_font()
+
     output_dir = Path(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
 
     accuracy = float(accuracy_score(y_true.numpy(), y_pred.numpy()))
-    matrix = confusion_matrix(y_true.numpy(), y_pred.numpy(), labels=list(range(10)))
+    labels = list(range(num_classes))
+    matrix = confusion_matrix(y_true.numpy(), y_pred.numpy(), labels=labels)
 
     (output_dir / "summary.json").write_text(
         json.dumps({"accuracy": accuracy}, indent=2),
@@ -31,25 +46,40 @@ def save_evaluation_bundle(
     np.savetxt(output_dir / "confusion_matrix.csv", matrix, delimiter=",", fmt="%d")
 
     fig, ax = plt.subplots(figsize=(6, 5))
-    ax.imshow(matrix, cmap="Blues")
-    ax.set_title("混淆矩阵")
+    im = ax.imshow(matrix, cmap="Blues")
+    ax.set_title("混淆矩阵（计数）")
     ax.set_xlabel("预测类别")
     ax.set_ylabel("真实类别")
+    ax.set_xticks(np.arange(num_classes))
+    ax.set_yticks(np.arange(num_classes))
+    ax.set_xticklabels(labels)
+    ax.set_yticklabels(labels)
+    fig.colorbar(im, ax=ax, fraction=0.046, pad=0.04)
     fig.tight_layout()
     fig.savefig(output_dir / "confusion_matrix.png")
     plt.close(fig)
 
     wrong_indices = (y_true != y_pred).nonzero(as_tuple=False).flatten().tolist()
     if not wrong_indices:
-        wrong_indices = [0]
+        fig, ax = plt.subplots(1, 1, figsize=(6, 2))
+        ax.text(0.5, 0.5, "无误分类样本", ha="center", va="center")
+        ax.axis("off")
+        fig.tight_layout()
+        fig.savefig(output_dir / "misclassified_grid.png")
+        plt.close(fig)
+        return
 
     fig, axes = plt.subplots(1, min(4, len(wrong_indices)), figsize=(10, 3))
     if not isinstance(axes, np.ndarray):
         axes = np.array([axes])
 
     for axis, index in zip(axes, wrong_indices[:4]):
-        axis.imshow(images[index].squeeze(0).numpy(), cmap="gray")
-        axis.set_title(f"T:{int(y_true[index])} P:{int(y_pred[index])}")
+        image = images[index]
+        if torch.is_tensor(image):
+            image = (image * 0.5 + 0.5).clamp(0, 1)
+            image = image.squeeze(0).numpy()
+        axis.imshow(image, cmap="gray", vmin=0, vmax=1)
+        axis.set_title(f"真:{int(y_true[index])} 预测:{int(y_pred[index])}")
         axis.axis("off")
     fig.tight_layout()
     fig.savefig(output_dir / "misclassified_grid.png")
@@ -105,7 +135,7 @@ def main():
     model.to(device)
 
     images, y_true, y_pred = collect_predictions(model, val_loader, device=device)
-    save_evaluation_bundle(images, y_true, y_pred, paths.figures_dir)
+    save_evaluation_bundle(images, y_true, y_pred, paths.figures_dir, num_classes=config.num_classes)
     print(f"评估完成。准确率已保存到 {paths.figures_dir / 'summary.json'}")
 
 
