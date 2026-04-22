@@ -10,6 +10,7 @@ from src.config import ExperimentConfig, ProjectPaths
 
 
 def run_epoch(model, loader, criterion, device: str, optimizer=None):
+    """运行一个 epoch，返回该 epoch 的平均 loss 与 accuracy。"""
     training = optimizer is not None
     if training:
         model.train()
@@ -47,24 +48,26 @@ def run_epoch(model, loader, criterion, device: str, optimizer=None):
 
 
 def save_history(history: dict, path: Path):
+    """将训练/验证指标写入 JSON，便于复现实验与画图。"""
     path.write_text(json.dumps(history, indent=2), encoding="utf-8")
 
 
 
 def plot_history(history: dict, figure_path: Path):
+    """将 loss/accuracy 曲线保存为 PNG 图片。"""
     epochs = range(1, len(history["train_loss"]) + 1)
     fig, axes = plt.subplots(1, 2, figsize=(10, 4))
 
     axes[0].plot(epochs, history["train_loss"], label="train")
     axes[0].plot(epochs, history["val_loss"], label="val")
-    axes[0].set_title("Loss")
-    axes[0].set_xlabel("Epoch")
+    axes[0].set_title("损失")
+    axes[0].set_xlabel("轮次")
     axes[0].legend()
 
     axes[1].plot(epochs, history["train_accuracy"], label="train")
     axes[1].plot(epochs, history["val_accuracy"], label="val")
-    axes[1].set_title("Accuracy")
-    axes[1].set_xlabel("Epoch")
+    axes[1].set_title("准确率")
+    axes[1].set_xlabel("轮次")
     axes[1].legend()
 
     fig.tight_layout()

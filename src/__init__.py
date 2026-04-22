@@ -1,1 +1,1 @@
-"""Handwritten digit recognition baseline package."""
+"""手写数字识别基线工程包。"""

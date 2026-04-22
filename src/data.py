@@ -1,11 +1,10 @@
-"""Dataset adapters and dataloaders.
+"""数据集适配与 DataLoader 构建。
 
-This module provides a small abstraction around the supported datasets so the
-rest of the codebase can depend on a consistent interface.
+这个模块对不同数据源提供一个很小的抽象层，让其余代码只依赖统一接口。
 
-Supported datasets:
-- MNIST via torchvision.datasets.MNIST
-- Folder-based digit dataset with class subdirectories
+支持的数据集：
+- MNIST（torchvision.datasets.MNIST）
+- 文件夹数字数据集（按类别子目录组织）
 """
 
 from __future__ import annotations
@@ -24,19 +23,18 @@ _IMAGE_SUFFIXES = {".png", ".jpg", ".jpeg", ".bmp"}
 
 
 class FolderDigitsDataset(Dataset):
-    """A dataset that reads digit images from a folder structure.
+    """从文件夹结构读取数字图片的数据集。
 
-    Expected layout:
+    期望目录结构：
 
         root/
-          0/  # class label directory name must be an int
+          0/  # 类别目录名必须能转成 int
             img1.png
             ...
           1/
             ...
 
-    Ordering is deterministic by sorting class directories then sorting image
-    file paths within each class directory.
+    为保证可复现性：先对类别目录排序，再对每个类别里的文件路径排序。
     """
 
     def __init__(self, root: Path, image_size: int = 28, augment: bool = False):
@@ -52,7 +50,7 @@ class FolderDigitsDataset(Dataset):
                     self.samples.append((image_path, label))
 
         if not self.samples:
-            raise ValueError(f"No labeled images found under {self.root}")
+            raise ValueError(f"在目录 {self.root} 下没有找到带标签的图片")
 
     def __len__(self) -> int:
         return len(self.samples)
@@ -98,7 +96,7 @@ def load_base_dataset(config: ExperimentConfig):
             augment=False,
         )
     raise ValueError(
-        f"Unsupported dataset_name='{config.dataset_name}'. Use 'mnist' or 'folder'."
+        f"不支持的 dataset_name='{config.dataset_name}'。请使用 'mnist' 或 'folder'。"
     )
 
 
@@ -108,7 +106,7 @@ def create_dataloaders(config: ExperimentConfig):
     val_size = max(1, int(len(dataset) * config.validation_split))
     train_size = len(dataset) - val_size
     if train_size <= 0:
-        raise ValueError("validation_split leaves no training samples")
+        raise ValueError("validation_split 设置过大，导致训练样本数为 0")
 
     generator = torch.Generator().manual_seed(config.seed)
     train_subset, val_subset = random_split(

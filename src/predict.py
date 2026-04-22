@@ -20,7 +20,7 @@ class PredictionImageDataset(Dataset):
             if path.suffix.lower() in {".png", ".jpg", ".jpeg", ".bmp"}
         )
         if not self.image_paths:
-            raise ValueError(f"No prediction images found under {self.image_dir}")
+            raise ValueError(f"在目录 {self.image_dir} 下没有找到可用于预测的图片")
 
         self.transform = transforms.Compose(
             [
@@ -49,7 +49,7 @@ def write_predictions_csv(rows, output_path: Path):
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description="Predict labels for unlabeled digit images")
+    parser = argparse.ArgumentParser(description="对无标签数字图片进行预测并导出结果")
     parser.add_argument("--checkpoint", type=Path, required=True)
     parser.add_argument("--image-dir", type=Path, required=True)
     parser.add_argument("--project-root", type=Path, default=Path("."))
@@ -82,7 +82,7 @@ def main():
 
     output_path = paths.predictions_dir / "predictions.csv"
     write_predictions_csv(rows, output_path)
-    print(f"Prediction export written to {output_path}")
+    print(f"预测结果已导出到 {output_path}")
 
 
 if __name__ == "__main__":

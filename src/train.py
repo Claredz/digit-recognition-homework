@@ -21,7 +21,7 @@ def set_seed(seed: int):
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description="Train the handwritten digit CNN baseline")
+    parser = argparse.ArgumentParser(description="训练手写数字 CNN 基线模型")
     parser.add_argument("--project-root", type=Path, default=Path("."))
     parser.add_argument("--dataset-name", choices=["mnist", "folder"], default="mnist")
     parser.add_argument("--data-dir", type=Path, default=None)
@@ -70,7 +70,7 @@ def main():
         encoding="utf-8",
     )
 
-    print(f"Training complete. Best validation accuracy: {history['best_val_accuracy']:.4f}")
+    print(f"训练完成。验证集最佳准确率：{history['best_val_accuracy']:.4f}")
 
 
 if __name__ == "__main__":

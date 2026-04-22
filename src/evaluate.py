@@ -32,9 +32,9 @@ def save_evaluation_bundle(
 
     fig, ax = plt.subplots(figsize=(6, 5))
     ax.imshow(matrix, cmap="Blues")
-    ax.set_title("Confusion Matrix")
-    ax.set_xlabel("Predicted")
-    ax.set_ylabel("True")
+    ax.set_title("混淆矩阵")
+    ax.set_xlabel("预测类别")
+    ax.set_ylabel("真实类别")
     fig.tight_layout()
     fig.savefig(output_dir / "confusion_matrix.png")
     plt.close(fig)
@@ -74,7 +74,7 @@ def collect_predictions(model, loader, device: str):
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description="Evaluate a trained handwritten digit model")
+    parser = argparse.ArgumentParser(description="评估已训练的手写数字模型")
     parser.add_argument("--checkpoint", type=Path, required=True)
     parser.add_argument("--project-root", type=Path, default=Path("."))
     parser.add_argument("--dataset-name", choices=["mnist", "folder"], default="mnist")
@@ -106,7 +106,7 @@ def main():
 
     images, y_true, y_pred = collect_predictions(model, val_loader, device=device)
     save_evaluation_bundle(images, y_true, y_pred, paths.figures_dir)
-    print(f"Evaluation complete. Accuracy saved to {paths.figures_dir / 'summary.json'}")
+    print(f"评估完成。准确率已保存到 {paths.figures_dir / 'summary.json'}")
 
 
 if __name__ == "__main__":
