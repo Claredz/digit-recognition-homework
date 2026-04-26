@@ -54,6 +54,21 @@ def save_evaluation_bundle(
     ax.set_yticks(np.arange(num_classes))
     ax.set_xticklabels(labels)
     ax.set_yticklabels(labels)
+
+    threshold = matrix.max() / 2.0 if matrix.size else 0
+    for i in range(num_classes):
+        for j in range(num_classes):
+            value = int(matrix[i, j])
+            ax.text(
+                j,
+                i,
+                str(value),
+                ha="center",
+                va="center",
+                color="white" if value > threshold else "black",
+                fontsize=8,
+            )
+
     fig.colorbar(im, ax=ax, fraction=0.046, pad=0.04)
     fig.tight_layout()
     fig.savefig(output_dir / "confusion_matrix.png")
