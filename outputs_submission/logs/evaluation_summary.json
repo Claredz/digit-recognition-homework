@@ -1,0 +1,5 @@
+{
+  "accuracy": 0.99025,
+  "best_val_accuracy": 0.99025,
+  "validation_samples": 12000
+}
