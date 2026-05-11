@@ -1,0 +1,2 @@
+﻿experiment_name,datasets_used,val_accuracy,val_loss,best_epoch,checkpoint_path,use_tta
+current_run,MNIST + EMNIST Digits,0.9951666666666666,0.01778664664149983,15,e:\ALL\学习\AI导论作业-识别手写数字\outputs_submission\checkpoints\best_model_state.pt,True

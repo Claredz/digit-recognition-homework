@@ -17,7 +17,11 @@
       "Bash(python -m src.evaluate --checkpoint outputs/checkpoints/best_model.pt --dataset-name mnist --project-root .)",
       "Bash(python *)",
       "Bash(git *)",
-      "PowerShell(python -c $code)"
+      "PowerShell(python -c $code)",
+      "Bash(jupyter nbconvert *)",
+      "PowerShell(Get-Process *)",
+      "PowerShell(python -c $script)",
+      "PowerShell(python \"C:\\\\Users\\\\claredz\\\\AppData\\\\Local\\\\Temp\\\\update_notebook_hpo.py\")"
     ]
   }
 }

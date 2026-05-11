@@ -1,0 +1,8 @@
+{
+  "batch_size": 64,
+  "learning_rate": 0.0011114989443094978,
+  "weight_decay": 1.1527987128232402e-06,
+  "dropout": 0.43946844825669795,
+  "rotation_degrees": 9.98931168960506,
+  "translate_ratio": 0.025480693281393137
+}
