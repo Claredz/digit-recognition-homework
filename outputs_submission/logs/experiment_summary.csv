@@ -1,2 +1,2 @@
-﻿experiment_name,datasets_used,validation_source,val_accuracy,val_loss,best_epoch,checkpoint_path,use_tta
-current_run,MNIST + EMNIST Digits + USPS + QMNIST,mixed,0.9961362739015173,0.012729394667554903,18,e:\ALL\学习\AI导论作业-识别手写数字\outputs_submission\checkpoints\best_model_state.pt,True
+﻿experiment_name,model_name,num_parameters,datasets_used,validation_source,val_accuracy,val_loss,best_epoch,checkpoint_path,batch_size,num_workers,pin_memory,use_amp,allow_tf32,label_smoothing,optimizer_type,scheduler_type,total_training_time_sec,average_train_samples_per_sec,use_tta
+current_run,medium_cnn,251562,MNIST + EMNIST Digits + USPS + QMNIST,mixed,0.9974053810141575,0.202194394992487,22,e:\ALL\学习\AI导论作业-识别手写数字\outputs_submission\checkpoints\best_model_state.pt,512,4,True,True,True,0.03,AdamW,ReduceLROnPlateau,556.9892414000005,8254.343264287674,True

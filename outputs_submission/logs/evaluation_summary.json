@@ -1,6 +1,11 @@
 {
-  "accuracy": 0.9961362739015173,
-  "best_val_accuracy": 0.9961362739015173,
+  "accuracy": 0.9974053810141575,
+  "best_val_accuracy": 0.9974053810141575,
   "validation_samples": 35458,
-  "validation_source": "mixed"
+  "validation_source": "mixed",
+  "model_name": "medium_cnn",
+  "batch_size": 512,
+  "num_workers": 4,
+  "use_amp": true,
+  "allow_tf32": true
 }
