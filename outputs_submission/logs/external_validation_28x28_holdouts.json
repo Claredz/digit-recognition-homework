@@ -6,8 +6,9 @@
     "accuracy": 0.9973,
     "macro_f1": 0.9973182818857177,
     "model_name": "medium_cnn",
-    "checkpoint_path": "e:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_submission\\checkpoints\\best_model_state.pt",
-    "predictions_path": "e:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_submission\\predictions\\mnist_test_holdout_predictions.csv"
+    "checkpoint_path": "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_submission\\checkpoints\\best_model_state.pt",
+    "predictions_path": "e:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_submission\\predictions\\mnist_test_holdout_predictions.csv",
+    "corruption_summary_path": null
   },
   {
     "dataset": "emnist_digits_test",
@@ -16,8 +17,9 @@
     "accuracy": 0.9973,
     "macro_f1": 0.9973000601570753,
     "model_name": "medium_cnn",
-    "checkpoint_path": "e:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_submission\\checkpoints\\best_model_state.pt",
-    "predictions_path": "e:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_submission\\predictions\\emnist_digits_test_holdout_predictions.csv"
+    "checkpoint_path": "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_submission\\checkpoints\\best_model_state.pt",
+    "predictions_path": "e:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_submission\\predictions\\emnist_digits_test_holdout_predictions.csv",
+    "corruption_summary_path": null
   },
   {
     "dataset": "qmnist_test10k",
@@ -26,7 +28,19 @@
     "accuracy": 0.9973,
     "macro_f1": 0.9973182818857177,
     "model_name": "medium_cnn",
-    "checkpoint_path": "e:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_submission\\checkpoints\\best_model_state.pt",
-    "predictions_path": "e:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_submission\\predictions\\qmnist_test10k_holdout_predictions.csv"
+    "checkpoint_path": "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_submission\\checkpoints\\best_model_state.pt",
+    "predictions_path": "e:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_submission\\predictions\\qmnist_test10k_holdout_predictions.csv",
+    "corruption_summary_path": null
+  },
+  {
+    "dataset": "mnist_c",
+    "description": "MNIST-C corrupted 28x28 MNIST test images from Zenodo; not used for training/HPO",
+    "samples": 160000,
+    "accuracy": 0.6836375,
+    "macro_f1": 0.7202620249576783,
+    "model_name": "medium_cnn",
+    "checkpoint_path": "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_submission\\checkpoints\\best_model_state.pt",
+    "predictions_path": "e:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_submission\\predictions\\mnist_c_holdout_predictions.csv",
+    "corruption_summary_path": "e:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_submission\\logs\\mnist_c_corruption_summary.csv"
   }
 ]

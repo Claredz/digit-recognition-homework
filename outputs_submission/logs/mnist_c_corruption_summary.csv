@@ -1,0 +1,17 @@
+﻿corruption,samples,accuracy
+brightness,10000,0.0987
+impulse_noise,10000,0.1079
+fog,10000,0.1146
+stripe,10000,0.2051
+canny_edges,10000,0.3977
+glass_blur,10000,0.6597
+zigzag,10000,0.6753
+shot_noise,10000,0.8976
+spatter,10000,0.9104
+dotted_line,10000,0.9477
+motion_blur,10000,0.9669
+rotate,10000,0.9775
+scale,10000,0.99
+shear,10000,0.9952
+translate,10000,0.9966
+identity,10000,0.9973

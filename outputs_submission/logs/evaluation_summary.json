@@ -4,8 +4,8 @@
   "validation_samples": 35458,
   "validation_source": "mixed",
   "model_name": "medium_cnn",
-  "batch_size": 512,
+  "batch_size": 1024,
   "num_workers": 8,
-  "use_amp": true,
-  "allow_tf32": true
+  "use_amp": false,
+  "allow_tf32": false
 }
