@@ -1,0 +1,32 @@
+[
+  {
+    "dataset": "mnist_test",
+    "description": "Official MNIST test split; 28x28 grayscale digits; not used for training/HPO",
+    "samples": 10000,
+    "accuracy": 0.9973,
+    "macro_f1": 0.9973182818857177,
+    "model_name": "medium_cnn",
+    "checkpoint_path": "e:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_submission\\checkpoints\\best_model_state.pt",
+    "predictions_path": "e:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_submission\\predictions\\mnist_test_holdout_predictions.csv"
+  },
+  {
+    "dataset": "emnist_digits_test",
+    "description": "Official EMNIST Digits test split; 28x28 grayscale digits; not used for training/HPO",
+    "samples": 40000,
+    "accuracy": 0.9973,
+    "macro_f1": 0.9973000601570753,
+    "model_name": "medium_cnn",
+    "checkpoint_path": "e:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_submission\\checkpoints\\best_model_state.pt",
+    "predictions_path": "e:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_submission\\predictions\\emnist_digits_test_holdout_predictions.csv"
+  },
+  {
+    "dataset": "qmnist_test10k",
+    "description": "Official QMNIST test10k split; 28x28 grayscale digits; not used for training/HPO",
+    "samples": 10000,
+    "accuracy": 0.9973,
+    "macro_f1": 0.9973182818857177,
+    "model_name": "medium_cnn",
+    "checkpoint_path": "e:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_submission\\checkpoints\\best_model_state.pt",
+    "predictions_path": "e:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_submission\\predictions\\qmnist_test10k_holdout_predictions.csv"
+  }
+]

@@ -1,8 +1,13 @@
 {
-  "batch_size": 64,
-  "learning_rate": 0.0011114989443094978,
-  "weight_decay": 1.1527987128232402e-06,
-  "dropout": 0.43946844825669795,
-  "rotation_degrees": 9.98931168960506,
-  "translate_ratio": 0.025480693281393137
+  "model_name": "medium_cnn",
+  "batch_size": 512,
+  "learning_rate": 0.0008398721379146775,
+  "weight_decay": 6.602542933207749e-06,
+  "dropout": 0.21672530847241062,
+  "rotation_degrees": 7.536974266650085,
+  "translate_ratio": 0.05567431908414762,
+  "scale_min": 0.9213414099692713,
+  "scale_max": 1.1010803603468335,
+  "shear_degrees": 4.9755817645420075,
+  "scheduler_type": "CosineAnnealingLR"
 }
