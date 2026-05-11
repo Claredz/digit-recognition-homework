@@ -1,5 +1,6 @@
 {
-  "accuracy": 0.9951666666666666,
-  "best_val_accuracy": 0.9951666666666666,
-  "validation_samples": 12000
+  "accuracy": 0.9961362739015173,
+  "best_val_accuracy": 0.9961362739015173,
+  "validation_samples": 35458,
+  "validation_source": "mixed"
 }
