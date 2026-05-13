@@ -1,4 +1,4 @@
 split,accuracy,num_samples
 val_clean,0.998928309549326,35458
-val_corrupt_lite,0.9952055953522477,35458
+val_corrupt_lite,0.9948389644085961,35458
 val_external,0.9973,60000

@@ -5,7 +5,7 @@
       "num_samples": 35458
     },
     "val_corrupt_lite": {
-      "accuracy": 0.9952055953522477,
+      "accuracy": 0.9948389644085961,
       "num_samples": 35458
     },
     "val_external": {
@@ -14,7 +14,7 @@
     }
   },
   "score": {
-    "composite_score": 0.9979628250324327,
+    "composite_score": 0.997907830390885,
     "weights": {
       "val_clean": 0.6,
       "val_external": 0.25,

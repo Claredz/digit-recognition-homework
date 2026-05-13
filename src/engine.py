@@ -51,6 +51,8 @@ def run_epoch(
 
     for batch_index, (images, labels) in enumerate(loader, start=1):
         images = images.to(device, non_blocking=True)
+        if device == "cuda":
+            images = images.contiguous(memory_format=torch.channels_last)
         labels = labels.to(device, non_blocking=True)
 
         if training:
@@ -157,6 +159,8 @@ def fit(model, train_loader, val_loader, config: ExperimentConfig, paths: Projec
         torch.backends.cudnn.allow_tf32 = True
 
     model = model.to(device)
+    if device == "cuda":
+        model = model.to(memory_format=torch.channels_last)
     criterion = nn.CrossEntropyLoss(label_smoothing=config.label_smoothing)
     optimizer = build_optimizer(model, config)
     scheduler = build_scheduler(optimizer, config)
