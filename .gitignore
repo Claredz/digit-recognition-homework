@@ -3,5 +3,6 @@ __pycache__/
 .pytest_cache/
 .venv/
 outputs/
+outputs_runs/
 data/
 *.pyc

@@ -55,6 +55,10 @@ class ExperimentConfig:
     mnist_max_samples: int | None = None
     max_samples: int | None = None
 
+    external_holdout_names: tuple[str, ...] = ("mnist_test", "emnist_digits_test", "qmnist_test10k")
+    external_validation_batch_size: int = 512
+    mnist_c_zip: Path | None = None
+
     use_tta: bool = False
     tta_n: int = 1
     auto_invert: bool = True

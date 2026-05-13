@@ -139,10 +139,24 @@ python -m src.train --project-root . --dataset-name multisource --model-name med
 python -m src.evaluate --project-root . --checkpoint outputs_runs/smoke_medium/checkpoints/best_model.pt --dataset-name mnist --model-name medium_cnn
 ```
 
-评估上一版高分 checkpoint：
+评估上一版高分 checkpoint 的快速 validation smoke split：
 
 ```bash
 python -m src.evaluate --project-root . --checkpoint outputs_submission/checkpoints/best_model_state.pt --dataset-name mnist --model-name medium_cnn --output-dir outputs_runs/eval_high_score
+```
+
+注意：如果配置里用了 `max_samples` 或 notebook 默认小样本设置，这里的 validation accuracy 可能显示 `1.0`，它只说明小样本流程跑通，不代表正式测试集结果。
+
+评估多个正式 holdout 测试集：
+
+```bash
+python -m src.evaluate --project-root . --checkpoint outputs_submission/checkpoints/best_model_state.pt --dataset-name mnist --model-name medium_cnn --output-dir outputs_runs/eval_high_score --holdouts mnist_test emnist_digits_test qmnist_test10k
+```
+
+如果要额外评估 MNIST-C corruption zip：
+
+```bash
+python -m src.evaluate --project-root . --checkpoint outputs_submission/checkpoints/best_model_state.pt --dataset-name mnist --model-name medium_cnn --output-dir outputs_runs/eval_high_score --include-mnist-c
 ```
 
 评估结果会写入：
@@ -153,11 +167,11 @@ outputs_runs/eval_high_score/evaluation/
 
 包括：
 
-- `summary.json`
-- `classification_report.json`
-- `confusion_matrix.csv`
-- `confusion_matrix.png`
-- `misclassified_grid.png`
+- `validation/summary.json`
+- `holdouts/external_holdouts_summary.json`
+- `holdouts/external_holdouts_summary.csv`
+- `mnist_c/mnist_c_corruption_summary.csv`
+- 各数据集自己的 `classification_report.json`、`confusion_matrix.csv`、`confusion_matrix.png`
 
 ### 对无标签图片预测
 
@@ -187,11 +201,13 @@ sample_002.png,3
 RUN_TRAINING = False
 RUN_HPO = False
 RUN_EXTERNAL_EVAL = True
+RUN_HOLDOUTS = True
+RUN_MNIST_C = False
 RUN_PREDICTION = True
 LOAD_EXISTING_BEST_MODEL = True
 ```
 
-这样可以跳过训练，直接加载 `outputs_submission/checkpoints/best_model_state.pt` 做评估或预测。
+这样可以跳过训练，直接加载 `outputs_submission/checkpoints/best_model_state.pt` 做评估或预测。`project_notebook.ipynb` 里 `validation_smoke` 是小样本流程检查；正式指标应看 `holdouts` 和可选的 `mnist_c` 汇总。
 
 `project_notebook.ipynb` 默认使用工程模块和 `outputs_runs/project_notebook/`，适合调试，不会覆盖高分结果。
 

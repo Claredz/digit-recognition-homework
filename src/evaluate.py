@@ -1,14 +1,18 @@
 import argparse
+import csv
 import json
+import zipfile
 from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
 import torch
-from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix, f1_score
+from torch.utils.data import DataLoader
+from torchvision import datasets
 
 from src.config import ExperimentConfig, ensure_project_paths
-from src.data import create_dataloaders
+from src.data import build_eval_transform, create_dataloaders
 from src.model import build_model
 
 
@@ -137,6 +141,130 @@ def collect_predictions(model, loader, device: str):
     return torch.cat(image_batches), torch.cat(true_batches), torch.cat(pred_batches)
 
 
+def _holdout_dataset(name: str, config: ExperimentConfig):
+    root = str(config.resolved_data_dir())
+    normalized = name.strip().lower()
+    if normalized == "mnist_test":
+        return datasets.MNIST(root=root, train=False, download=True, transform=build_eval_transform(config))
+    if normalized == "emnist_digits_test":
+        return datasets.EMNIST(
+            root=root,
+            split="digits",
+            train=False,
+            download=True,
+            transform=build_eval_transform(config, correct_emnist=True),
+        )
+    if normalized == "qmnist_test10k":
+        return datasets.QMNIST(
+            root=root,
+            what="test10k",
+            compat=True,
+            download=True,
+            transform=build_eval_transform(config),
+        )
+    raise ValueError(f"不支持的 holdout 名称: {name}")
+
+
+def evaluate_holdout(model, name: str, config: ExperimentConfig, output_dir: Path, device: str):
+    dataset = _holdout_dataset(name, config)
+    loader = DataLoader(
+        dataset,
+        batch_size=config.external_validation_batch_size,
+        shuffle=False,
+        num_workers=config.num_workers,
+        pin_memory=config.pin_memory,
+    )
+    images, y_true, y_pred = collect_predictions(model, loader, device=device)
+    summary = save_evaluation_bundle(
+        images=images,
+        y_true=y_true,
+        y_pred=y_pred,
+        output_dir=output_dir / name,
+        num_classes=config.num_classes,
+    )
+    summary["macro_f1"] = float(f1_score(y_true.numpy(), y_pred.numpy(), average="macro", zero_division=0))
+    summary["name"] = name
+    return summary
+
+
+def evaluate_external_holdouts(model, config: ExperimentConfig, output_dir: Path, device: str):
+    output_dir = Path(output_dir)
+    summaries = []
+    for name in config.external_holdout_names:
+        summaries.append(evaluate_holdout(model, name, config, output_dir, device))
+
+    summary_path = output_dir / "external_holdouts_summary.json"
+    csv_path = output_dir / "external_holdouts_summary.csv"
+    summary_path.write_text(json.dumps(summaries, indent=2), encoding="utf-8")
+    with csv_path.open("w", newline="", encoding="utf-8") as handle:
+        writer = csv.DictWriter(handle, fieldnames=["name", "accuracy", "macro_f1", "num_samples"])
+        writer.writeheader()
+        writer.writerows(summaries)
+    return summaries
+
+
+def _mnist_c_zip_path(config: ExperimentConfig) -> Path:
+    if config.mnist_c_zip is not None:
+        return Path(config.mnist_c_zip)
+    return config.resolved_data_dir() / "mnist_c" / "mnist_c.zip"
+
+
+def evaluate_mnist_c_zip(model, config: ExperimentConfig, output_dir: Path, device: str):
+    zip_path = _mnist_c_zip_path(config)
+    if not zip_path.exists():
+        raise FileNotFoundError(f"未找到 MNIST-C zip: {zip_path}")
+
+    rows = []
+    model.eval()
+    with zipfile.ZipFile(zip_path) as archive:
+        corruptions = sorted(
+            {
+                parts[1]
+                for item in archive.namelist()
+                if (parts := item.split("/")) and len(parts) == 3 and parts[2] == "test_images.npy"
+            }
+        )
+        for corruption in corruptions:
+            with archive.open(f"mnist_c/{corruption}/test_images.npy") as image_file:
+                images_np = np.load(image_file)
+            with archive.open(f"mnist_c/{corruption}/test_labels.npy") as label_file:
+                labels_np = np.load(label_file)
+
+            if images_np.ndim == 4 and images_np.shape[-1] == 1:
+                images_np = np.squeeze(images_np, axis=-1)
+            if images_np.ndim != 3:
+                raise ValueError(f"MNIST-C 图像形状应为 [N, H, W] 或 [N, H, W, 1]，实际为 {images_np.shape}")
+            images = torch.from_numpy(images_np).float().unsqueeze(1) / 255.0
+            images = (images - 0.5) / 0.5
+            labels = torch.from_numpy(labels_np).long()
+            pred_batches = []
+            with torch.no_grad():
+                for start in range(0, len(images), config.external_validation_batch_size):
+                    batch = images[start : start + config.external_validation_batch_size].to(device)
+                    pred_batches.append(model(batch).argmax(dim=1).cpu())
+            predictions = torch.cat(pred_batches)
+            rows.append(
+                {
+                    "corruption": corruption,
+                    "accuracy": float(accuracy_score(labels.numpy(), predictions.numpy())),
+                    "macro_f1": float(f1_score(labels.numpy(), predictions.numpy(), average="macro", zero_division=0)),
+                    "num_samples": int(len(labels)),
+                }
+            )
+
+    output_dir = Path(output_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
+    (output_dir / "mnist_c_corruption_summary.json").write_text(
+        json.dumps(rows, indent=2),
+        encoding="utf-8",
+    )
+    with (output_dir / "mnist_c_corruption_summary.csv").open("w", newline="", encoding="utf-8") as handle:
+        writer = csv.DictWriter(handle, fieldnames=["corruption", "accuracy", "macro_f1", "num_samples"])
+        writer.writeheader()
+        writer.writerows(rows)
+    return rows
+
+
 def parse_args():
     parser = argparse.ArgumentParser(description="评估已训练的手写数字模型")
     parser.add_argument("--checkpoint", type=Path, required=True)
@@ -148,6 +276,13 @@ def parse_args():
     parser.add_argument("--validation-split", type=float, default=0.2)
     parser.add_argument("--image-size", type=int, default=28)
     parser.add_argument("--output-dir", type=Path, default=None)
+    parser.add_argument(
+        "--holdouts",
+        nargs="*",
+        default=None,
+        help="额外评估的测试集，例如 mnist_test emnist_digits_test qmnist_test10k",
+    )
+    parser.add_argument("--include-mnist-c", action="store_true", help="额外评估 data/mnist_c/mnist_c.zip")
     return parser.parse_args()
 
 
@@ -162,6 +297,7 @@ def main():
         batch_size=args.batch_size,
         validation_split=args.validation_split,
         image_size=args.image_size,
+        external_holdout_names=tuple(args.holdouts) if args.holdouts else ExperimentConfig.external_holdout_names,
     )
     paths = ensure_project_paths(config)
     _, val_loader = create_dataloaders(config)
@@ -170,8 +306,18 @@ def main():
     model, _ = load_model_from_checkpoint(args.checkpoint, config, device)
 
     images, y_true, y_pred = collect_predictions(model, val_loader, device=device)
-    summary = save_evaluation_bundle(images, y_true, y_pred, paths.evaluation_dir, num_classes=config.num_classes)
-    print(f"评估完成。accuracy={summary['accuracy']:.4f}，结果已保存到 {paths.evaluation_dir}")
+    summary = save_evaluation_bundle(images, y_true, y_pred, paths.evaluation_dir / "validation", num_classes=config.num_classes)
+    print(f"验证集评估完成。accuracy={summary['accuracy']:.4f}，结果已保存到 {paths.evaluation_dir / 'validation'}")
+
+    if args.holdouts is not None:
+        holdout_summaries = evaluate_external_holdouts(model, config, paths.evaluation_dir / "holdouts", device)
+        for item in holdout_summaries:
+            print(f"{item['name']}: accuracy={item['accuracy']:.4f}, macro_f1={item['macro_f1']:.4f}")
+
+    if args.include_mnist_c:
+        mnist_c_rows = evaluate_mnist_c_zip(model, config, paths.evaluation_dir / "mnist_c", device)
+        mean_accuracy = sum(row["accuracy"] for row in mnist_c_rows) / len(mnist_c_rows)
+        print(f"mnist_c: mean corruption accuracy={mean_accuracy:.4f}")
 
 
 if __name__ == "__main__":
