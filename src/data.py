@@ -1,42 +1,19 @@
-"""数据集适配与 DataLoader 构建。
-
-这个模块对不同数据源提供一个很小的抽象层，让其余代码只依赖统一接口。
-
-支持的数据集：
-- MNIST（torchvision.datasets.MNIST）
-- 文件夹数字数据集（按类别子目录组织）
-"""
-
 from __future__ import annotations
 
 from pathlib import Path
 
 import torch
 from PIL import Image
-from torch.utils.data import DataLoader, Dataset, random_split
+from torch.utils.data import ConcatDataset, DataLoader, Dataset, Subset
 from torchvision import datasets, transforms
+from torchvision.transforms import functional as TF
 
 from src.config import ExperimentConfig
-
 
 _IMAGE_SUFFIXES = {".png", ".jpg", ".jpeg", ".bmp"}
 
 
 class FolderDigitsDataset(Dataset):
-    """从文件夹结构读取数字图片的数据集。
-
-    期望目录结构：
-
-        root/
-          0/  # 类别目录名必须能转成 int
-            img1.png
-            ...
-          1/
-            ...
-
-    为保证可复现性：先对类别目录排序，再对每个类别里的文件路径排序。
-    """
-
     def __init__(self, root: Path, image_size: int = 28, augment: bool = False):
         self.root = Path(root)
         self.transform = build_transform(image_size=image_size, augment=augment)
@@ -63,8 +40,26 @@ class FolderDigitsDataset(Dataset):
         return tensor, label
 
 
+class CorrectEMNISTOrientation:
+    def __call__(self, image):
+        return TF.hflip(TF.rotate(image, -90))
+
+
+def _base_transform_ops(image_size: int, correct_emnist: bool = False):
+    operations: list = []
+    if correct_emnist:
+        operations.append(CorrectEMNISTOrientation())
+    operations.extend(
+        [
+            transforms.Grayscale(num_output_channels=1),
+            transforms.Resize((image_size, image_size)),
+        ]
+    )
+    return operations
+
+
 def build_transform(image_size: int, augment: bool = False):
-    operations: list = [transforms.Resize((image_size, image_size))]
+    operations = _base_transform_ops(image_size)
     if augment:
         operations.extend(
             [
@@ -72,59 +67,151 @@ def build_transform(image_size: int, augment: bool = False):
                 transforms.RandomAffine(degrees=0, translate=(0.08, 0.08)),
             ]
         )
-    operations.extend(
-        [
-            transforms.ToTensor(),
-            transforms.Normalize((0.5,), (0.5,)),
-        ]
-    )
+    operations.extend([transforms.ToTensor(), transforms.Normalize((0.5,), (0.5,))])
     return transforms.Compose(operations)
 
 
-def load_base_dataset(config: ExperimentConfig):
+def build_train_transform(config: ExperimentConfig, correct_emnist: bool = False):
+    operations = _base_transform_ops(config.image_size, correct_emnist=correct_emnist)
+    if config.use_random_affine:
+        operations.append(
+            transforms.RandomAffine(
+                degrees=config.rotation_degrees,
+                translate=(config.translate_ratio, config.translate_ratio),
+                scale=(config.scale_min, config.scale_max),
+                shear=config.shear_degrees,
+            )
+        )
+    if config.use_gaussian_blur:
+        operations.append(transforms.RandomApply([transforms.GaussianBlur(kernel_size=3)], p=0.25))
+    operations.extend([transforms.ToTensor(), transforms.Normalize((0.5,), (0.5,))])
+    return transforms.Compose(operations)
+
+
+def build_eval_transform(config: ExperimentConfig, correct_emnist: bool = False):
+    operations = _base_transform_ops(config.image_size, correct_emnist=correct_emnist)
+    operations.extend([transforms.ToTensor(), transforms.Normalize((0.5,), (0.5,))])
+    return transforms.Compose(operations)
+
+
+def _split_indices(length: int, validation_split: float, seed: int, max_samples: int | None = None):
+    indices = torch.randperm(length, generator=torch.Generator().manual_seed(seed)).tolist()
+    if max_samples is not None:
+        indices = indices[: min(max_samples, len(indices))]
+    val_size = max(1, int(len(indices) * validation_split))
+    train_size = len(indices) - val_size
+    if train_size <= 0:
+        raise ValueError("validation_split 设置过大，导致训练样本数为 0")
+    return indices[:train_size], indices[train_size:]
+
+
+def _dataset(source: str, config: ExperimentConfig, train: bool, transform):
+    root = str(config.resolved_data_dir())
+    if source == "mnist":
+        return datasets.MNIST(root=root, train=train, download=True, transform=transform)
+    if source == "emnist_digits":
+        return datasets.EMNIST(root=root, split="digits", train=train, download=True, transform=transform)
+    if source == "usps":
+        return datasets.USPS(root=root, train=train, download=True, transform=transform)
+    if source == "qmnist":
+        return datasets.QMNIST(
+            root=root,
+            what="train" if train else "test10k",
+            compat=True,
+            download=True,
+            transform=transform,
+        )
+    raise ValueError(f"不支持的数据源: {source}")
+
+
+def _source_specs(config: ExperimentConfig):
+    specs: list[tuple[str, int | None]] = []
+    if config.use_mnist:
+        specs.append(("mnist", config.mnist_max_samples or config.max_samples))
+    if config.use_emnist_digits:
+        specs.append(("emnist_digits", config.emnist_max_samples or config.max_samples))
+    if config.use_usps:
+        specs.append(("usps", config.usps_max_samples or config.max_samples))
+    if config.use_qmnist:
+        specs.append(("qmnist", config.qmnist_max_samples or config.max_samples))
+    if not specs:
+        raise ValueError("至少需要启用一个训练数据源")
+    return specs
+
+
+def _loader_kwargs(config: ExperimentConfig, shuffle: bool):
+    kwargs = {
+        "batch_size": config.batch_size,
+        "shuffle": shuffle,
+        "num_workers": config.num_workers,
+        "pin_memory": config.pin_memory,
+        "timeout": config.dataloader_timeout,
+    }
+    if config.num_workers > 0:
+        kwargs["persistent_workers"] = config.persistent_workers
+        if config.prefetch_factor is not None:
+            kwargs["prefetch_factor"] = config.prefetch_factor
+    return kwargs
+
+
+def load_base_dataset(config: ExperimentConfig, train: bool = True, augment: bool = False):
     if config.dataset_name == "mnist":
         return datasets.MNIST(
             root=str(config.resolved_data_dir()),
-            train=True,
+            train=train,
             download=True,
-            transform=build_transform(config.image_size, augment=False),
+            transform=build_train_transform(config) if augment else build_eval_transform(config),
         )
     if config.dataset_name == "folder":
         return FolderDigitsDataset(
             root=config.resolved_data_dir(),
             image_size=config.image_size,
-            augment=False,
+            augment=augment,
         )
     raise ValueError(
-        f"不支持的 dataset_name='{config.dataset_name}'。请使用 'mnist' 或 'folder'。"
+        f"不支持的 dataset_name='{config.dataset_name}'。请使用 'mnist'、'folder' 或 'multisource'。"
+    )
+
+
+def create_multisource_dataloaders(config: ExperimentConfig):
+    train_parts = []
+    val_parts = []
+    for offset, (source, max_samples) in enumerate(_source_specs(config)):
+        correct_emnist = source == "emnist_digits"
+        train_dataset = _dataset(source, config, train=True, transform=build_train_transform(config, correct_emnist))
+        eval_dataset = _dataset(source, config, train=True, transform=build_eval_transform(config, correct_emnist))
+        train_indices, val_indices = _split_indices(
+            len(eval_dataset),
+            config.validation_split,
+            seed=config.seed + offset,
+            max_samples=max_samples,
+        )
+        train_parts.append(Subset(train_dataset, train_indices))
+        val_parts.append(Subset(eval_dataset, val_indices))
+
+    train_dataset = train_parts[0] if len(train_parts) == 1 else ConcatDataset(train_parts)
+    val_dataset = val_parts[0] if len(val_parts) == 1 else ConcatDataset(val_parts)
+    return (
+        DataLoader(train_dataset, **_loader_kwargs(config, shuffle=True)),
+        DataLoader(val_dataset, **_loader_kwargs(config, shuffle=False)),
     )
 
 
 def create_dataloaders(config: ExperimentConfig):
-    dataset = load_base_dataset(config)
+    if config.dataset_name in {"multisource", "submission"} or any(
+        [config.use_emnist_digits, config.use_usps, config.use_qmnist]
+    ):
+        return create_multisource_dataloaders(config)
 
-    val_size = max(1, int(len(dataset) * config.validation_split))
-    train_size = len(dataset) - val_size
-    if train_size <= 0:
-        raise ValueError("validation_split 设置过大，导致训练样本数为 0")
-
-    generator = torch.Generator().manual_seed(config.seed)
-    train_subset, val_subset = random_split(
-        dataset,
-        [train_size, val_size],
-        generator=generator,
+    train_dataset = load_base_dataset(config, train=True, augment=True)
+    val_dataset = load_base_dataset(config, train=True, augment=False)
+    train_indices, val_indices = _split_indices(
+        len(val_dataset),
+        config.validation_split,
+        seed=config.seed,
+        max_samples=config.max_samples,
     )
-
-    train_loader = DataLoader(
-        train_subset,
-        batch_size=config.batch_size,
-        shuffle=True,
-        num_workers=config.num_workers,
+    return (
+        DataLoader(Subset(train_dataset, train_indices), **_loader_kwargs(config, shuffle=True)),
+        DataLoader(Subset(val_dataset, val_indices), **_loader_kwargs(config, shuffle=False)),
     )
-    val_loader = DataLoader(
-        val_subset,
-        batch_size=config.batch_size,
-        shuffle=False,
-        num_workers=config.num_workers,
-    )
-    return train_loader, val_loader

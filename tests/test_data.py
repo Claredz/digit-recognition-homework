@@ -1,7 +1,7 @@
 import torch
 
 from src.config import ExperimentConfig
-from src.data import FolderDigitsDataset, create_dataloaders
+from src.data import FolderDigitsDataset, build_eval_transform, build_train_transform, create_dataloaders
 
 
 def test_folder_digits_dataset_returns_grayscale_tensor(folder_digit_dataset, tmp_path):
@@ -18,6 +18,17 @@ def test_folder_digits_dataset_returns_grayscale_tensor(folder_digit_dataset, tm
     assert image.shape == (1, 28, 28)
     assert image.dtype == torch.float32
     assert label in {0, 1}
+
+
+def test_train_and_eval_transforms_return_digit_tensors(tmp_path):
+    config = ExperimentConfig(project_root=tmp_path, image_size=28)
+    image = torch.zeros(1, 28, 28)
+
+    train_tensor = build_train_transform(config)(image)
+    eval_tensor = build_eval_transform(config)(image)
+
+    assert train_tensor.shape == (1, 28, 28)
+    assert eval_tensor.shape == (1, 28, 28)
 
 
 def test_create_dataloaders_splits_dataset_deterministically(folder_digit_dataset, tmp_path):

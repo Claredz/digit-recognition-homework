@@ -1,71 +1,71 @@
 import json
+from contextlib import nullcontext
 from pathlib import Path
 
 import matplotlib.pyplot as plt
 import torch
-
-
-def _configure_matplotlib_chinese_font():
-    plt.rcParams["font.sans-serif"] = [
-        "Microsoft YaHei",
-        "SimHei",
-        "SimSun",
-        "DejaVu Sans",
-    ]
-    plt.rcParams["axes.unicode_minus"] = False
-
 from torch import nn
 
 from src.config import ExperimentConfig, ProjectPaths
 
 
+def _configure_matplotlib_chinese_font():
+    plt.rcParams["font.sans-serif"] = ["Microsoft YaHei", "SimHei", "SimSun", "DejaVu Sans"]
+    plt.rcParams["axes.unicode_minus"] = False
 
-def run_epoch(model, loader, criterion, device: str, optimizer=None):
-    """运行一个 epoch，返回该 epoch 的平均 loss 与 accuracy。"""
+
+def make_autocast_context(config: ExperimentConfig, device: str):
+    if device == "cuda" and config.use_amp:
+        return torch.amp.autocast("cuda")
+    return nullcontext()
+
+
+def make_grad_scaler(config: ExperimentConfig, device: str):
+    return torch.amp.GradScaler("cuda", enabled=device == "cuda" and config.use_amp)
+
+
+def run_epoch(model, loader, criterion, device: str, optimizer=None, config: ExperimentConfig | None = None, scaler=None):
     training = optimizer is not None
-    if training:
-        model.train()
-    else:
-        model.eval()
+    model.train(training)
 
     total_loss = 0.0
     total_correct = 0
     total_examples = 0
 
     for images, labels in loader:
-        images = images.to(device)
-        labels = labels.to(device)
+        images = images.to(device, non_blocking=True)
+        labels = labels.to(device, non_blocking=True)
 
         if training:
-            optimizer.zero_grad()
+            optimizer.zero_grad(set_to_none=True)
 
         with torch.set_grad_enabled(training):
-            logits = model(images)
-            loss = criterion(logits, labels)
+            autocast_context = make_autocast_context(config, device) if config is not None else nullcontext()
+            with autocast_context:
+                logits = model(images)
+                loss = criterion(logits, labels)
             if training:
-                loss.backward()
-                optimizer.step()
+                if scaler is not None and scaler.is_enabled():
+                    scaler.scale(loss).backward()
+                    scaler.step(optimizer)
+                    scaler.update()
+                else:
+                    loss.backward()
+                    optimizer.step()
 
         predictions = logits.argmax(dim=1)
         total_loss += loss.item() * images.size(0)
         total_correct += (predictions == labels).sum().item()
         total_examples += images.size(0)
 
-    return {
-        "loss": total_loss / total_examples,
-        "accuracy": total_correct / total_examples,
-    }
-
+    return {"loss": total_loss / total_examples, "accuracy": total_correct / total_examples}
 
 
 def save_history(history: dict, path: Path):
-    """将训练/验证指标写入 JSON，便于复现实验与画图。"""
     path.write_text(json.dumps(history, indent=2), encoding="utf-8")
 
 
-
 def plot_history(history: dict, figure_path: Path):
-    """将 loss/accuracy 曲线保存为 PNG 图片。"""
     _configure_matplotlib_chinese_font()
     epochs = range(1, len(history["train_loss"]) + 1)
     fig, axes = plt.subplots(1, 2, figsize=(10, 4))
@@ -87,11 +87,45 @@ def plot_history(history: dict, figure_path: Path):
     plt.close(fig)
 
 
+def build_optimizer(model, config: ExperimentConfig):
+    optimizer_type = config.optimizer_type.strip().lower()
+    if optimizer_type == "adamw":
+        return torch.optim.AdamW(model.parameters(), lr=config.learning_rate, weight_decay=config.weight_decay)
+    if optimizer_type == "adam":
+        return torch.optim.Adam(model.parameters(), lr=config.learning_rate, weight_decay=config.weight_decay)
+    raise ValueError(f"不支持的 optimizer_type='{config.optimizer_type}'")
+
+
+def build_scheduler(optimizer, config: ExperimentConfig):
+    scheduler_type = config.scheduler_type.strip().lower()
+    if scheduler_type in {"", "none", "null"}:
+        return None
+    if scheduler_type == "reducelronplateau":
+        return torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode="min", factor=0.5, patience=2)
+    if scheduler_type == "cosineannealinglr":
+        return torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=max(1, config.epochs))
+    raise ValueError(f"不支持的 scheduler_type='{config.scheduler_type}'")
+
+
+def _scheduler_step(scheduler, config: ExperimentConfig, val_loss: float):
+    if scheduler is None:
+        return
+    if config.scheduler_type.strip().lower() == "reducelronplateau":
+        scheduler.step(val_loss)
+    else:
+        scheduler.step()
+
 
 def fit(model, train_loader, val_loader, config: ExperimentConfig, paths: ProjectPaths, device: str):
+    if device == "cuda" and config.allow_tf32:
+        torch.backends.cuda.matmul.allow_tf32 = True
+        torch.backends.cudnn.allow_tf32 = True
+
     model = model.to(device)
-    criterion = nn.CrossEntropyLoss()
-    optimizer = torch.optim.Adam(model.parameters(), lr=config.learning_rate)
+    criterion = nn.CrossEntropyLoss(label_smoothing=config.label_smoothing)
+    optimizer = build_optimizer(model, config)
+    scheduler = build_scheduler(optimizer, config)
+    scaler = make_grad_scaler(config, device)
 
     history = {
         "config": config.to_dict(),
@@ -99,33 +133,60 @@ def fit(model, train_loader, val_loader, config: ExperimentConfig, paths: Projec
         "train_accuracy": [],
         "val_loss": [],
         "val_accuracy": [],
+        "learning_rate": [],
         "best_val_accuracy": 0.0,
+        "best_val_loss": float("inf"),
+        "best_epoch": 0,
     }
 
     best_val_accuracy = -1.0
+    best_val_loss = float("inf")
+    bad_epochs = 0
     checkpoint_path = paths.checkpoints_dir / "best_model.pt"
 
     for epoch in range(config.epochs):
-        train_metrics = run_epoch(model, train_loader, criterion, device=device, optimizer=optimizer)
-        val_metrics = run_epoch(model, val_loader, criterion, device=device, optimizer=None)
+        train_metrics = run_epoch(
+            model,
+            train_loader,
+            criterion,
+            device=device,
+            optimizer=optimizer,
+            config=config,
+            scaler=scaler,
+        )
+        val_metrics = run_epoch(model, val_loader, criterion, device=device, optimizer=None, config=config)
+        _scheduler_step(scheduler, config, val_metrics["loss"])
 
         history["train_loss"].append(train_metrics["loss"])
         history["train_accuracy"].append(train_metrics["accuracy"])
         history["val_loss"].append(val_metrics["loss"])
         history["val_accuracy"].append(val_metrics["accuracy"])
+        history["learning_rate"].append(optimizer.param_groups[0]["lr"])
 
-        if val_metrics["accuracy"] > best_val_accuracy:
+        improved = val_metrics["accuracy"] > best_val_accuracy + config.early_stopping_min_delta
+        if improved:
             best_val_accuracy = val_metrics["accuracy"]
-            torch.save(
-                {
-                    "model_state_dict": model.state_dict(),
-                    "config": config.to_dict(),
-                    "best_val_accuracy": best_val_accuracy,
-                },
-                checkpoint_path,
-            )
+            best_val_loss = val_metrics["loss"]
+            bad_epochs = 0
+            history["best_val_accuracy"] = best_val_accuracy
+            history["best_val_loss"] = best_val_loss
+            history["best_epoch"] = epoch + 1
+            checkpoint = {
+                "model_state_dict": model.state_dict(),
+                "config": config.to_dict(),
+                "model_name": config.model_name,
+                "epoch": epoch + 1,
+                "best_val_accuracy": best_val_accuracy,
+                "best_val_loss": best_val_loss,
+                "history": history,
+            }
+            torch.save(checkpoint, checkpoint_path)
+        else:
+            bad_epochs += 1
 
-    history["best_val_accuracy"] = best_val_accuracy
+        if config.use_early_stopping and bad_epochs >= config.early_stopping_patience:
+            break
+
     save_history(history, paths.logs_dir / "history.json")
     plot_history(history, paths.figures_dir / "training_curves.png")
     return history
