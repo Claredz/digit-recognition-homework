@@ -10,36 +10,38 @@ from torch.utils.data import DataLoader
 
 from src.config import ExperimentConfig, ensure_project_paths
 from src.evaluate import load_model_from_checkpoint
-from src.predict import PredictionImageDataset, predict_with_tta, write_predictions_csv
+from src.predict import PredictionImageDataset, predict_probabilities_with_tta, write_predictions_csv
 from src.validation_board import build_validation_board_loaders, score_validation_board
+
+
+DEFAULT_WEIGHT_GRID_STRING = "0.80,0.75,0.70,0.65,0.60,0.55,0.50,0.45,0.40,0.35,0.30"
 
 
 def parse_weight_grid(value: str | None):
     if not value:
-        return (0.75, 0.70, 0.65, 0.60, 0.55, 0.50)
+        return ExperimentConfig(project_root=Path(".")).ensemble_weight_grid
     return tuple(float(item.strip()) for item in value.split(",") if item.strip())
 
 
-def ensemble_probabilities(clean_logits: torch.Tensor, robust_logits: torch.Tensor, clean_weight: float):
-    clean_prob = torch.softmax(clean_logits, dim=1)
-    robust_prob = torch.softmax(robust_logits, dim=1)
-    return clean_weight * clean_prob + (1.0 - clean_weight) * robust_prob
+def ensemble_probabilities(clean_probabilities: torch.Tensor, robust_probabilities: torch.Tensor, clean_weight: float):
+    return clean_weight * clean_probabilities + (1.0 - clean_weight) * robust_probabilities
 
 
 def predict_batch_pair(clean_model, robust_model, images: torch.Tensor, config: ExperimentConfig, device: str, clean_weight: float):
-    clean_logits = predict_with_tta(clean_model, images, config, device)
-    robust_logits = predict_with_tta(robust_model, images, config, device)
-    ensemble_probs = ensemble_probabilities(clean_logits, robust_logits, clean_weight)
-    return clean_logits, robust_logits, ensemble_probs
+    clean_probabilities = predict_probabilities_with_tta(clean_model, images, config, device)
+    robust_probabilities = predict_probabilities_with_tta(robust_model, images, config, device)
+    ensemble_probs = ensemble_probabilities(clean_probabilities, robust_probabilities, clean_weight)
+    return clean_probabilities, robust_probabilities, ensemble_probs
 
 
 def predict_image_folder(clean_model, robust_model, loader, config: ExperimentConfig, device: str, clean_weight: float):
     clean_rows = []
     robust_rows = []
     ensemble_rows = []
+    total_batches = len(loader) if hasattr(loader, "__len__") else None
     with torch.no_grad():
-        for images, filenames in loader:
-            clean_logits, robust_logits, ensemble_probs = predict_batch_pair(
+        for batch_index, (images, filenames) in enumerate(loader, start=1):
+            clean_probabilities, robust_probabilities, ensemble_probs = predict_batch_pair(
                 clean_model,
                 robust_model,
                 images,
@@ -47,28 +49,36 @@ def predict_image_folder(clean_model, robust_model, loader, config: ExperimentCo
                 device,
                 clean_weight,
             )
-            clean_predictions = clean_logits.argmax(dim=1).cpu().tolist()
-            robust_predictions = robust_logits.argmax(dim=1).cpu().tolist()
+            clean_predictions = clean_probabilities.argmax(dim=1).cpu().tolist()
+            robust_predictions = robust_probabilities.argmax(dim=1).cpu().tolist()
             ensemble_predictions = ensemble_probs.argmax(dim=1).cpu().tolist()
             clean_rows.extend(zip(filenames, clean_predictions))
             robust_rows.extend(zip(filenames, robust_predictions))
             ensemble_rows.extend(zip(filenames, ensemble_predictions))
+            if config.verbose and (batch_index == 1 or batch_index % max(1, config.log_interval) == 0 or batch_index == total_batches):
+                total_text = str(total_batches) if total_batches is not None else "?"
+                print(f"[predict] batch {batch_index}/{total_text}", flush=True)
     return clean_rows, robust_rows, ensemble_rows
 
 
-def evaluate_ensemble_loader(clean_model, robust_model, loader, config: ExperimentConfig, device: str, clean_weight: float):
+def evaluate_ensemble_loader(clean_model, robust_model, loader, config: ExperimentConfig, device: str, clean_weight: float, split_name: str = "split"):
     clean_model.eval()
     robust_model.eval()
     total_correct = 0
     total_examples = 0
+    total_batches = len(loader) if hasattr(loader, "__len__") else None
     with torch.no_grad():
-        for images, labels in loader:
+        for batch_index, (images, labels) in enumerate(loader, start=1):
             labels = labels.to(device)
-            clean_logits = clean_model(images.to(device))
-            robust_logits = robust_model(images.to(device))
-            predictions = ensemble_probabilities(clean_logits, robust_logits, clean_weight).argmax(dim=1)
+            images = images.to(device)
+            clean_probabilities = torch.softmax(clean_model(images), dim=1)
+            robust_probabilities = torch.softmax(robust_model(images), dim=1)
+            predictions = ensemble_probabilities(clean_probabilities, robust_probabilities, clean_weight).argmax(dim=1)
             total_correct += int((predictions == labels).sum().item())
             total_examples += int(labels.numel())
+            if config.verbose and (batch_index == 1 or batch_index % max(1, config.log_interval) == 0 or batch_index == total_batches):
+                total_text = str(total_batches) if total_batches is not None else "?"
+                print(f"[ensemble:{clean_weight:.2f}:{split_name}] batch {batch_index}/{total_text}", flush=True)
     return {"accuracy": total_correct / total_examples if total_examples else 0.0, "num_samples": total_examples}
 
 
@@ -76,12 +86,16 @@ def search_ensemble_weight(clean_model, robust_model, config: ExperimentConfig, 
     loaders = build_validation_board_loaders(config)
     rows = []
     best = None
+    if config.verbose:
+        print(f"[ensemble] searching clean weights: {config.ensemble_weight_grid}", flush=True)
     for weight in config.ensemble_weight_grid:
+        if config.verbose:
+            print(f"[ensemble] evaluate clean_weight={weight:.2f}", flush=True)
         split_results = {
-            name: evaluate_ensemble_loader(clean_model, robust_model, loader, config, device, clean_weight=weight)
+            name: evaluate_ensemble_loader(clean_model, robust_model, loader, config, device, clean_weight=weight, split_name=name)
             for name, loader in loaders.items()
         }
-        score = score_validation_board(split_results)
+        score = score_validation_board(split_results, config=config)
         row = {
             "clean_weight": weight,
             "composite_score": score["composite_score"],
@@ -90,6 +104,8 @@ def search_ensemble_weight(clean_model, robust_model, config: ExperimentConfig, 
         rows.append(row)
         if best is None or row["composite_score"] > best["composite_score"]:
             best = row
+        if config.verbose:
+            print(f"[ensemble] clean_weight={weight:.2f} composite={row['composite_score']:.4f} best={best['clean_weight']:.2f}/{best['composite_score']:.4f}", flush=True)
 
     output_dir = Path(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -113,7 +129,7 @@ def parse_args():
     parser.add_argument("--clean-checkpoint", type=Path, required=True)
     parser.add_argument("--robust-checkpoint", type=Path, required=True)
     parser.add_argument("--clean-weight", type=float, default=0.60)
-    parser.add_argument("--weight-grid", default="0.75,0.70,0.65,0.60,0.55,0.50")
+    parser.add_argument("--weight-grid", default=DEFAULT_WEIGHT_GRID_STRING)
     parser.add_argument("--batch-size", type=int, default=128)
     parser.add_argument("--image-size", type=int, default=28)
     parser.add_argument("--use-tta", action="store_true")

@@ -95,12 +95,29 @@ class ExperimentConfig:
     mnist_family_weight: float = 0.60
 
     ensemble_weight_clean: float = 0.60
-    ensemble_weight_grid: tuple[float, ...] = (0.75, 0.70, 0.65, 0.60, 0.55, 0.50)
+    ensemble_weight_grid: tuple[float, ...] = (0.80, 0.75, 0.70, 0.65, 0.60, 0.55, 0.50, 0.45, 0.40, 0.35, 0.30)
     enable_validation_board: bool = False
+
+    verbose: bool = True
+    log_interval: int = 50
+
+    robust_affine_degrees: float = 15.0
+    robust_noise_std_min: float = 0.02
+    robust_noise_std_max: float = 0.08
+    robust_blur_prob: float = 0.20
+    robust_morph_prob: float = 0.35
+    robust_center_jitter: int = 2
+
+    validation_weight_clean: float | None = None
+    validation_weight_external: float | None = None
+    validation_weight_corrupt_lite: float | None = None
+    validation_weight_local: float | None = None
 
     use_tta: bool = False
     tta_n: int = 1
     auto_invert: bool = True
+    debug_preprocess: bool = False
+    debug_preprocess_samples: int = 16
 
     def resolved_data_dir(self) -> Path:
         if self.data_dir is not None:

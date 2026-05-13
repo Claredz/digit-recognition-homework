@@ -25,15 +25,31 @@ def make_grad_scaler(config: ExperimentConfig, device: str):
     return torch.amp.GradScaler("cuda", enabled=device == "cuda" and config.use_amp)
 
 
-def run_epoch(model, loader, criterion, device: str, optimizer=None, config: ExperimentConfig | None = None, scaler=None):
+def run_epoch(
+    model,
+    loader,
+    criterion,
+    device: str,
+    optimizer=None,
+    config: ExperimentConfig | None = None,
+    scaler=None,
+    phase: str | None = None,
+    epoch_index: int | None = None,
+    total_epochs: int | None = None,
+):
     training = optimizer is not None
+    phase = phase or ("train" if training else "val")
     model.train(training)
 
     total_loss = 0.0
     total_correct = 0
     total_examples = 0
+    verbose = True if config is None else config.verbose
+    log_interval = max(1, 50 if config is None else config.log_interval)
+    total_batches = len(loader) if hasattr(loader, "__len__") else None
+    start_time = time.perf_counter()
 
-    for images, labels in loader:
+    for batch_index, (images, labels) in enumerate(loader, start=1):
         images = images.to(device, non_blocking=True)
         labels = labels.to(device, non_blocking=True)
 
@@ -58,6 +74,24 @@ def run_epoch(model, loader, criterion, device: str, optimizer=None, config: Exp
         total_loss += loss.item() * images.size(0)
         total_correct += (predictions == labels).sum().item()
         total_examples += images.size(0)
+
+        should_log = verbose and (batch_index == 1 or batch_index % log_interval == 0 or batch_index == total_batches)
+        if should_log:
+            running_loss = total_loss / max(1, total_examples)
+            running_accuracy = total_correct / max(1, total_examples)
+            epoch_text = ""
+            if epoch_index is not None and total_epochs is not None:
+                epoch_text = f" epoch {epoch_index}/{total_epochs}"
+            batch_total_text = str(total_batches) if total_batches is not None else "?"
+            lr_text = ""
+            if optimizer is not None:
+                lr_text = f" lr={optimizer.param_groups[0]['lr']:.6g}"
+            print(
+                f"[{phase}]{epoch_text} batch {batch_index}/{batch_total_text} "
+                f"loss={running_loss:.4f} acc={running_accuracy:.4f}{lr_text} "
+                f"elapsed={time.perf_counter() - start_time:.1f}s",
+                flush=True,
+            )
 
     return {"loss": total_loss / total_examples, "accuracy": total_correct / total_examples}
 
@@ -161,8 +195,21 @@ def fit(model, train_loader, val_loader, config: ExperimentConfig, paths: Projec
             optimizer=optimizer,
             config=config,
             scaler=scaler,
+            phase="train",
+            epoch_index=epoch + 1,
+            total_epochs=config.epochs,
         )
-        val_metrics = run_epoch(model, val_loader, criterion, device=device, optimizer=None, config=config)
+        val_metrics = run_epoch(
+            model,
+            val_loader,
+            criterion,
+            device=device,
+            optimizer=None,
+            config=config,
+            phase="val",
+            epoch_index=epoch + 1,
+            total_epochs=config.epochs,
+        )
         _scheduler_step(scheduler, config, val_metrics["loss"])
 
         current_lr = optimizer.param_groups[0]["lr"]

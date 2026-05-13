@@ -28,6 +28,8 @@ def checkpoint_state_dict(checkpoint_payload):
 
 
 def load_model_from_checkpoint(checkpoint_path: Path, config: ExperimentConfig, device: str):
+    if config.verbose:
+        print(f"[load] checkpoint={checkpoint_path} device={device}", flush=True)
     checkpoint_payload = torch.load(checkpoint_path, map_location=device)
     checkpoint_config = checkpoint_payload.get("config", {}) if isinstance(checkpoint_payload, dict) else {}
     model_name = checkpoint_payload.get("model_name") if isinstance(checkpoint_payload, dict) else None
@@ -37,6 +39,8 @@ def load_model_from_checkpoint(checkpoint_path: Path, config: ExperimentConfig, 
     model.load_state_dict(checkpoint_state_dict(checkpoint_payload))
     model.to(device)
     model.eval()
+    if config.verbose:
+        print(f"[load] model={model_name} dropout={dropout}", flush=True)
     return model, checkpoint_payload
 
 
@@ -124,19 +128,25 @@ def save_evaluation_bundle(
     return summary
 
 
-def collect_predictions(model, loader, device: str):
+def collect_predictions(model, loader, device: str, config: ExperimentConfig | None = None, stage_name: str = "evaluate"):
     model.eval()
     image_batches = []
     true_batches = []
     pred_batches = []
+    verbose = True if config is None else config.verbose
+    log_interval = max(1, 50 if config is None else config.log_interval)
+    total_batches = len(loader) if hasattr(loader, "__len__") else None
 
     with torch.no_grad():
-        for images, labels in loader:
+        for batch_index, (images, labels) in enumerate(loader, start=1):
             logits = model(images.to(device))
             predictions = logits.argmax(dim=1).cpu()
             image_batches.append(images.cpu())
             true_batches.append(labels.cpu())
             pred_batches.append(predictions)
+            if verbose and (batch_index == 1 or batch_index % log_interval == 0 or batch_index == total_batches):
+                total_text = str(total_batches) if total_batches is not None else "?"
+                print(f"[{stage_name}] batch {batch_index}/{total_text}", flush=True)
 
     return torch.cat(image_batches), torch.cat(true_batches), torch.cat(pred_batches)
 
@@ -166,6 +176,8 @@ def _holdout_dataset(name: str, config: ExperimentConfig):
 
 
 def evaluate_holdout(model, name: str, config: ExperimentConfig, output_dir: Path, device: str):
+    if config.verbose:
+        print(f"[holdout] start {name}", flush=True)
     dataset = _holdout_dataset(name, config)
     loader = DataLoader(
         dataset,
@@ -174,7 +186,9 @@ def evaluate_holdout(model, name: str, config: ExperimentConfig, output_dir: Pat
         num_workers=config.num_workers,
         pin_memory=config.pin_memory,
     )
-    images, y_true, y_pred = collect_predictions(model, loader, device=device)
+    if config.verbose:
+        print(f"[holdout] {name} samples={len(dataset)} batches={len(loader)}", flush=True)
+    images, y_true, y_pred = collect_predictions(model, loader, device=device, config=config, stage_name=f"holdout:{name}")
     summary = save_evaluation_bundle(
         images=images,
         y_true=y_true,
@@ -184,6 +198,8 @@ def evaluate_holdout(model, name: str, config: ExperimentConfig, output_dir: Pat
     )
     summary["macro_f1"] = float(f1_score(y_true.numpy(), y_pred.numpy(), average="macro", zero_division=0))
     summary["name"] = name
+    if config.verbose:
+        print(f"[holdout] done {name} accuracy={summary['accuracy']:.4f} macro_f1={summary['macro_f1']:.4f}", flush=True)
     return summary
 
 
@@ -224,7 +240,9 @@ def evaluate_mnist_c_zip(model, config: ExperimentConfig, output_dir: Path, devi
                 if (parts := item.split("/")) and len(parts) == 3 and parts[2] == "test_images.npy"
             }
         )
-        for corruption in corruptions:
+        for corruption_index, corruption in enumerate(corruptions, start=1):
+            if config.verbose:
+                print(f"[mnist-c] corruption {corruption_index}/{len(corruptions)}: {corruption}", flush=True)
             with archive.open(f"mnist_c/{corruption}/test_images.npy") as image_file:
                 images_np = np.load(image_file)
             with archive.open(f"mnist_c/{corruption}/test_labels.npy") as label_file:
@@ -239,18 +257,25 @@ def evaluate_mnist_c_zip(model, config: ExperimentConfig, output_dir: Path, devi
             labels = torch.from_numpy(labels_np).long()
             pred_batches = []
             with torch.no_grad():
-                for start in range(0, len(images), config.external_validation_batch_size):
+                for batch_index, start in enumerate(range(0, len(images), config.external_validation_batch_size), start=1):
                     batch = images[start : start + config.external_validation_batch_size].to(device)
                     pred_batches.append(model(batch).argmax(dim=1).cpu())
+                    total_batches = (len(images) + config.external_validation_batch_size - 1) // config.external_validation_batch_size
+                    if config.verbose and (batch_index == 1 or batch_index % max(1, config.log_interval) == 0 or batch_index == total_batches):
+                        print(f"[mnist-c:{corruption}] batch {batch_index}/{total_batches}", flush=True)
             predictions = torch.cat(pred_batches)
+            accuracy = float(accuracy_score(labels.numpy(), predictions.numpy()))
+            macro_f1 = float(f1_score(labels.numpy(), predictions.numpy(), average="macro", zero_division=0))
             rows.append(
                 {
                     "corruption": corruption,
-                    "accuracy": float(accuracy_score(labels.numpy(), predictions.numpy())),
-                    "macro_f1": float(f1_score(labels.numpy(), predictions.numpy(), average="macro", zero_division=0)),
+                    "accuracy": accuracy,
+                    "macro_f1": macro_f1,
                     "num_samples": int(len(labels)),
                 }
             )
+            if config.verbose:
+                print(f"[mnist-c] done {corruption} accuracy={accuracy:.4f} macro_f1={macro_f1:.4f}", flush=True)
 
     output_dir = Path(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)

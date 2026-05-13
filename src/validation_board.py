@@ -57,13 +57,19 @@ def _loader(dataset: Dataset, config: ExperimentConfig):
 
 
 def build_validation_board_loaders(config: ExperimentConfig):
+    if config.verbose:
+        print("[validation-board] building loaders", flush=True)
     loaders = {}
     _, clean_val_loader = create_dataloaders(config)
     loaders["val_clean"] = clean_val_loader
+    if config.verbose:
+        print(f"[validation-board] add val_clean samples={len(clean_val_loader.dataset)}", flush=True)
 
     try:
         corrupt_dataset = TransformDataset(clean_val_loader.dataset, build_corrupt_lite_transform(config))
         loaders["val_corrupt_lite"] = _loader(corrupt_dataset, config)
+        if config.verbose:
+            print(f"[validation-board] add val_corrupt_lite samples={len(corrupt_dataset)}", flush=True)
     except Exception as exc:
         warnings.warn(f"Val-corrupt-lite 构建失败，已跳过: {exc}", stacklevel=2)
 
@@ -74,7 +80,10 @@ def build_validation_board_loaders(config: ExperimentConfig):
         except Exception as exc:
             warnings.warn(f"外部 holdout {name} 不可用，已跳过: {exc}", stacklevel=2)
     if external_parts:
-        loaders["val_external"] = _loader(external_parts[0] if len(external_parts) == 1 else ConcatDataset(external_parts), config)
+        external_dataset = external_parts[0] if len(external_parts) == 1 else ConcatDataset(external_parts)
+        loaders["val_external"] = _loader(external_dataset, config)
+        if config.verbose:
+            print(f"[validation-board] add val_external holdouts samples={len(external_dataset)}", flush=True)
 
     local_holdout = config.local_digits_holdout_dir
     if local_holdout is not None:
@@ -87,6 +96,8 @@ def build_validation_board_loaders(config: ExperimentConfig):
         config.use_local_digits = original_use_local
         if local_dataset is not None:
             loaders["val_local"] = _loader(local_dataset, config)
+            if config.verbose:
+                print(f"[validation-board] add val_local samples={len(local_dataset)}", flush=True)
 
     optional_external_parts = []
     eval_transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize((0.5,), (0.5,))])
@@ -97,7 +108,10 @@ def build_validation_board_loaders(config: ExperimentConfig):
     if optional_external_parts:
         existing = loaders.get("val_external")
         datasets = optional_external_parts if existing is None else [existing.dataset, *optional_external_parts]
-        loaders["val_external"] = _loader(datasets[0] if len(datasets) == 1 else ConcatDataset(datasets), config)
+        external_dataset = datasets[0] if len(datasets) == 1 else ConcatDataset(datasets)
+        loaders["val_external"] = _loader(external_dataset, config)
+        if config.verbose:
+            print(f"[validation-board] add optional external data; val_external samples={len(external_dataset)}", flush=True)
 
     return loaders
 
@@ -106,36 +120,50 @@ def accuracy_from_logits(logits: torch.Tensor, labels: torch.Tensor) -> float:
     return float((logits.argmax(dim=1) == labels).float().mean().item())
 
 
-def evaluate_loader(model, loader, device: str):
+def evaluate_loader(model, loader, device: str, config: ExperimentConfig | None = None, split_name: str = "split"):
     model.eval()
     total_correct = 0
     total_examples = 0
+    verbose = True if config is None else config.verbose
+    log_interval = max(1, 50 if config is None else config.log_interval)
+    total_batches = len(loader) if hasattr(loader, "__len__") else None
     with torch.no_grad():
-        for images, labels in loader:
+        for batch_index, (images, labels) in enumerate(loader, start=1):
             images = images.to(device)
             labels = labels.to(device)
             predictions = model(images).argmax(dim=1)
             total_correct += int((predictions == labels).sum().item())
             total_examples += int(labels.numel())
+            if verbose and (batch_index == 1 or batch_index % log_interval == 0 or batch_index == total_batches):
+                total_text = str(total_batches) if total_batches is not None else "?"
+                print(f"[validation-board:{split_name}] batch {batch_index}/{total_text}", flush=True)
     return {"accuracy": total_correct / total_examples if total_examples else 0.0, "num_samples": total_examples}
 
 
-def score_validation_board(results: dict):
+def score_validation_board(results: dict, config: ExperimentConfig | None = None):
     has_local = "val_local" in results and results["val_local"].get("num_samples", 0) > 0
     if has_local:
         weights = {"val_clean": 0.45, "val_local": 0.35, "val_external": 0.15, "val_corrupt_lite": 0.05}
     else:
         weights = {"val_clean": 0.60, "val_external": 0.25, "val_corrupt_lite": 0.15}
+    if config is not None:
+        overrides = {
+            "val_clean": config.validation_weight_clean,
+            "val_external": config.validation_weight_external,
+            "val_corrupt_lite": config.validation_weight_corrupt_lite,
+            "val_local": config.validation_weight_local,
+        }
+        weights.update({name: value for name, value in overrides.items() if value is not None})
     available = {name: weight for name, weight in weights.items() if name in results}
     total_weight = sum(available.values()) or 1.0
     composite = sum(results[name]["accuracy"] * weight for name, weight in available.items()) / total_weight
     return {"composite_score": composite, "weights": available, "has_local": has_local}
 
 
-def save_validation_board(results: dict, output_dir: Path, prefix: str):
+def save_validation_board(results: dict, output_dir: Path, prefix: str, config: ExperimentConfig | None = None):
     output_dir = Path(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
-    scored = {"splits": results, "score": score_validation_board(results)}
+    scored = {"splits": results, "score": score_validation_board(results, config=config)}
     (output_dir / f"validation_board_{prefix}.json").write_text(
         json.dumps(scored, indent=2, ensure_ascii=False), encoding="utf-8"
     )
@@ -149,5 +177,15 @@ def save_validation_board(results: dict, output_dir: Path, prefix: str):
 
 def evaluate_validation_board(model, config: ExperimentConfig, output_dir: Path, device: str, prefix: str = "model"):
     loaders = build_validation_board_loaders(config)
-    results = {name: evaluate_loader(model, loader, device) for name, loader in loaders.items()}
-    return save_validation_board(results, output_dir, prefix=prefix)
+    results = {}
+    for name, loader in loaders.items():
+        if config.verbose:
+            print(f"[validation-board] evaluating {prefix}:{name}", flush=True)
+        results[name] = evaluate_loader(model, loader, device, config=config, split_name=name)
+        if config.verbose:
+            row = results[name]
+            print(f"[validation-board] done {prefix}:{name} accuracy={row['accuracy']:.4f} samples={row['num_samples']}", flush=True)
+    scored = save_validation_board(results, output_dir, prefix=prefix, config=config)
+    if config.verbose:
+        print(f"[validation-board] {prefix} composite_score={scored['score']['composite_score']:.4f}", flush=True)
+    return scored
