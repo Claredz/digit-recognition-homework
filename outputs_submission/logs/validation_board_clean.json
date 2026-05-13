@@ -1,0 +1,25 @@
+{
+  "splits": {
+    "val_clean": {
+      "accuracy": 0.998928309549326,
+      "num_samples": 35458
+    },
+    "val_corrupt_lite": {
+      "accuracy": 0.9952055953522477,
+      "num_samples": 35458
+    },
+    "val_external": {
+      "accuracy": 0.9973,
+      "num_samples": 60000
+    }
+  },
+  "score": {
+    "composite_score": 0.9979628250324327,
+    "weights": {
+      "val_clean": 0.6,
+      "val_external": 0.25,
+      "val_corrupt_lite": 0.15
+    },
+    "has_local": false
+  }
+}

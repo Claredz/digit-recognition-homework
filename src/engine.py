@@ -1,4 +1,5 @@
 import json
+import time
 from contextlib import nullcontext
 from pathlib import Path
 
@@ -142,9 +143,16 @@ def fit(model, train_loader, val_loader, config: ExperimentConfig, paths: Projec
     best_val_accuracy = -1.0
     best_val_loss = float("inf")
     bad_epochs = 0
-    checkpoint_path = paths.checkpoints_dir / "best_model.pt"
+    checkpoint_path = paths.checkpoints_dir / getattr(config, "checkpoint_name", "best_model.pt")
+
+    print(
+        f"Start training: model={config.model_name}, epochs={config.epochs}, "
+        f"optimizer={config.optimizer_type}, scheduler={config.scheduler_type}, device={device}",
+        flush=True,
+    )
 
     for epoch in range(config.epochs):
+        epoch_start = time.perf_counter()
         train_metrics = run_epoch(
             model,
             train_loader,
@@ -157,11 +165,12 @@ def fit(model, train_loader, val_loader, config: ExperimentConfig, paths: Projec
         val_metrics = run_epoch(model, val_loader, criterion, device=device, optimizer=None, config=config)
         _scheduler_step(scheduler, config, val_metrics["loss"])
 
+        current_lr = optimizer.param_groups[0]["lr"]
         history["train_loss"].append(train_metrics["loss"])
         history["train_accuracy"].append(train_metrics["accuracy"])
         history["val_loss"].append(val_metrics["loss"])
         history["val_accuracy"].append(val_metrics["accuracy"])
-        history["learning_rate"].append(optimizer.param_groups[0]["lr"])
+        history["learning_rate"].append(current_lr)
 
         improved = val_metrics["accuracy"] > best_val_accuracy + config.early_stopping_min_delta
         if improved:
@@ -184,7 +193,23 @@ def fit(model, train_loader, val_loader, config: ExperimentConfig, paths: Projec
         else:
             bad_epochs += 1
 
+        elapsed = time.perf_counter() - epoch_start
+        status = "best" if improved else f"no_improve={bad_epochs}"
+        print(
+            f"Epoch {epoch + 1:03d}/{config.epochs:03d} | "
+            f"train_loss={train_metrics['loss']:.4f} train_acc={train_metrics['accuracy']:.4f} | "
+            f"val_loss={val_metrics['loss']:.4f} val_acc={val_metrics['accuracy']:.4f} | "
+            f"best_val_acc={best_val_accuracy:.4f}@{history['best_epoch']} | "
+            f"lr={current_lr:.6g} | {status} | {elapsed:.1f}s",
+            flush=True,
+        )
+
         if config.use_early_stopping and bad_epochs >= config.early_stopping_patience:
+            print(
+                f"Early stopping at epoch {epoch + 1}: best_val_acc={best_val_accuracy:.4f} "
+                f"at epoch {history['best_epoch']}",
+                flush=True,
+            )
             break
 
     save_history(history, paths.logs_dir / "history.json")

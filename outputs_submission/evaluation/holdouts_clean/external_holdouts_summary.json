@@ -1,0 +1,20 @@
+[
+  {
+    "accuracy": 0.9973,
+    "num_samples": 10000,
+    "macro_f1": 0.9973182818857177,
+    "name": "mnist_test"
+  },
+  {
+    "accuracy": 0.9973,
+    "num_samples": 40000,
+    "macro_f1": 0.9973000601570753,
+    "name": "emnist_digits_test"
+  },
+  {
+    "accuracy": 0.9973,
+    "num_samples": 10000,
+    "macro_f1": 0.9973182818857177,
+    "name": "qmnist_test10k"
+  }
+]

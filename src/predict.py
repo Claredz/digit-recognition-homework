@@ -2,7 +2,6 @@ import argparse
 import csv
 from pathlib import Path
 
-import numpy as np
 from PIL import Image
 import torch
 from torch.utils.data import DataLoader, Dataset
@@ -10,49 +9,18 @@ from torchvision import transforms
 
 from src.config import ExperimentConfig, ensure_project_paths
 from src.evaluate import load_model_from_checkpoint
+from src.preprocess import auto_invert_grayscale, crop_digit_foreground, preprocess_to_mnist_style_image
 
 _IMAGE_SUFFIXES = {".png", ".jpg", ".jpeg", ".bmp"}
 
 
-def auto_invert_grayscale(image: Image.Image) -> Image.Image:
-    gray = image.convert("L")
-    array = np.asarray(gray, dtype=np.uint8)
-    if float(array.mean()) > 127.0:
-        array = 255 - array
-    return Image.fromarray(array, mode="L")
-
-
-def crop_digit_foreground(image: Image.Image, threshold: int = 20) -> Image.Image:
-    array = np.asarray(image.convert("L"), dtype=np.uint8)
-    ys, xs = np.where(array > threshold)
-    if len(xs) == 0 or len(ys) == 0:
-        return image.convert("L")
-    left, right = int(xs.min()), int(xs.max()) + 1
-    top, bottom = int(ys.min()), int(ys.max()) + 1
-    return image.crop((left, top, right, bottom))
-
-
 def resize_and_center(image: Image.Image, image_size: int = 28, padding: int = 4) -> Image.Image:
-    image = image.convert("L")
-    max_digit_size = image_size - 2 * padding
-    width, height = image.size
-    if width == 0 or height == 0:
-        return Image.new("L", (image_size, image_size), color=0)
-    scale = min(max_digit_size / width, max_digit_size / height)
-    new_size = (max(1, int(round(width * scale))), max(1, int(round(height * scale))))
-    resized = image.resize(new_size, Image.Resampling.BILINEAR)
-    canvas = Image.new("L", (image_size, image_size), color=0)
-    offset = ((image_size - new_size[0]) // 2, (image_size - new_size[1]) // 2)
-    canvas.paste(resized, offset)
-    return canvas
+    body_size = max(1, image_size - 2 * padding)
+    return preprocess_to_mnist_style_image(image, image_size=image_size, body_size=body_size, auto_invert=False)
 
 
 def preprocess_digit_image(image: Image.Image, image_size: int = 28, auto_invert: bool = True) -> Image.Image:
-    gray = image.convert("L")
-    if auto_invert:
-        gray = auto_invert_grayscale(gray)
-    cropped = crop_digit_foreground(gray)
-    return resize_and_center(cropped, image_size=image_size)
+    return preprocess_to_mnist_style_image(image, image_size=image_size, auto_invert=auto_invert)
 
 
 def build_prediction_transform(config: ExperimentConfig):

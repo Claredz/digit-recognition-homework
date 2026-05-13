@@ -1,0 +1,4 @@
+name,accuracy,macro_f1,num_samples
+mnist_test,0.9973,0.9973182818857177,10000
+emnist_digits_test,0.9973,0.9973000601570753,40000
+qmnist_test10k,0.9973,0.9973182818857177,10000

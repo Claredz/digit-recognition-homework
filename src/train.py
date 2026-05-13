@@ -46,6 +46,33 @@ def parse_args():
     parser.add_argument("--use-qmnist", action="store_true")
     parser.add_argument("--use-early-stopping", action="store_true")
     parser.add_argument("--early-stopping-patience", type=int, default=7)
+    parser.add_argument("--training-mode", choices=["clean", "robust_finetune"], default="clean")
+    parser.add_argument("--clean-checkpoint-path", type=Path, default=None)
+    parser.add_argument("--robust-checkpoint-path", type=Path, default=None)
+    parser.add_argument("--checkpoint-name", default="best_model.pt")
+    parser.add_argument("--finetune-learning-rate", type=float, default=1e-4)
+    parser.add_argument("--finetune-epochs", type=int, default=10)
+    parser.add_argument("--freeze-backbone-first", action="store_true")
+    parser.add_argument("--freeze-epochs", type=int, default=2)
+    parser.add_argument("--robust-aug-strength", choices=["light", "medium", "strong"], default="medium")
+    parser.add_argument("--no-robust-sampler", action="store_true")
+    parser.add_argument("--use-local-digits", action="store_true")
+    parser.add_argument("--local-digits-dir", type=Path, default=None)
+    parser.add_argument("--local-digits-holdout-dir", type=Path, default=None)
+    parser.add_argument("--use-hasyv2", action="store_true")
+    parser.add_argument("--hasyv2-dir", type=Path, default=None)
+    parser.add_argument("--use-chars74k", action="store_true")
+    parser.add_argument("--chars74k-dir", type=Path, default=None)
+    parser.add_argument("--use-penbased-rendered", action="store_true")
+    parser.add_argument("--penbased-dir", type=Path, default=None)
+    parser.add_argument("--use-optical-digits", action="store_true")
+    parser.add_argument("--optical-dir", type=Path, default=None)
+    parser.add_argument("--mnist-family-weight", type=float, default=0.60)
+    parser.add_argument("--local-digits-weight", type=float, default=0.20)
+    parser.add_argument("--hasyv2-weight", type=float, default=0.10)
+    parser.add_argument("--chars74k-weight", type=float, default=0.05)
+    parser.add_argument("--penbased-weight", type=float, default=0.08)
+    parser.add_argument("--optical-weight", type=float, default=0.02)
     return parser.parse_args()
 
 
@@ -76,9 +103,42 @@ def main():
         use_qmnist=args.use_qmnist,
         use_early_stopping=args.use_early_stopping,
         early_stopping_patience=args.early_stopping_patience,
+        training_mode=args.training_mode,
+        clean_checkpoint_path=args.clean_checkpoint_path.resolve() if args.clean_checkpoint_path is not None else Path("outputs_submission/checkpoints/checkpoint_clean_best.pth"),
+        robust_checkpoint_path=args.robust_checkpoint_path.resolve() if args.robust_checkpoint_path is not None else None,
+        checkpoint_name=args.checkpoint_name,
+        fine_tune_lr=args.finetune_learning_rate,
+        fine_tune_epochs=args.finetune_epochs,
+        freeze_backbone_first=args.freeze_backbone_first,
+        freeze_epochs=args.freeze_epochs,
+        robust_aug_strength=args.robust_aug_strength,
+        use_robust_sampler=not args.no_robust_sampler,
+        use_local_digits=args.use_local_digits,
+        local_digits_dir=args.local_digits_dir.resolve() if args.local_digits_dir is not None else None,
+        local_digits_holdout_dir=args.local_digits_holdout_dir.resolve() if args.local_digits_holdout_dir is not None else None,
+        use_hasyv2=args.use_hasyv2,
+        hasyv2_dir=args.hasyv2_dir.resolve() if args.hasyv2_dir is not None else None,
+        use_chars74k=args.use_chars74k,
+        chars74k_dir=args.chars74k_dir.resolve() if args.chars74k_dir is not None else None,
+        use_penbased_rendered=args.use_penbased_rendered,
+        penbased_dir=args.penbased_dir.resolve() if args.penbased_dir is not None else None,
+        use_optical_digits=args.use_optical_digits,
+        optical_dir=args.optical_dir.resolve() if args.optical_dir is not None else None,
+        mnist_family_weight=args.mnist_family_weight,
+        local_digits_weight=args.local_digits_weight,
+        hasyv2_weight=args.hasyv2_weight,
+        chars74k_weight=args.chars74k_weight,
+        penbased_weight=args.penbased_weight,
+        optical_weight=args.optical_weight,
     )
 
     set_seed(config.seed)
+    if config.training_mode == "robust_finetune":
+        from src.robust_train import run_robust_finetune
+
+        run_robust_finetune(config)
+        return
+
     paths = ensure_project_paths(config)
     train_loader, val_loader = create_dataloaders(config)
 
@@ -97,7 +157,7 @@ def main():
         "learning_rate": config.learning_rate,
         "best_val_accuracy": history["best_val_accuracy"],
         "best_epoch": history["best_epoch"],
-        "checkpoint": str(paths.checkpoints_dir / "best_model.pt"),
+        "checkpoint": str(paths.checkpoints_dir / config.checkpoint_name),
         "total_parameters": total_params,
         "trainable_parameters": trainable_params,
     }

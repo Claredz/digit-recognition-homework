@@ -59,6 +59,45 @@ class ExperimentConfig:
     external_validation_batch_size: int = 512
     mnist_c_zip: Path | None = None
 
+    training_mode: str = "clean"
+    train_clean_model: bool = True
+    train_robust_model: bool = False
+    use_ensemble: bool = False
+    use_pretrained_clean_checkpoint: bool = True
+    clean_checkpoint_path: Path | None = Path("outputs_submission/checkpoints/checkpoint_clean_best.pth")
+    robust_checkpoint_path: Path | None = None
+    train_robust_from_clean: bool = True
+    checkpoint_name: str = "best_model.pt"
+
+    use_local_digits: bool = False
+    use_hasyv2: bool = False
+    use_chars74k: bool = False
+    use_penbased_rendered: bool = False
+    use_optical_digits: bool = False
+    local_digits_dir: Path | None = None
+    local_digits_holdout_dir: Path | None = None
+    hasyv2_dir: Path | None = None
+    chars74k_dir: Path | None = None
+    penbased_dir: Path | None = None
+    optical_dir: Path | None = None
+
+    fine_tune_lr: float = 1e-4
+    fine_tune_epochs: int = 10
+    freeze_backbone_first: bool = False
+    freeze_epochs: int = 2
+    robust_aug_strength: str = "medium"
+    use_robust_sampler: bool = True
+    local_digits_weight: float = 0.20
+    hasyv2_weight: float = 0.10
+    chars74k_weight: float = 0.05
+    penbased_weight: float = 0.08
+    optical_weight: float = 0.02
+    mnist_family_weight: float = 0.60
+
+    ensemble_weight_clean: float = 0.60
+    ensemble_weight_grid: tuple[float, ...] = (0.75, 0.70, 0.65, 0.60, 0.55, 0.50)
+    enable_validation_board: bool = False
+
     use_tta: bool = False
     tta_n: int = 1
     auto_invert: bool = True

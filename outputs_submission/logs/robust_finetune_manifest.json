@@ -1,0 +1,53 @@
+{
+  "model_role": "Teacher-Private-Style Robust Expert",
+  "base_model_role": "Clean Expert / pretraining-base model",
+  "initialized_from_clean_checkpoint": true,
+  "clean_checkpoint_path": "e:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_submission\\checkpoints\\best_model_stat-09987e.pt",
+  "robust_checkpoint_path": "e:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_submission\\checkpoints\\robust_expert_best.pt",
+  "model_name": "medium_cnn",
+  "fine_tune_lr": 5e-05,
+  "fine_tune_epochs": 8,
+  "freeze_backbone_first": false,
+  "freeze_epochs": 0,
+  "ema_enabled": false,
+  "tta_enabled_for_inference": true,
+  "robust_aug_strength": "medium",
+  "data_sources": {
+    "source_names": [
+      "mnist_family",
+      "hasyv2",
+      "chars74k",
+      "penbased"
+    ],
+    "source_lengths": {
+      "mnist_family": 141833,
+      "hasyv2": 816,
+      "chars74k": 440,
+      "penbased": 26381
+    }
+  },
+  "sampling": {
+    "use_robust_sampler": true,
+    "mnist_family_weight": 0.65,
+    "local_digits_weight": 0.0,
+    "hasyv2_weight": 0.12,
+    "chars74k_weight": 0.05,
+    "penbased_weight": 0.08,
+    "optical_weight": 0.0
+  },
+  "best_val_accuracy": 0.9889536667689476,
+  "best_epoch": 6,
+  "total_parameters": 251562,
+  "trainable_parameters": 251562,
+  "checkpoint_payload_keys": [
+    "best_val_accuracy",
+    "best_val_loss",
+    "config",
+    "epoch",
+    "history",
+    "model_name",
+    "model_state_dict",
+    "num_parameters",
+    "trainable_parameters"
+  ]
+}
