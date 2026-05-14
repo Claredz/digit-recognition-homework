@@ -5,13 +5,13 @@
   "clean_checkpoint_path": "e:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_submission\\checkpoints\\best_model_stat-09987e.pt",
   "robust_checkpoint_path": "e:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_submission\\checkpoints\\robust_expert_best.pt",
   "model_name": "medium_cnn",
-  "fine_tune_lr": 5e-05,
-  "fine_tune_epochs": 12,
+  "fine_tune_lr": 3e-05,
+  "fine_tune_epochs": 30,
   "freeze_backbone_first": false,
   "freeze_epochs": 0,
   "ema_enabled": false,
   "tta_enabled_for_inference": true,
-  "robust_aug_strength": "medium",
+  "robust_aug_strength": "strong",
   "data_sources": {
     "source_names": [
       "mnist_family",
@@ -28,15 +28,15 @@
   },
   "sampling": {
     "use_robust_sampler": true,
-    "mnist_family_weight": 0.55,
+    "mnist_family_weight": 0.45,
     "local_digits_weight": 0.0,
-    "hasyv2_weight": 0.16,
-    "chars74k_weight": 0.07,
-    "penbased_weight": 0.12,
-    "optical_weight": 0.0
+    "hasyv2_weight": 0.2,
+    "chars74k_weight": 0.1,
+    "penbased_weight": 0.15,
+    "optical_weight": 0.05
   },
-  "best_val_accuracy": 0.9838553591238464,
-  "best_epoch": 9,
+  "best_val_accuracy": 0.9852951589680647,
+  "best_epoch": 20,
   "total_parameters": 251562,
   "trainable_parameters": 251562,
   "checkpoint_payload_keys": [

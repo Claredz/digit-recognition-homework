@@ -161,6 +161,8 @@ def fit(model, train_loader, val_loader, config: ExperimentConfig, paths: Projec
     model = model.to(device)
     if device == "cuda":
         model = model.to(memory_format=torch.channels_last)
+        if config.compile_model:
+            model = torch.compile(model, mode=config.compile_mode)
     criterion = nn.CrossEntropyLoss(label_smoothing=config.label_smoothing)
     optimizer = build_optimizer(model, config)
     scheduler = build_scheduler(optimizer, config)
@@ -231,8 +233,9 @@ def fit(model, train_loader, val_loader, config: ExperimentConfig, paths: Projec
             history["best_val_accuracy"] = best_val_accuracy
             history["best_val_loss"] = best_val_loss
             history["best_epoch"] = epoch + 1
+            model_to_save = model._orig_mod if hasattr(model, "_orig_mod") else model
             checkpoint = {
-                "model_state_dict": model.state_dict(),
+                "model_state_dict": model_to_save.state_dict(),
                 "config": config.to_dict(),
                 "model_name": config.model_name,
                 "epoch": epoch + 1,

@@ -33,6 +33,8 @@ class ExperimentConfig:
     weight_decay: float = 0.0
     use_amp: bool = False
     allow_tf32: bool = False
+    compile_model: bool = False
+    compile_mode: str = "max-autotune"
     use_early_stopping: bool = False
     early_stopping_patience: int = 7
     early_stopping_min_delta: float = 1e-4
@@ -107,6 +109,8 @@ class ExperimentConfig:
     robust_blur_prob: float = 0.20
     robust_morph_prob: float = 0.35
     robust_center_jitter: int = 2
+
+    cache_folder_digits: bool = False
 
     validation_weight_clean: float | None = None
     validation_weight_external: float | None = None

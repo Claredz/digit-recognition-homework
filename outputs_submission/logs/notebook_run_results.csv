@@ -1,0 +1,5 @@
+﻿stage,status,metric,artifact,notes,duration_sec
+train_robust,done,0.9852951589680647,e:\ALL\学习\AI导论作业-识别手写数字\outputs_submission\checkpoints\robust_expert_best.pt,,2148.81
+evaluate_clean,done,0.9978612964634215,e:\ALL\学习\AI导论作业-识别手写数字\outputs_submission\logs\validation_board_clean.json,,375.49
+evaluate_robust,done,0.989141083953406,e:\ALL\学习\AI导论作业-识别手写数字\outputs_submission\logs\validation_board_robust.json,,1147.45
+ensemble_search,done,0.9889304826354062,e:\ALL\学习\AI导论作业-识别手写数字\outputs_submission\logs\ensemble_weight_search.csv,"{""clean_weight"": 0.3, ""composite_score"": 0.9889304826354062, ""val_clean_acc"": 0.9976027976761239, ""val_corrupt_lite_acc"": 0.9931186192114615, ""val_external_acc"": 0.9656040445920504}",2232.68

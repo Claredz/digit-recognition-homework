@@ -140,15 +140,26 @@ class SourceDataset:
 
 
 class PreprocessedFolderDigitsDataset(Dataset):
-    def __init__(self, root: Path, transform=None, image_size: int = 28, auto_invert: bool = True):
+    def __init__(
+        self,
+        root: Path,
+        transform=None,
+        image_size: int = 28,
+        auto_invert: bool = True,
+        cache_images: bool = False,
+    ):
         self.root = Path(root)
         self.transform = transform
         self.image_size = image_size
         self.auto_invert = auto_invert
+        self.cache_images = cache_images
         self.samples: list[tuple[Path, int, str | None]] = []
+        self.cached_images: list[Image.Image] | None = None
         self._collect_samples()
         if not self.samples:
             raise ValueError(f"在目录 {self.root} 下没有找到 0-9 标签图片")
+        if self.cache_images:
+            self.cached_images = [self._load_preprocessed_image(path) for path, _, _ in self.samples]
 
     def _collect_samples(self):
         if not self.root.exists():
@@ -175,14 +186,20 @@ class PreprocessedFolderDigitsDataset(Dataset):
     def __len__(self) -> int:
         return len(self.samples)
 
-    def __getitem__(self, index: int):
-        image_path, label, _ = self.samples[index]
+    def _load_preprocessed_image(self, image_path: Path):
         with Image.open(image_path) as image:
-            processed = preprocess_to_mnist_style_image(
+            return preprocess_to_mnist_style_image(
                 image,
                 image_size=self.image_size,
                 auto_invert=self.auto_invert,
-            )
+            ).copy()
+
+    def __getitem__(self, index: int):
+        image_path, label, _ = self.samples[index]
+        if self.cached_images is None:
+            processed = self._load_preprocessed_image(image_path)
+        else:
+            processed = self.cached_images[index]
         if self.transform is not None:
             processed = self.transform(processed)
         return processed, label
@@ -243,7 +260,12 @@ def _maybe_folder_dataset(name: str, enabled: bool, root: Path, transform, confi
         warnings.warn(f"{name} 数据目录不存在，已跳过: {root}", stacklevel=2)
         return None
     try:
-        return PreprocessedFolderDigitsDataset(root, transform=transform, image_size=config.image_size)
+        return PreprocessedFolderDigitsDataset(
+            root,
+            transform=transform,
+            image_size=config.image_size,
+            cache_images=config.cache_folder_digits,
+        )
     except ValueError as exc:
         warnings.warn(f"{name} 数据不可用，已跳过: {exc}", stacklevel=2)
         return None

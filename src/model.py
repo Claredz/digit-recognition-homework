@@ -60,6 +60,43 @@ class MediumCNN(nn.Module):
         return self.classifier(features)
 
 
+class LargeCNN(nn.Module):
+    def __init__(self, num_classes: int = 10, in_channels: int = 1, dropout: float = 0.25):
+        super().__init__()
+        self.features = nn.Sequential(
+            nn.Conv2d(in_channels, 64, kernel_size=3, padding=1),
+            nn.BatchNorm2d(64),
+            nn.SiLU(inplace=True),
+            nn.Conv2d(64, 64, kernel_size=3, padding=1),
+            nn.BatchNorm2d(64),
+            nn.SiLU(inplace=True),
+            nn.MaxPool2d(kernel_size=2),
+            nn.Conv2d(64, 128, kernel_size=3, padding=1),
+            nn.BatchNorm2d(128),
+            nn.SiLU(inplace=True),
+            nn.Conv2d(128, 128, kernel_size=3, padding=1),
+            nn.BatchNorm2d(128),
+            nn.SiLU(inplace=True),
+            nn.MaxPool2d(kernel_size=2),
+            nn.Conv2d(128, 256, kernel_size=3, padding=1),
+            nn.BatchNorm2d(256),
+            nn.SiLU(inplace=True),
+            nn.Conv2d(256, 256, kernel_size=3, padding=1),
+            nn.BatchNorm2d(256),
+            nn.SiLU(inplace=True),
+            nn.AdaptiveAvgPool2d(1),
+        )
+        self.classifier = nn.Sequential(
+            nn.Flatten(),
+            nn.Dropout(p=dropout),
+            nn.Linear(256, num_classes),
+        )
+
+    def forward(self, inputs: torch.Tensor) -> torch.Tensor:
+        features = self.features(inputs)
+        return self.classifier(features)
+
+
 def normalize_model_name(model_name: str) -> str:
     normalized = str(model_name).strip().lower().replace("-", "_")
     aliases = {
@@ -69,9 +106,12 @@ def normalize_model_name(model_name: str) -> str:
         "medium": "medium_cnn",
         "mediumcnn": "medium_cnn",
         "medium_cnn": "medium_cnn",
+        "large": "large_cnn",
+        "largecnn": "large_cnn",
+        "large_cnn": "large_cnn",
     }
     if normalized not in aliases:
-        raise ValueError(f"不支持的 model_name='{model_name}'。请使用 small_cnn 或 medium_cnn。")
+        raise ValueError(f"不支持的 model_name='{model_name}'。请使用 small_cnn、medium_cnn 或 large_cnn。")
     return aliases[normalized]
 
 
@@ -95,7 +135,9 @@ def build_model(
     normalized_name = normalize_model_name(model_name)
     if normalized_name == "small_cnn":
         return SmallCNN(num_classes=num_classes, in_channels=in_channels, dropout=dropout)
-    return MediumCNN(num_classes=num_classes, in_channels=in_channels, dropout=dropout)
+    if normalized_name == "medium_cnn":
+        return MediumCNN(num_classes=num_classes, in_channels=in_channels, dropout=dropout)
+    return LargeCNN(num_classes=num_classes, in_channels=in_channels, dropout=dropout)
 
 
 def count_model_parameters(model: nn.Module) -> tuple[int, int]:
