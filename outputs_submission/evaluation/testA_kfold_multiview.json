@@ -1,0 +1,116 @@
+{
+  "device": "cuda",
+  "tta_n": 8,
+  "per_model": {
+    "kfold_f0": {
+      "raw": 0.7162857055664062,
+      "raw_tta": 0.7200000286102295,
+      "prep": 0.6782857179641724,
+      "prep_tta": 0.6785714030265808
+    },
+    "kfold_f1": {
+      "raw": 0.7157142758369446,
+      "raw_tta": 0.7182857394218445,
+      "prep": 0.6774285435676575,
+      "prep_tta": 0.6762857437133789
+    },
+    "kfold_f2": {
+      "raw": 0.7160000205039978,
+      "raw_tta": 0.7217142581939697,
+      "prep": 0.678857147693634,
+      "prep_tta": 0.6765714287757874
+    },
+    "kfold_f3": {
+      "raw": 0.7174285650253296,
+      "raw_tta": 0.7211428284645081,
+      "prep": 0.6797142624855042,
+      "prep_tta": 0.6785714030265808
+    },
+    "kfold_f4": {
+      "raw": 0.7168571352958679,
+      "raw_tta": 0.7191428542137146,
+      "prep": 0.6791428327560425,
+      "prep_tta": 0.675428569316864
+    },
+    "plan_A": {
+      "raw": 0.7157142758369446,
+      "raw_tta": 0.7202857136726379,
+      "prep": 0.6765714287757874,
+      "prep_tta": 0.677142858505249
+    }
+  },
+  "fusions": [
+    {
+      "members": "kfold_5",
+      "n_members": 5,
+      "views": "raw+tta",
+      "accuracy": 0.7222856879234314
+    },
+    {
+      "members": "kfold_5",
+      "n_members": 5,
+      "views": "raw+prep+tta",
+      "accuracy": 0.7222856879234314
+    },
+    {
+      "members": "kfold_5_plus_planA",
+      "n_members": 6,
+      "views": "raw+tta",
+      "accuracy": 0.722000002861023
+    },
+    {
+      "members": "kfold_5_plus_planA",
+      "n_members": 6,
+      "views": "raw+prep",
+      "accuracy": 0.7211428284645081
+    },
+    {
+      "members": "kfold_5",
+      "n_members": 5,
+      "views": "raw+prep",
+      "accuracy": 0.7208571434020996
+    },
+    {
+      "members": "kfold_5_plus_planA",
+      "n_members": 6,
+      "views": "raw+prep+tta",
+      "accuracy": 0.7208571434020996
+    },
+    {
+      "members": "kfold_5_plus_planA",
+      "n_members": 6,
+      "views": "raw_only",
+      "accuracy": 0.7174285650253296
+    },
+    {
+      "members": "kfold_5",
+      "n_members": 5,
+      "views": "raw_only",
+      "accuracy": 0.7168571352958679
+    },
+    {
+      "members": "kfold_5",
+      "n_members": 5,
+      "views": "prep+tta",
+      "accuracy": 0.680571436882019
+    },
+    {
+      "members": "kfold_5_plus_planA",
+      "n_members": 6,
+      "views": "prep+tta",
+      "accuracy": 0.6800000071525574
+    },
+    {
+      "members": "kfold_5_plus_planA",
+      "n_members": 6,
+      "views": "prep_only",
+      "accuracy": 0.6791428327560425
+    },
+    {
+      "members": "kfold_5",
+      "n_members": 5,
+      "views": "prep_only",
+      "accuracy": 0.678857147693634
+    }
+  ]
+}

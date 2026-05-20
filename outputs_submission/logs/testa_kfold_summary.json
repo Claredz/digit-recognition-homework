@@ -1,0 +1,84 @@
+{
+  "run_name": "testa_kfold",
+  "base_checkpoint": "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_submission\\checkpoints\\robust_expert_v2_testa_partial_best_epoch12_score07098.pt",
+  "n_splits": 5,
+  "start_fold": 0,
+  "end_fold": 5,
+  "epochs_per_fold": 12,
+  "epoch_size": 120000,
+  "batch_size": 4096,
+  "lr": 3e-06,
+  "testa_weight": 0.3,
+  "mixup_alpha": 0.4,
+  "cutmix_alpha": 1.0,
+  "mix_prob": 0.5,
+  "random_erasing_p": 0.25,
+  "folds": [
+    {
+      "fold_index": 0,
+      "checkpoint": "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_submission\\checkpoints\\robust_expert_v2_kfold_f0_best.pt",
+      "best_score": 0.7036827195467423,
+      "best_epoch": 4,
+      "elapsed_sec": 1738.4,
+      "archived_logs": {
+        "testa_robust_v2_history.csv": "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_submission\\logs\\testa_kfold_fold0_testa_robust_v2_history.csv",
+        "testa_robust_v2_history.json": "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_submission\\logs\\testa_kfold_fold0_testa_robust_v2_history.json",
+        "testa_robust_v2_manifest.json": "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_submission\\logs\\testa_kfold_fold0_testa_robust_v2_manifest.json",
+        "testa_robust_v2_data_manifest.json": "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_submission\\logs\\testa_kfold_fold0_testa_robust_v2_data_manifest.json"
+      }
+    },
+    {
+      "fold_index": 1,
+      "checkpoint": "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_submission\\checkpoints\\robust_expert_v2_kfold_f1_best.pt",
+      "best_score": 0.6875891583452212,
+      "best_epoch": 1,
+      "elapsed_sec": 709.1,
+      "archived_logs": {
+        "testa_robust_v2_history.csv": "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_submission\\logs\\testa_kfold_fold1_testa_robust_v2_history.csv",
+        "testa_robust_v2_history.json": "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_submission\\logs\\testa_kfold_fold1_testa_robust_v2_history.json",
+        "testa_robust_v2_manifest.json": "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_submission\\logs\\testa_kfold_fold1_testa_robust_v2_manifest.json",
+        "testa_robust_v2_data_manifest.json": "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_submission\\logs\\testa_kfold_fold1_testa_robust_v2_data_manifest.json"
+      }
+    },
+    {
+      "fold_index": 2,
+      "checkpoint": "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_submission\\checkpoints\\robust_expert_v2_kfold_f2_best.pt",
+      "best_score": 0.6832618025751074,
+      "best_epoch": 4,
+      "elapsed_sec": 514.7,
+      "archived_logs": {
+        "testa_robust_v2_history.csv": "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_submission\\logs\\testa_kfold_fold2_testa_robust_v2_history.csv",
+        "testa_robust_v2_history.json": "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_submission\\logs\\testa_kfold_fold2_testa_robust_v2_history.json",
+        "testa_robust_v2_manifest.json": "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_submission\\logs\\testa_kfold_fold2_testa_robust_v2_manifest.json",
+        "testa_robust_v2_data_manifest.json": "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_submission\\logs\\testa_kfold_fold2_testa_robust_v2_data_manifest.json"
+      }
+    },
+    {
+      "fold_index": 3,
+      "checkpoint": "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_submission\\checkpoints\\robust_expert_v2_kfold_f3_best.pt",
+      "best_score": 0.6866045845272206,
+      "best_epoch": 6,
+      "elapsed_sec": 630.1,
+      "archived_logs": {
+        "testa_robust_v2_history.csv": "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_submission\\logs\\testa_kfold_fold3_testa_robust_v2_history.csv",
+        "testa_robust_v2_history.json": "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_submission\\logs\\testa_kfold_fold3_testa_robust_v2_history.json",
+        "testa_robust_v2_manifest.json": "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_submission\\logs\\testa_kfold_fold3_testa_robust_v2_manifest.json",
+        "testa_robust_v2_data_manifest.json": "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_submission\\logs\\testa_kfold_fold3_testa_robust_v2_data_manifest.json"
+      }
+    },
+    {
+      "fold_index": 4,
+      "checkpoint": "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_submission\\checkpoints\\robust_expert_v2_kfold_f4_best.pt",
+      "best_score": 0.7214798850574713,
+      "best_epoch": 7,
+      "elapsed_sec": 718.7,
+      "archived_logs": {
+        "testa_robust_v2_history.csv": "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_submission\\logs\\testa_kfold_fold4_testa_robust_v2_history.csv",
+        "testa_robust_v2_history.json": "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_submission\\logs\\testa_kfold_fold4_testa_robust_v2_history.json",
+        "testa_robust_v2_manifest.json": "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_submission\\logs\\testa_kfold_fold4_testa_robust_v2_manifest.json",
+        "testa_robust_v2_data_manifest.json": "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_submission\\logs\\testa_kfold_fold4_testa_robust_v2_data_manifest.json"
+      }
+    }
+  ],
+  "total_elapsed_sec": 4311.3
+}

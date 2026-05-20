@@ -1,0 +1,87 @@
+{
+  "folds": {
+    "kfold_f0": {
+      "fold_index": 0,
+      "checkpoint": "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_submission\\checkpoints\\robust_expert_v2_kfold_f0_best.pt",
+      "full_testa": {
+        "raw": 0.7162857055664062,
+        "preprocess": 0.6782857179641724,
+        "n": 3500
+      },
+      "heldout": {
+        "raw": 0.720963180065155,
+        "preprocess": 0.6883852481842041,
+        "n": 706
+      },
+      "elapsed_sec": 1.78
+    },
+    "kfold_f1": {
+      "fold_index": 1,
+      "checkpoint": "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_submission\\checkpoints\\robust_expert_v2_kfold_f1_best.pt",
+      "full_testa": {
+        "raw": 0.7157142758369446,
+        "preprocess": 0.6774285435676575,
+        "n": 3500
+      },
+      "heldout": {
+        "raw": 0.71897292137146,
+        "preprocess": 0.660485029220581,
+        "n": 701
+      },
+      "elapsed_sec": 1.56
+    },
+    "kfold_f2": {
+      "fold_index": 2,
+      "checkpoint": "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_submission\\checkpoints\\robust_expert_v2_kfold_f2_best.pt",
+      "full_testa": {
+        "raw": 0.7160000205039978,
+        "preprocess": 0.678857147693634,
+        "n": 3500
+      },
+      "heldout": {
+        "raw": 0.7052932977676392,
+        "preprocess": 0.6652360558509827,
+        "n": 699
+      },
+      "elapsed_sec": 1.56
+    },
+    "kfold_f3": {
+      "fold_index": 3,
+      "checkpoint": "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_submission\\checkpoints\\robust_expert_v2_kfold_f3_best.pt",
+      "full_testa": {
+        "raw": 0.7174285650253296,
+        "preprocess": 0.6797142624855042,
+        "n": 3500
+      },
+      "heldout": {
+        "raw": 0.7077363729476929,
+        "preprocess": 0.670487105846405,
+        "n": 698
+      },
+      "elapsed_sec": 1.51
+    },
+    "kfold_f4": {
+      "fold_index": 4,
+      "checkpoint": "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_submission\\checkpoints\\robust_expert_v2_kfold_f4_best.pt",
+      "full_testa": {
+        "raw": 0.7168571352958679,
+        "preprocess": 0.6791428327560425,
+        "n": 3500
+      },
+      "heldout": {
+        "raw": 0.7255747318267822,
+        "preprocess": 0.7155172228813171,
+        "n": 696
+      },
+      "elapsed_sec": 1.46
+    }
+  },
+  "ensemble": {
+    "full_testa_raw": 0.7168571352958679,
+    "full_testa_preprocess": 0.678857147693634,
+    "full_testa_n": 3500,
+    "mean_heldout_raw": 0.7157142857142857,
+    "mean_heldout_preprocess": 0.68,
+    "heldout_n_total": 3500
+  }
+}

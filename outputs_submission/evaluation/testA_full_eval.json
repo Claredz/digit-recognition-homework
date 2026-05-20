@@ -1,0 +1,61 @@
+{
+  "device": "cuda",
+  "batch_size": 256,
+  "tta_n": 8,
+  "checkpoints": {
+    "long_best": {
+      "checkpoint": "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_submission\\checkpoints\\robust_expert_v2_long_best_epoch32_score06834.pt",
+      "results": {
+        "raw_no_tta": {
+          "accuracy": 0.7042857142857143,
+          "num_samples": 3500,
+          "elapsed_s": 1.66
+        },
+        "raw_tta8": {
+          "accuracy": 0.7054285714285714,
+          "num_samples": 3500,
+          "elapsed_s": 21.34,
+          "tta_n": 8
+        },
+        "preprocess_no_tta": {
+          "accuracy": 0.6662857142857143,
+          "num_samples": 3500,
+          "elapsed_s": 2.49
+        },
+        "preprocess_tta8": {
+          "accuracy": 0.6671428571428571,
+          "num_samples": 3500,
+          "elapsed_s": 20.16,
+          "tta_n": 8
+        }
+      }
+    },
+    "plan_A": {
+      "checkpoint": "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_submission\\checkpoints\\robust_expert_v2_testa_partial_best_epoch12_score07098.pt",
+      "results": {
+        "raw_no_tta": {
+          "accuracy": 0.7157142857142857,
+          "num_samples": 3500,
+          "elapsed_s": 0.61
+        },
+        "raw_tta8": {
+          "accuracy": 0.7137142857142857,
+          "num_samples": 3500,
+          "elapsed_s": 17.72,
+          "tta_n": 8
+        },
+        "preprocess_no_tta": {
+          "accuracy": 0.6765714285714286,
+          "num_samples": 3500,
+          "elapsed_s": 3.31
+        },
+        "preprocess_tta8": {
+          "accuracy": 0.6748571428571428,
+          "num_samples": 3500,
+          "elapsed_s": 19.98,
+          "tta_n": 8
+        }
+      }
+    }
+  }
+}

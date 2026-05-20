@@ -1,0 +1,44 @@
+{
+  "best_score": 0.6866045845272206,
+  "best_epoch": 6,
+  "checkpoint": "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_submission\\checkpoints\\robust_expert_v2_kfold_f3_best.pt",
+  "history_csv": "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_submission\\logs\\testa_robust_v2_history.csv",
+  "data": {
+    "train_length_per_epoch": 120000,
+    "clean_family_length": 170000,
+    "mnist_c_train_length": 720000,
+    "synthetic_length": 24000,
+    "mnist_c_val_length": 9600,
+    "testA_length": 3500,
+    "testA_train_length": 2802,
+    "testA_validation_length": 698,
+    "testA_validation_mode": "kfold",
+    "testA_train_ratio": 0.7,
+    "kfold_n_splits": 5,
+    "kfold_index": 3,
+    "random_erasing_p": 0.25,
+    "mixup_alpha": 0.4,
+    "cutmix_alpha": 1.0,
+    "mix_prob": 0.5,
+    "selected_mnist_c": [
+      "impulse_noise",
+      "shot_noise",
+      "dotted_line",
+      "stripe",
+      "spatter",
+      "fog",
+      "glass_blur",
+      "motion_blur",
+      "zigzag",
+      "shear",
+      "translate",
+      "scale"
+    ],
+    "sampling_weights": {
+      "clean_family": 0.25,
+      "mnist_c_selected": 0.25,
+      "synthetic_testa_like": 0.2,
+      "testA_partial": 0.3
+    }
+  }
+}

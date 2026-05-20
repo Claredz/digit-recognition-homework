@@ -1,0 +1,862 @@
+
+============================================================
+[kfold] fold 0/4 -> robust_expert_v2_kfold_f0_best.pt
+============================================================
+{
+  "stage": "testA robust v2",
+  "device": "cuda",
+  "project_root": "E:\\ALL\\学习\\AI导论作业-识别手写数字",
+  "output_dir": "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_submission",
+  "base_checkpoint": "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_submission\\checkpoints\\robust_expert_v2_testa_partial_best_epoch12_score07098.pt",
+  "model_name": "medium_cnn",
+  "dropout": 0.21672530847241062,
+  "image_size": 28,
+  "seed": 42,
+  "epochs": 12,
+  "epoch_size": 120000,
+  "batch_size": 4096,
+  "learning_rate": 3e-06,
+  "weight_decay": 0.0001,
+  "label_smoothing": 0.02,
+  "num_workers": 0,
+  "prefetch_factor": 4,
+  "use_amp": true,
+  "allow_tf32": true,
+  "compile_model": false,
+  "log_interval": 20,
+  "patience": 5,
+  "clean_weight": 0.25,
+  "mnist_c_weight": 0.25,
+  "synthetic_weight": 0.2,
+  "use_testa_partial": true,
+  "testa_weight": 0.3,
+  "testa_train_ratio": 0.7,
+  "use_kfold": true,
+  "kfold_n_splits": 5,
+  "kfold_index": 0,
+  "mixup_alpha": 0.4,
+  "cutmix_alpha": 1.0,
+  "mix_prob": 0.5,
+  "random_erasing_p": 0.25,
+  "mnist_max_samples": null,
+  "qmnist_max_samples": 60000,
+  "emnist_max_samples": 50000,
+  "mnist_c_train_per_corruption": 60000,
+  "mnist_c_val_per_corruption": 800,
+  "testA_weight_raw": 0.45,
+  "testA_weight_preprocess": 0.55,
+  "checkpoint_name": "robust_expert_v2_kfold_f0_best.pt"
+}
+{
+  "train_length_per_epoch": 120000,
+  "clean_family_length": 170000,
+  "mnist_c_train_length": 720000,
+  "synthetic_length": 24000,
+  "mnist_c_val_length": 9600,
+  "testA_length": 3500,
+  "testA_train_length": 2794,
+  "testA_validation_length": 706,
+  "testA_validation_mode": "kfold",
+  "testA_train_ratio": 0.7,
+  "kfold_n_splits": 5,
+  "kfold_index": 0,
+  "random_erasing_p": 0.25,
+  "mixup_alpha": 0.4,
+  "cutmix_alpha": 1.0,
+  "mix_prob": 0.5,
+  "selected_mnist_c": [
+    "impulse_noise",
+    "shot_noise",
+    "dotted_line",
+    "stripe",
+    "spatter",
+    "fog",
+    "glass_blur",
+    "motion_blur",
+    "zigzag",
+    "shear",
+    "translate",
+    "scale"
+  ],
+  "sampling_weights": {
+    "clean_family": 0.25,
+    "mnist_c_selected": 0.25,
+    "synthetic_testa_like": 0.2,
+    "testA_partial": 0.3
+  }
+}
+[train] epoch 1/12 batch 1/29 loss=2.4320 acc=0.2498 lr=3e-06 elapsed=24.2s
+[train] epoch 1/12 batch 20/29 loss=1.3837 acc=0.6360 lr=3e-06 elapsed=149.0s
+[train] epoch 1/12 batch 29/29 loss=1.4205 acc=0.6288 lr=3e-06 elapsed=205.6s
+Epoch 001/012 | train_acc=0.6288 testA_raw=0.7181 testA_preprocess=0.6841 mnistC=0.9741 score=0.6994 best=0.6994@1 | best
+[train] epoch 2/12 batch 1/29 loss=0.7756 acc=0.7854 lr=2.94889e-06 elapsed=6.2s
+[train] epoch 2/12 batch 20/29 loss=1.1627 acc=0.6519 lr=2.94889e-06 elapsed=117.3s
+[train] epoch 2/12 batch 29/29 loss=1.1514 acc=0.6657 lr=2.94889e-06 elapsed=162.6s
+Epoch 002/012 | train_acc=0.6657 testA_raw=0.7210 testA_preprocess=0.6813 mnistC=0.9733 score=0.6992 best=0.6994@1 | no_improve=1
+[train] epoch 3/12 batch 1/29 loss=2.3490 acc=0.3325 lr=2.79904e-06 elapsed=7.1s
+[train] epoch 3/12 batch 20/29 loss=1.2526 acc=0.6614 lr=2.79904e-06 elapsed=106.4s
+[train] epoch 3/12 batch 29/29 loss=1.2543 acc=0.6349 lr=2.79904e-06 elapsed=162.5s
+Epoch 003/012 | train_acc=0.6349 testA_raw=0.7195 testA_preprocess=0.6870 mnistC=0.9758 score=0.7016 best=0.7016@3 | best
+[train] epoch 4/12 batch 1/29 loss=0.7771 acc=0.7864 lr=2.56066e-06 elapsed=6.3s
+[train] epoch 4/12 batch 20/29 loss=1.2290 acc=0.6302 lr=2.56066e-06 elapsed=126.2s
+[train] epoch 4/12 batch 29/29 loss=1.1347 acc=0.6460 lr=2.56066e-06 elapsed=181.4s
+Epoch 004/012 | train_acc=0.6460 testA_raw=0.7224 testA_preprocess=0.6884 mnistC=0.9736 score=0.7037 best=0.7037@4 | best
+[train] epoch 5/12 batch 1/29 loss=0.7810 acc=0.7771 lr=2.25e-06 elapsed=6.7s
+[train] epoch 5/12 batch 20/29 loss=1.1405 acc=0.7241 lr=2.25e-06 elapsed=123.4s
+[train] epoch 5/12 batch 29/29 loss=1.2695 acc=0.6546 lr=2.25e-06 elapsed=179.9s
+Epoch 005/012 | train_acc=0.6546 testA_raw=0.7210 testA_preprocess=0.6856 mnistC=0.9756 score=0.7015 best=0.7037@4 | no_improve=1
+[train] epoch 6/12 batch 1/29 loss=0.7848 acc=0.7761 lr=1.88823e-06 elapsed=6.7s
+[train] epoch 6/12 batch 20/29 loss=0.8809 acc=0.6753 lr=1.88823e-06 elapsed=121.0s
+[train] epoch 6/12 batch 29/29 loss=0.9922 acc=0.6611 lr=1.88823e-06 elapsed=174.6s
+Epoch 006/012 | train_acc=0.6611 testA_raw=0.7238 testA_preprocess=0.6870 mnistC=0.9767 score=0.7035 best=0.7037@4 | no_improve=2
+[train] epoch 7/12 batch 1/29 loss=0.7846 acc=0.7754 lr=1.5e-06 elapsed=6.1s
+[train] epoch 7/12 batch 20/29 loss=1.0268 acc=0.6847 lr=1.5e-06 elapsed=121.1s
+[train] epoch 7/12 batch 29/29 loss=1.0766 acc=0.6732 lr=1.5e-06 elapsed=174.4s
+Epoch 007/012 | train_acc=0.6732 testA_raw=0.7224 testA_preprocess=0.6884 mnistC=0.9760 score=0.7037 best=0.7037@4 | no_improve=3
+[train] epoch 8/12 batch 1/29 loss=0.8016 acc=0.7795 lr=1.11177e-06 elapsed=6.0s
+[train] epoch 8/12 batch 20/29 loss=1.3495 acc=0.5964 lr=1.11177e-06 elapsed=116.0s
+[train] epoch 8/12 batch 29/29 loss=1.2832 acc=0.6273 lr=1.11177e-06 elapsed=168.6s
+Epoch 008/012 | train_acc=0.6273 testA_raw=0.7224 testA_preprocess=0.6856 mnistC=0.9756 score=0.7021 best=0.7037@4 | no_improve=4
+[train] epoch 9/12 batch 1/29 loss=2.1932 acc=0.4258 lr=7.5e-07 elapsed=6.0s
+[train] epoch 9/12 batch 20/29 loss=1.2276 acc=0.5928 lr=7.5e-07 elapsed=121.4s
+[train] epoch 9/12 batch 29/29 loss=1.1251 acc=0.6072 lr=7.5e-07 elapsed=176.7s
+Epoch 009/012 | train_acc=0.6072 testA_raw=0.7210 testA_preprocess=0.6884 mnistC=0.9777 score=0.7030 best=0.7037@4 | no_improve=5
+Early stopping: best=0.7037@4
+{
+  "best_score": 0.7036827195467423,
+  "best_epoch": 4,
+  "checkpoint": "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_submission\\checkpoints\\robust_expert_v2_kfold_f0_best.pt",
+  "history_csv": "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_submission\\logs\\testa_robust_v2_history.csv",
+  "data": {
+    "train_length_per_epoch": 120000,
+    "clean_family_length": 170000,
+    "mnist_c_train_length": 720000,
+    "synthetic_length": 24000,
+    "mnist_c_val_length": 9600,
+    "testA_length": 3500,
+    "testA_train_length": 2794,
+    "testA_validation_length": 706,
+    "testA_validation_mode": "kfold",
+    "testA_train_ratio": 0.7,
+    "kfold_n_splits": 5,
+    "kfold_index": 0,
+    "random_erasing_p": 0.25,
+    "mixup_alpha": 0.4,
+    "cutmix_alpha": 1.0,
+    "mix_prob": 0.5,
+    "selected_mnist_c": [
+      "impulse_noise",
+      "shot_noise",
+      "dotted_line",
+      "stripe",
+      "spatter",
+      "fog",
+      "glass_blur",
+      "motion_blur",
+      "zigzag",
+      "shear",
+      "translate",
+      "scale"
+    ],
+    "sampling_weights": {
+      "clean_family": 0.25,
+      "mnist_c_selected": 0.25,
+      "synthetic_testa_like": 0.2,
+      "testA_partial": 0.3
+    }
+  }
+}
+[kfold] fold 0 done score=0.7037 epoch=4 elapsed=1738.4s
+
+============================================================
+[kfold] fold 1/4 -> robust_expert_v2_kfold_f1_best.pt
+============================================================
+{
+  "stage": "testA robust v2",
+  "device": "cuda",
+  "project_root": "E:\\ALL\\学习\\AI导论作业-识别手写数字",
+  "output_dir": "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_submission",
+  "base_checkpoint": "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_submission\\checkpoints\\robust_expert_v2_testa_partial_best_epoch12_score07098.pt",
+  "model_name": "medium_cnn",
+  "dropout": 0.21672530847241062,
+  "image_size": 28,
+  "seed": 42,
+  "epochs": 12,
+  "epoch_size": 120000,
+  "batch_size": 4096,
+  "learning_rate": 3e-06,
+  "weight_decay": 0.0001,
+  "label_smoothing": 0.02,
+  "num_workers": 0,
+  "prefetch_factor": 4,
+  "use_amp": true,
+  "allow_tf32": true,
+  "compile_model": false,
+  "log_interval": 20,
+  "patience": 5,
+  "clean_weight": 0.25,
+  "mnist_c_weight": 0.25,
+  "synthetic_weight": 0.2,
+  "use_testa_partial": true,
+  "testa_weight": 0.3,
+  "testa_train_ratio": 0.7,
+  "use_kfold": true,
+  "kfold_n_splits": 5,
+  "kfold_index": 1,
+  "mixup_alpha": 0.4,
+  "cutmix_alpha": 1.0,
+  "mix_prob": 0.5,
+  "random_erasing_p": 0.25,
+  "mnist_max_samples": null,
+  "qmnist_max_samples": 60000,
+  "emnist_max_samples": 50000,
+  "mnist_c_train_per_corruption": 60000,
+  "mnist_c_val_per_corruption": 800,
+  "testA_weight_raw": 0.45,
+  "testA_weight_preprocess": 0.55,
+  "checkpoint_name": "robust_expert_v2_kfold_f1_best.pt"
+}
+{
+  "train_length_per_epoch": 120000,
+  "clean_family_length": 170000,
+  "mnist_c_train_length": 720000,
+  "synthetic_length": 24000,
+  "mnist_c_val_length": 9600,
+  "testA_length": 3500,
+  "testA_train_length": 2799,
+  "testA_validation_length": 701,
+  "testA_validation_mode": "kfold",
+  "testA_train_ratio": 0.7,
+  "kfold_n_splits": 5,
+  "kfold_index": 1,
+  "random_erasing_p": 0.25,
+  "mixup_alpha": 0.4,
+  "cutmix_alpha": 1.0,
+  "mix_prob": 0.5,
+  "selected_mnist_c": [
+    "impulse_noise",
+    "shot_noise",
+    "dotted_line",
+    "stripe",
+    "spatter",
+    "fog",
+    "glass_blur",
+    "motion_blur",
+    "zigzag",
+    "shear",
+    "translate",
+    "scale"
+  ],
+  "sampling_weights": {
+    "clean_family": 0.25,
+    "mnist_c_selected": 0.25,
+    "synthetic_testa_like": 0.2,
+    "testA_partial": 0.3
+  }
+}
+[train] epoch 1/12 batch 1/29 loss=1.1445 acc=0.1084 lr=3e-06 elapsed=5.8s
+[train] epoch 1/12 batch 20/29 loss=1.1976 acc=0.5392 lr=3e-06 elapsed=118.0s
+[train] epoch 1/12 batch 29/29 loss=1.1616 acc=0.5677 lr=3e-06 elapsed=171.1s
+Epoch 001/012 | train_acc=0.5677 testA_raw=0.7190 testA_preprocess=0.6619 mnistC=0.9749 score=0.6876 best=0.6876@1 | best
+[train] epoch 2/12 batch 1/29 loss=0.7895 acc=0.7805 lr=2.94889e-06 elapsed=6.0s
+[train] epoch 2/12 batch 20/29 loss=1.1055 acc=0.6422 lr=2.94889e-06 elapsed=115.6s
+[train] epoch 2/12 batch 29/29 loss=1.2057 acc=0.6468 lr=2.94889e-06 elapsed=161.9s
+Epoch 002/012 | train_acc=0.6468 testA_raw=0.7204 testA_preprocess=0.6576 mnistC=0.9761 score=0.6859 best=0.6876@1 | no_improve=1
+[train] epoch 3/12 batch 1/29 loss=2.3071 acc=0.3872 lr=2.79904e-06 elapsed=4.6s
+[train] epoch 3/12 batch 20/29 loss=1.1089 acc=0.6872 lr=2.79904e-06 elapsed=43.1s
+[train] epoch 3/12 batch 29/29 loss=1.0728 acc=0.6886 lr=2.79904e-06 elapsed=59.3s
+Epoch 003/012 | train_acc=0.6886 testA_raw=0.7218 testA_preprocess=0.6591 mnistC=0.9790 score=0.6873 best=0.6876@1 | no_improve=2
+[train] epoch 4/12 batch 1/29 loss=0.7539 acc=0.7913 lr=2.56066e-06 elapsed=1.7s
+[train] epoch 4/12 batch 20/29 loss=1.2556 acc=0.5671 lr=2.56066e-06 elapsed=37.9s
+[train] epoch 4/12 batch 29/29 loss=1.2095 acc=0.6129 lr=2.56066e-06 elapsed=58.1s
+Epoch 004/012 | train_acc=0.6129 testA_raw=0.7175 testA_preprocess=0.6619 mnistC=0.9747 score=0.6869 best=0.6876@1 | no_improve=3
+[train] epoch 5/12 batch 1/29 loss=2.1705 acc=0.4460 lr=2.25e-06 elapsed=2.7s
+[train] epoch 5/12 batch 20/29 loss=1.1620 acc=0.6767 lr=2.25e-06 elapsed=46.1s
+[train] epoch 5/12 batch 29/29 loss=1.2722 acc=0.6039 lr=2.25e-06 elapsed=66.8s
+Epoch 005/012 | train_acc=0.6039 testA_raw=0.7190 testA_preprocess=0.6591 mnistC=0.9749 score=0.6860 best=0.6876@1 | no_improve=4
+[train] epoch 6/12 batch 1/29 loss=0.7757 acc=0.7861 lr=1.88823e-06 elapsed=2.3s
+[train] epoch 6/12 batch 20/29 loss=1.1477 acc=0.6887 lr=1.88823e-06 elapsed=45.4s
+[train] epoch 6/12 batch 29/29 loss=1.1185 acc=0.6845 lr=1.88823e-06 elapsed=67.4s
+Epoch 006/012 | train_acc=0.6845 testA_raw=0.7190 testA_preprocess=0.6576 mnistC=0.9742 score=0.6852 best=0.6876@1 | no_improve=5
+Early stopping: best=0.6876@1
+{
+  "best_score": 0.6875891583452212,
+  "best_epoch": 1,
+  "checkpoint": "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_submission\\checkpoints\\robust_expert_v2_kfold_f1_best.pt",
+  "history_csv": "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_submission\\logs\\testa_robust_v2_history.csv",
+  "data": {
+    "train_length_per_epoch": 120000,
+    "clean_family_length": 170000,
+    "mnist_c_train_length": 720000,
+    "synthetic_length": 24000,
+    "mnist_c_val_length": 9600,
+    "testA_length": 3500,
+    "testA_train_length": 2799,
+    "testA_validation_length": 701,
+    "testA_validation_mode": "kfold",
+    "testA_train_ratio": 0.7,
+    "kfold_n_splits": 5,
+    "kfold_index": 1,
+    "random_erasing_p": 0.25,
+    "mixup_alpha": 0.4,
+    "cutmix_alpha": 1.0,
+    "mix_prob": 0.5,
+    "selected_mnist_c": [
+      "impulse_noise",
+      "shot_noise",
+      "dotted_line",
+      "stripe",
+      "spatter",
+      "fog",
+      "glass_blur",
+      "motion_blur",
+      "zigzag",
+      "shear",
+      "translate",
+      "scale"
+    ],
+    "sampling_weights": {
+      "clean_family": 0.25,
+      "mnist_c_selected": 0.25,
+      "synthetic_testa_like": 0.2,
+      "testA_partial": 0.3
+    }
+  }
+}
+[kfold] fold 1 done score=0.6876 epoch=1 elapsed=709.1s
+
+============================================================
+[kfold] fold 2/4 -> robust_expert_v2_kfold_f2_best.pt
+============================================================
+{
+  "stage": "testA robust v2",
+  "device": "cuda",
+  "project_root": "E:\\ALL\\学习\\AI导论作业-识别手写数字",
+  "output_dir": "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_submission",
+  "base_checkpoint": "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_submission\\checkpoints\\robust_expert_v2_testa_partial_best_epoch12_score07098.pt",
+  "model_name": "medium_cnn",
+  "dropout": 0.21672530847241062,
+  "image_size": 28,
+  "seed": 42,
+  "epochs": 12,
+  "epoch_size": 120000,
+  "batch_size": 4096,
+  "learning_rate": 3e-06,
+  "weight_decay": 0.0001,
+  "label_smoothing": 0.02,
+  "num_workers": 0,
+  "prefetch_factor": 4,
+  "use_amp": true,
+  "allow_tf32": true,
+  "compile_model": false,
+  "log_interval": 20,
+  "patience": 5,
+  "clean_weight": 0.25,
+  "mnist_c_weight": 0.25,
+  "synthetic_weight": 0.2,
+  "use_testa_partial": true,
+  "testa_weight": 0.3,
+  "testa_train_ratio": 0.7,
+  "use_kfold": true,
+  "kfold_n_splits": 5,
+  "kfold_index": 2,
+  "mixup_alpha": 0.4,
+  "cutmix_alpha": 1.0,
+  "mix_prob": 0.5,
+  "random_erasing_p": 0.25,
+  "mnist_max_samples": null,
+  "qmnist_max_samples": 60000,
+  "emnist_max_samples": 50000,
+  "mnist_c_train_per_corruption": 60000,
+  "mnist_c_val_per_corruption": 800,
+  "testA_weight_raw": 0.45,
+  "testA_weight_preprocess": 0.55,
+  "checkpoint_name": "robust_expert_v2_kfold_f2_best.pt"
+}
+{
+  "train_length_per_epoch": 120000,
+  "clean_family_length": 170000,
+  "mnist_c_train_length": 720000,
+  "synthetic_length": 24000,
+  "mnist_c_val_length": 9600,
+  "testA_length": 3500,
+  "testA_train_length": 2801,
+  "testA_validation_length": 699,
+  "testA_validation_mode": "kfold",
+  "testA_train_ratio": 0.7,
+  "kfold_n_splits": 5,
+  "kfold_index": 2,
+  "random_erasing_p": 0.25,
+  "mixup_alpha": 0.4,
+  "cutmix_alpha": 1.0,
+  "mix_prob": 0.5,
+  "selected_mnist_c": [
+    "impulse_noise",
+    "shot_noise",
+    "dotted_line",
+    "stripe",
+    "spatter",
+    "fog",
+    "glass_blur",
+    "motion_blur",
+    "zigzag",
+    "shear",
+    "translate",
+    "scale"
+  ],
+  "sampling_weights": {
+    "clean_family": 0.25,
+    "mnist_c_selected": 0.25,
+    "synthetic_testa_like": 0.2,
+    "testA_partial": 0.3
+  }
+}
+[train] epoch 1/12 batch 1/29 loss=1.1363 acc=0.1033 lr=3e-06 elapsed=1.7s
+[train] epoch 1/12 batch 20/29 loss=1.5443 acc=0.4962 lr=3e-06 elapsed=35.3s
+[train] epoch 1/12 batch 29/29 loss=1.4851 acc=0.5225 lr=3e-06 elapsed=51.3s
+Epoch 001/012 | train_acc=0.5225 testA_raw=0.7039 testA_preprocess=0.6624 mnistC=0.9785 score=0.6810 best=0.6810@1 | best
+[train] epoch 2/12 batch 1/29 loss=0.9237 acc=0.7791 lr=2.94889e-06 elapsed=1.7s
+[train] epoch 2/12 batch 20/29 loss=1.3119 acc=0.5638 lr=2.94889e-06 elapsed=35.3s
+[train] epoch 2/12 batch 29/29 loss=1.1550 acc=0.6311 lr=2.94889e-06 elapsed=51.0s
+Epoch 002/012 | train_acc=0.6311 testA_raw=0.7067 testA_preprocess=0.6595 mnistC=0.9766 score=0.6808 best=0.6810@1 | no_improve=1
+[train] epoch 3/12 batch 1/29 loss=1.7369 acc=0.6294 lr=2.79904e-06 elapsed=1.8s
+[train] epoch 3/12 batch 20/29 loss=1.3642 acc=0.6579 lr=2.79904e-06 elapsed=35.6s
+[train] epoch 3/12 batch 29/29 loss=1.2728 acc=0.6891 lr=2.79904e-06 elapsed=51.3s
+Epoch 003/012 | train_acc=0.6891 testA_raw=0.7067 testA_preprocess=0.6581 mnistC=0.9750 score=0.6800 best=0.6810@1 | no_improve=2
+[train] epoch 4/12 batch 1/29 loss=0.7611 acc=0.7939 lr=2.56066e-06 elapsed=1.7s
+[train] epoch 4/12 batch 20/29 loss=1.0670 acc=0.6959 lr=2.56066e-06 elapsed=45.1s
+[train] epoch 4/12 batch 29/29 loss=1.0944 acc=0.7011 lr=2.56066e-06 elapsed=64.6s
+Epoch 004/012 | train_acc=0.7011 testA_raw=0.7053 testA_preprocess=0.6652 mnistC=0.9748 score=0.6833 best=0.6833@4 | best
+[train] epoch 5/12 batch 1/29 loss=0.7533 acc=0.7886 lr=2.25e-06 elapsed=2.7s
+[train] epoch 5/12 batch 20/29 loss=1.1533 acc=0.5934 lr=2.25e-06 elapsed=37.9s
+[train] epoch 5/12 batch 29/29 loss=1.1959 acc=0.5721 lr=2.25e-06 elapsed=53.6s
+Epoch 005/012 | train_acc=0.5721 testA_raw=0.7053 testA_preprocess=0.6609 mnistC=0.9752 score=0.6809 best=0.6833@4 | no_improve=1
+[train] epoch 6/12 batch 1/29 loss=1.9185 acc=0.5547 lr=1.88823e-06 elapsed=1.7s
+[train] epoch 6/12 batch 20/29 loss=1.1222 acc=0.7227 lr=1.88823e-06 elapsed=35.4s
+[train] epoch 6/12 batch 29/29 loss=1.0232 acc=0.7414 lr=1.88823e-06 elapsed=51.3s
+Epoch 006/012 | train_acc=0.7414 testA_raw=0.7039 testA_preprocess=0.6609 mnistC=0.9755 score=0.6803 best=0.6833@4 | no_improve=2
+[train] epoch 7/12 batch 1/29 loss=0.7692 acc=0.7866 lr=1.5e-06 elapsed=1.7s
+[train] epoch 7/12 batch 20/29 loss=1.3379 acc=0.6067 lr=1.5e-06 elapsed=35.5s
+[train] epoch 7/12 batch 29/29 loss=1.2894 acc=0.6096 lr=1.5e-06 elapsed=51.2s
+Epoch 007/012 | train_acc=0.6096 testA_raw=0.7082 testA_preprocess=0.6624 mnistC=0.9770 score=0.6830 best=0.6833@4 | no_improve=3
+[train] epoch 8/12 batch 1/29 loss=2.4034 acc=0.1831 lr=1.11177e-06 elapsed=1.7s
+[train] epoch 8/12 batch 20/29 loss=1.2040 acc=0.6125 lr=1.11177e-06 elapsed=35.2s
+[train] epoch 8/12 batch 29/29 loss=1.2329 acc=0.6002 lr=1.11177e-06 elapsed=51.1s
+Epoch 008/012 | train_acc=0.6002 testA_raw=0.7039 testA_preprocess=0.6638 mnistC=0.9760 score=0.6818 best=0.6833@4 | no_improve=4
+[train] epoch 9/12 batch 1/29 loss=0.7736 acc=0.7820 lr=7.5e-07 elapsed=1.7s
+[train] epoch 9/12 batch 20/29 loss=1.2849 acc=0.5698 lr=7.5e-07 elapsed=35.3s
+[train] epoch 9/12 batch 29/29 loss=1.1655 acc=0.6129 lr=7.5e-07 elapsed=51.2s
+Epoch 009/012 | train_acc=0.6129 testA_raw=0.7053 testA_preprocess=0.6609 mnistC=0.9758 score=0.6809 best=0.6833@4 | no_improve=5
+Early stopping: best=0.6833@4
+{
+  "best_score": 0.6832618025751074,
+  "best_epoch": 4,
+  "checkpoint": "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_submission\\checkpoints\\robust_expert_v2_kfold_f2_best.pt",
+  "history_csv": "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_submission\\logs\\testa_robust_v2_history.csv",
+  "data": {
+    "train_length_per_epoch": 120000,
+    "clean_family_length": 170000,
+    "mnist_c_train_length": 720000,
+    "synthetic_length": 24000,
+    "mnist_c_val_length": 9600,
+    "testA_length": 3500,
+    "testA_train_length": 2801,
+    "testA_validation_length": 699,
+    "testA_validation_mode": "kfold",
+    "testA_train_ratio": 0.7,
+    "kfold_n_splits": 5,
+    "kfold_index": 2,
+    "random_erasing_p": 0.25,
+    "mixup_alpha": 0.4,
+    "cutmix_alpha": 1.0,
+    "mix_prob": 0.5,
+    "selected_mnist_c": [
+      "impulse_noise",
+      "shot_noise",
+      "dotted_line",
+      "stripe",
+      "spatter",
+      "fog",
+      "glass_blur",
+      "motion_blur",
+      "zigzag",
+      "shear",
+      "translate",
+      "scale"
+    ],
+    "sampling_weights": {
+      "clean_family": 0.25,
+      "mnist_c_selected": 0.25,
+      "synthetic_testa_like": 0.2,
+      "testA_partial": 0.3
+    }
+  }
+}
+[kfold] fold 2 done score=0.6833 epoch=4 elapsed=514.7s
+
+============================================================
+[kfold] fold 3/4 -> robust_expert_v2_kfold_f3_best.pt
+============================================================
+{
+  "stage": "testA robust v2",
+  "device": "cuda",
+  "project_root": "E:\\ALL\\学习\\AI导论作业-识别手写数字",
+  "output_dir": "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_submission",
+  "base_checkpoint": "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_submission\\checkpoints\\robust_expert_v2_testa_partial_best_epoch12_score07098.pt",
+  "model_name": "medium_cnn",
+  "dropout": 0.21672530847241062,
+  "image_size": 28,
+  "seed": 42,
+  "epochs": 12,
+  "epoch_size": 120000,
+  "batch_size": 4096,
+  "learning_rate": 3e-06,
+  "weight_decay": 0.0001,
+  "label_smoothing": 0.02,
+  "num_workers": 0,
+  "prefetch_factor": 4,
+  "use_amp": true,
+  "allow_tf32": true,
+  "compile_model": false,
+  "log_interval": 20,
+  "patience": 5,
+  "clean_weight": 0.25,
+  "mnist_c_weight": 0.25,
+  "synthetic_weight": 0.2,
+  "use_testa_partial": true,
+  "testa_weight": 0.3,
+  "testa_train_ratio": 0.7,
+  "use_kfold": true,
+  "kfold_n_splits": 5,
+  "kfold_index": 3,
+  "mixup_alpha": 0.4,
+  "cutmix_alpha": 1.0,
+  "mix_prob": 0.5,
+  "random_erasing_p": 0.25,
+  "mnist_max_samples": null,
+  "qmnist_max_samples": 60000,
+  "emnist_max_samples": 50000,
+  "mnist_c_train_per_corruption": 60000,
+  "mnist_c_val_per_corruption": 800,
+  "testA_weight_raw": 0.45,
+  "testA_weight_preprocess": 0.55,
+  "checkpoint_name": "robust_expert_v2_kfold_f3_best.pt"
+}
+{
+  "train_length_per_epoch": 120000,
+  "clean_family_length": 170000,
+  "mnist_c_train_length": 720000,
+  "synthetic_length": 24000,
+  "mnist_c_val_length": 9600,
+  "testA_length": 3500,
+  "testA_train_length": 2802,
+  "testA_validation_length": 698,
+  "testA_validation_mode": "kfold",
+  "testA_train_ratio": 0.7,
+  "kfold_n_splits": 5,
+  "kfold_index": 3,
+  "random_erasing_p": 0.25,
+  "mixup_alpha": 0.4,
+  "cutmix_alpha": 1.0,
+  "mix_prob": 0.5,
+  "selected_mnist_c": [
+    "impulse_noise",
+    "shot_noise",
+    "dotted_line",
+    "stripe",
+    "spatter",
+    "fog",
+    "glass_blur",
+    "motion_blur",
+    "zigzag",
+    "shear",
+    "translate",
+    "scale"
+  ],
+  "sampling_weights": {
+    "clean_family": 0.25,
+    "mnist_c_selected": 0.25,
+    "synthetic_testa_like": 0.2,
+    "testA_partial": 0.3
+  }
+}
+[train] epoch 1/12 batch 1/29 loss=2.4468 acc=0.2415 lr=3e-06 elapsed=1.7s
+[train] epoch 1/12 batch 20/29 loss=1.3320 acc=0.6048 lr=3e-06 elapsed=36.0s
+[train] epoch 1/12 batch 29/29 loss=1.1796 acc=0.6135 lr=3e-06 elapsed=52.2s
+Epoch 001/012 | train_acc=0.6135 testA_raw=0.7049 testA_preprocess=0.6648 mnistC=0.9745 score=0.6828 best=0.6828@1 | best
+[train] epoch 2/12 batch 1/29 loss=1.3782 acc=0.7659 lr=2.94889e-06 elapsed=1.8s
+[train] epoch 2/12 batch 20/29 loss=0.9256 acc=0.7392 lr=2.94889e-06 elapsed=35.7s
+[train] epoch 2/12 batch 29/29 loss=1.1531 acc=0.6948 lr=2.94889e-06 elapsed=51.7s
+Epoch 002/012 | train_acc=0.6948 testA_raw=0.7020 testA_preprocess=0.6705 mnistC=0.9803 score=0.6847 best=0.6847@2 | best
+[train] epoch 3/12 batch 1/29 loss=0.8095 acc=0.1086 lr=2.79904e-06 elapsed=1.7s
+[train] epoch 3/12 batch 20/29 loss=1.0398 acc=0.6480 lr=2.79904e-06 elapsed=35.7s
+[train] epoch 3/12 batch 29/29 loss=1.1437 acc=0.6152 lr=2.79904e-06 elapsed=51.7s
+Epoch 003/012 | train_acc=0.6152 testA_raw=0.7049 testA_preprocess=0.6662 mnistC=0.9742 score=0.6836 best=0.6847@2 | no_improve=1
+[train] epoch 4/12 batch 1/29 loss=1.1359 acc=0.1040 lr=2.56066e-06 elapsed=1.8s
+[train] epoch 4/12 batch 20/29 loss=1.2180 acc=0.5908 lr=2.56066e-06 elapsed=36.0s
+[train] epoch 4/12 batch 29/29 loss=1.2273 acc=0.6013 lr=2.56066e-06 elapsed=52.2s
+Epoch 004/012 | train_acc=0.6013 testA_raw=0.7034 testA_preprocess=0.6705 mnistC=0.9728 score=0.6853 best=0.6853@4 | best
+[train] epoch 5/12 batch 1/29 loss=0.7557 acc=0.7903 lr=2.25e-06 elapsed=1.8s
+[train] epoch 5/12 batch 20/29 loss=1.1485 acc=0.6109 lr=2.25e-06 elapsed=35.9s
+[train] epoch 5/12 batch 29/29 loss=1.1880 acc=0.6154 lr=2.25e-06 elapsed=52.1s
+Epoch 005/012 | train_acc=0.6154 testA_raw=0.7034 testA_preprocess=0.6691 mnistC=0.9744 score=0.6845 best=0.6853@4 | no_improve=1
+[train] epoch 6/12 batch 1/29 loss=1.9586 acc=0.5256 lr=1.88823e-06 elapsed=1.8s
+[train] epoch 6/12 batch 20/29 loss=1.3401 acc=0.5676 lr=1.88823e-06 elapsed=36.3s
+[train] epoch 6/12 batch 29/29 loss=1.2683 acc=0.5994 lr=1.88823e-06 elapsed=52.4s
+Epoch 006/012 | train_acc=0.5994 testA_raw=0.7063 testA_preprocess=0.6705 mnistC=0.9718 score=0.6866 best=0.6866@6 | best
+[train] epoch 7/12 batch 1/29 loss=2.0517 acc=0.2290 lr=1.5e-06 elapsed=1.8s
+[train] epoch 7/12 batch 20/29 loss=1.4680 acc=0.5671 lr=1.5e-06 elapsed=35.9s
+[train] epoch 7/12 batch 29/29 loss=1.2573 acc=0.5876 lr=1.5e-06 elapsed=51.9s
+Epoch 007/012 | train_acc=0.5876 testA_raw=0.7063 testA_preprocess=0.6662 mnistC=0.9774 score=0.6842 best=0.6866@6 | no_improve=1
+[train] epoch 8/12 batch 1/29 loss=0.7911 acc=0.7805 lr=1.11177e-06 elapsed=1.7s
+[train] epoch 8/12 batch 20/29 loss=1.1147 acc=0.5985 lr=1.11177e-06 elapsed=36.3s
+[train] epoch 8/12 batch 29/29 loss=1.0963 acc=0.6168 lr=1.11177e-06 elapsed=53.7s
+Epoch 008/012 | train_acc=0.6168 testA_raw=0.7077 testA_preprocess=0.6662 mnistC=0.9753 score=0.6849 best=0.6866@6 | no_improve=2
+[train] epoch 9/12 batch 1/29 loss=1.3869 acc=0.1130 lr=7.5e-07 elapsed=1.9s
+[train] epoch 9/12 batch 20/29 loss=1.3243 acc=0.6005 lr=7.5e-07 elapsed=38.6s
+[train] epoch 9/12 batch 29/29 loss=1.1871 acc=0.6525 lr=7.5e-07 elapsed=60.1s
+Epoch 009/012 | train_acc=0.6525 testA_raw=0.7077 testA_preprocess=0.6676 mnistC=0.9742 score=0.6857 best=0.6866@6 | no_improve=3
+[train] epoch 10/12 batch 1/29 loss=1.3849 acc=0.6494 lr=4.3934e-07 elapsed=1.9s
+[train] epoch 10/12 batch 20/29 loss=1.3493 acc=0.5877 lr=4.3934e-07 elapsed=39.1s
+[train] epoch 10/12 batch 29/29 loss=1.2596 acc=0.6372 lr=4.3934e-07 elapsed=56.2s
+Epoch 010/012 | train_acc=0.6372 testA_raw=0.7077 testA_preprocess=0.6676 mnistC=0.9759 score=0.6857 best=0.6866@6 | no_improve=4
+[train] epoch 11/12 batch 1/29 loss=0.9397 acc=0.7861 lr=2.00962e-07 elapsed=1.9s
+[train] epoch 11/12 batch 20/29 loss=1.3087 acc=0.6093 lr=2.00962e-07 elapsed=38.4s
+[train] epoch 11/12 batch 29/29 loss=1.3085 acc=0.5998 lr=2.00962e-07 elapsed=55.8s
+Epoch 011/012 | train_acc=0.5998 testA_raw=0.7049 testA_preprocess=0.6676 mnistC=0.9748 score=0.6844 best=0.6866@6 | no_improve=5
+Early stopping: best=0.6866@6
+{
+  "best_score": 0.6866045845272206,
+  "best_epoch": 6,
+  "checkpoint": "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_submission\\checkpoints\\robust_expert_v2_kfold_f3_best.pt",
+  "history_csv": "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_submission\\logs\\testa_robust_v2_history.csv",
+  "data": {
+    "train_length_per_epoch": 120000,
+    "clean_family_length": 170000,
+    "mnist_c_train_length": 720000,
+    "synthetic_length": 24000,
+    "mnist_c_val_length": 9600,
+    "testA_length": 3500,
+    "testA_train_length": 2802,
+    "testA_validation_length": 698,
+    "testA_validation_mode": "kfold",
+    "testA_train_ratio": 0.7,
+    "kfold_n_splits": 5,
+    "kfold_index": 3,
+    "random_erasing_p": 0.25,
+    "mixup_alpha": 0.4,
+    "cutmix_alpha": 1.0,
+    "mix_prob": 0.5,
+    "selected_mnist_c": [
+      "impulse_noise",
+      "shot_noise",
+      "dotted_line",
+      "stripe",
+      "spatter",
+      "fog",
+      "glass_blur",
+      "motion_blur",
+      "zigzag",
+      "shear",
+      "translate",
+      "scale"
+    ],
+    "sampling_weights": {
+      "clean_family": 0.25,
+      "mnist_c_selected": 0.25,
+      "synthetic_testa_like": 0.2,
+      "testA_partial": 0.3
+    }
+  }
+}
+[kfold] fold 3 done score=0.6866 epoch=6 elapsed=630.1s
+
+============================================================
+[kfold] fold 4/4 -> robust_expert_v2_kfold_f4_best.pt
+============================================================
+{
+  "stage": "testA robust v2",
+  "device": "cuda",
+  "project_root": "E:\\ALL\\学习\\AI导论作业-识别手写数字",
+  "output_dir": "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_submission",
+  "base_checkpoint": "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_submission\\checkpoints\\robust_expert_v2_testa_partial_best_epoch12_score07098.pt",
+  "model_name": "medium_cnn",
+  "dropout": 0.21672530847241062,
+  "image_size": 28,
+  "seed": 42,
+  "epochs": 12,
+  "epoch_size": 120000,
+  "batch_size": 4096,
+  "learning_rate": 3e-06,
+  "weight_decay": 0.0001,
+  "label_smoothing": 0.02,
+  "num_workers": 0,
+  "prefetch_factor": 4,
+  "use_amp": true,
+  "allow_tf32": true,
+  "compile_model": false,
+  "log_interval": 20,
+  "patience": 5,
+  "clean_weight": 0.25,
+  "mnist_c_weight": 0.25,
+  "synthetic_weight": 0.2,
+  "use_testa_partial": true,
+  "testa_weight": 0.3,
+  "testa_train_ratio": 0.7,
+  "use_kfold": true,
+  "kfold_n_splits": 5,
+  "kfold_index": 4,
+  "mixup_alpha": 0.4,
+  "cutmix_alpha": 1.0,
+  "mix_prob": 0.5,
+  "random_erasing_p": 0.25,
+  "mnist_max_samples": null,
+  "qmnist_max_samples": 60000,
+  "emnist_max_samples": 50000,
+  "mnist_c_train_per_corruption": 60000,
+  "mnist_c_val_per_corruption": 800,
+  "testA_weight_raw": 0.45,
+  "testA_weight_preprocess": 0.55,
+  "checkpoint_name": "robust_expert_v2_kfold_f4_best.pt"
+}
+{
+  "train_length_per_epoch": 120000,
+  "clean_family_length": 170000,
+  "mnist_c_train_length": 720000,
+  "synthetic_length": 24000,
+  "mnist_c_val_length": 9600,
+  "testA_length": 3500,
+  "testA_train_length": 2804,
+  "testA_validation_length": 696,
+  "testA_validation_mode": "kfold",
+  "testA_train_ratio": 0.7,
+  "kfold_n_splits": 5,
+  "kfold_index": 4,
+  "random_erasing_p": 0.25,
+  "mixup_alpha": 0.4,
+  "cutmix_alpha": 1.0,
+  "mix_prob": 0.5,
+  "selected_mnist_c": [
+    "impulse_noise",
+    "shot_noise",
+    "dotted_line",
+    "stripe",
+    "spatter",
+    "fog",
+    "glass_blur",
+    "motion_blur",
+    "zigzag",
+    "shear",
+    "translate",
+    "scale"
+  ],
+  "sampling_weights": {
+    "clean_family": 0.25,
+    "mnist_c_selected": 0.25,
+    "synthetic_testa_like": 0.2,
+    "testA_partial": 0.3
+  }
+}
+[train] epoch 1/12 batch 1/29 loss=2.4330 acc=0.2446 lr=3e-06 elapsed=2.0s
+[train] epoch 1/12 batch 20/29 loss=1.2217 acc=0.6650 lr=3e-06 elapsed=38.4s
+[train] epoch 1/12 batch 29/29 loss=1.1500 acc=0.6874 lr=3e-06 elapsed=55.6s
+Epoch 001/012 | train_acc=0.6874 testA_raw=0.7270 testA_preprocess=0.7098 mnistC=0.9761 score=0.7175 best=0.7175@1 | best
+[train] epoch 2/12 batch 1/29 loss=0.7713 acc=0.7822 lr=2.94889e-06 elapsed=1.7s
+[train] epoch 2/12 batch 20/29 loss=1.0229 acc=0.6557 lr=2.94889e-06 elapsed=38.1s
+[train] epoch 2/12 batch 29/29 loss=0.9888 acc=0.6239 lr=2.94889e-06 elapsed=55.1s
+Epoch 002/012 | train_acc=0.6239 testA_raw=0.7284 testA_preprocess=0.7083 mnistC=0.9757 score=0.7174 best=0.7175@1 | no_improve=1
+[train] epoch 3/12 batch 1/29 loss=1.2566 acc=0.1062 lr=2.79904e-06 elapsed=1.9s
+[train] epoch 3/12 batch 20/29 loss=1.0285 acc=0.7167 lr=2.79904e-06 elapsed=38.3s
+[train] epoch 3/12 batch 29/29 loss=1.0911 acc=0.6738 lr=2.79904e-06 elapsed=55.6s
+Epoch 003/012 | train_acc=0.6738 testA_raw=0.7284 testA_preprocess=0.7083 mnistC=0.9752 score=0.7174 best=0.7175@1 | no_improve=2
+[train] epoch 4/12 batch 1/29 loss=0.7633 acc=0.7859 lr=2.56066e-06 elapsed=1.9s
+[train] epoch 4/12 batch 20/29 loss=1.1906 acc=0.6790 lr=2.56066e-06 elapsed=38.4s
+[train] epoch 4/12 batch 29/29 loss=1.1018 acc=0.6855 lr=2.56066e-06 elapsed=55.7s
+Epoch 004/012 | train_acc=0.6855 testA_raw=0.7270 testA_preprocess=0.7126 mnistC=0.9757 score=0.7191 best=0.7191@4 | best
+[train] epoch 5/12 batch 1/29 loss=1.2235 acc=0.7720 lr=2.25e-06 elapsed=1.9s
+[train] epoch 5/12 batch 20/29 loss=1.2524 acc=0.6183 lr=2.25e-06 elapsed=38.7s
+[train] epoch 5/12 batch 29/29 loss=1.3705 acc=0.5778 lr=2.25e-06 elapsed=55.9s
+Epoch 005/012 | train_acc=0.5778 testA_raw=0.7256 testA_preprocess=0.7112 mnistC=0.9776 score=0.7177 best=0.7191@4 | no_improve=1
+[train] epoch 6/12 batch 1/29 loss=0.7662 acc=0.7832 lr=1.88823e-06 elapsed=1.9s
+[train] epoch 6/12 batch 20/29 loss=1.0988 acc=0.6777 lr=1.88823e-06 elapsed=38.4s
+[train] epoch 6/12 batch 29/29 loss=1.0545 acc=0.7041 lr=1.88823e-06 elapsed=55.6s
+Epoch 006/012 | train_acc=0.7041 testA_raw=0.7241 testA_preprocess=0.7141 mnistC=0.9753 score=0.7186 best=0.7191@4 | no_improve=2
+[train] epoch 7/12 batch 1/29 loss=0.8010 acc=0.7771 lr=1.5e-06 elapsed=1.9s
+[train] epoch 7/12 batch 20/29 loss=1.1392 acc=0.6565 lr=1.5e-06 elapsed=38.7s
+[train] epoch 7/12 batch 29/29 loss=1.1513 acc=0.6688 lr=1.5e-06 elapsed=55.9s
+Epoch 007/012 | train_acc=0.6688 testA_raw=0.7270 testA_preprocess=0.7170 mnistC=0.9714 score=0.7215 best=0.7215@7 | best
+[train] epoch 8/12 batch 1/29 loss=0.7733 acc=0.7854 lr=1.11177e-06 elapsed=1.9s
+[train] epoch 8/12 batch 20/29 loss=1.1857 acc=0.6001 lr=1.11177e-06 elapsed=39.1s
+[train] epoch 8/12 batch 29/29 loss=1.1618 acc=0.6037 lr=1.11177e-06 elapsed=57.7s
+Epoch 008/012 | train_acc=0.6037 testA_raw=0.7256 testA_preprocess=0.7126 mnistC=0.9729 score=0.7185 best=0.7215@7 | no_improve=1
+[train] epoch 9/12 batch 1/29 loss=2.0945 acc=0.6157 lr=7.5e-07 elapsed=2.2s
+[train] epoch 9/12 batch 20/29 loss=1.3758 acc=0.5913 lr=7.5e-07 elapsed=40.5s
+[train] epoch 9/12 batch 29/29 loss=1.3190 acc=0.5763 lr=7.5e-07 elapsed=57.8s
+Epoch 009/012 | train_acc=0.5763 testA_raw=0.7270 testA_preprocess=0.7141 mnistC=0.9732 score=0.7199 best=0.7215@7 | no_improve=2
+[train] epoch 10/12 batch 1/29 loss=0.7703 acc=0.7849 lr=4.3934e-07 elapsed=1.9s
+[train] epoch 10/12 batch 20/29 loss=1.3325 acc=0.6063 lr=4.3934e-07 elapsed=38.4s
+[train] epoch 10/12 batch 29/29 loss=1.2288 acc=0.5942 lr=4.3934e-07 elapsed=55.5s
+Epoch 010/012 | train_acc=0.5942 testA_raw=0.7256 testA_preprocess=0.7155 mnistC=0.9766 score=0.7200 best=0.7215@7 | no_improve=3
+[train] epoch 11/12 batch 1/29 loss=0.7692 acc=0.7825 lr=2.00962e-07 elapsed=1.9s
+[train] epoch 11/12 batch 20/29 loss=1.2249 acc=0.6256 lr=2.00962e-07 elapsed=38.3s
+[train] epoch 11/12 batch 29/29 loss=1.2363 acc=0.6351 lr=2.00962e-07 elapsed=55.5s
+Epoch 011/012 | train_acc=0.6351 testA_raw=0.7256 testA_preprocess=0.7126 mnistC=0.9739 score=0.7185 best=0.7215@7 | no_improve=4
+[train] epoch 12/12 batch 1/29 loss=0.7649 acc=0.7869 lr=5.11113e-08 elapsed=1.9s
+[train] epoch 12/12 batch 20/29 loss=1.3029 acc=0.5300 lr=5.11113e-08 elapsed=39.0s
+[train] epoch 12/12 batch 29/29 loss=1.3453 acc=0.5566 lr=5.11113e-08 elapsed=56.4s
+Epoch 012/012 | train_acc=0.5566 testA_raw=0.7241 testA_preprocess=0.7141 mnistC=0.9765 score=0.7186 best=0.7215@7 | no_improve=5
+Early stopping: best=0.7215@7
+{
+  "best_score": 0.7214798850574713,
+  "best_epoch": 7,
+  "checkpoint": "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_submission\\checkpoints\\robust_expert_v2_kfold_f4_best.pt",
+  "history_csv": "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_submission\\logs\\testa_robust_v2_history.csv",
+  "data": {
+    "train_length_per_epoch": 120000,
+    "clean_family_length": 170000,
+    "mnist_c_train_length": 720000,
+    "synthetic_length": 24000,
+    "mnist_c_val_length": 9600,
+    "testA_length": 3500,
+    "testA_train_length": 2804,
+    "testA_validation_length": 696,
+    "testA_validation_mode": "kfold",
+    "testA_train_ratio": 0.7,
+    "kfold_n_splits": 5,
+    "kfold_index": 4,
+    "random_erasing_p": 0.25,
+    "mixup_alpha": 0.4,
+    "cutmix_alpha": 1.0,
+    "mix_prob": 0.5,
+    "selected_mnist_c": [
+      "impulse_noise",
+      "shot_noise",
+      "dotted_line",
+      "stripe",
+      "spatter",
+      "fog",
+      "glass_blur",
+      "motion_blur",
+      "zigzag",
+      "shear",
+      "translate",
+      "scale"
+    ],
+    "sampling_weights": {
+      "clean_family": 0.25,
+      "mnist_c_selected": 0.25,
+      "synthetic_testa_like": 0.2,
+      "testA_partial": 0.3
+    }
+  }
+}
+[kfold] fold 4 done score=0.7215 epoch=7 elapsed=718.7s
+
+[kfold] all folds done. summary saved to E:\ALL\学习\AI导论作业-识别手写数字\outputs_submission\logs\testa_kfold_summary.json. total 4311.3s
+=== per-fold best score ===
+  fold 0: score=0.7037 epoch=4 t=1738.4s
+  fold 1: score=0.6876 epoch=1 t=709.1s
+  fold 2: score=0.6833 epoch=4 t=514.7s
+  fold 3: score=0.6866 epoch=6 t=630.1s
+  fold 4: score=0.7215 epoch=7 t=718.7s
+  mean heldout score: 0.6965

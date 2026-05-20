@@ -1,0 +1,168 @@
+{
+  "stage": "testA robust v2",
+  "device": "cuda",
+  "project_root": "E:\\ALL\\学习\\AI导论作业-识别手写数字",
+  "output_dir": "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_submission",
+  "base_checkpoint": "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_submission\\checkpoints\\robust_expert_v2_long_best_epoch32_score06834.pt",
+  "model_name": "medium_cnn",
+  "dropout": 0.21672530847241062,
+  "image_size": 28,
+  "seed": 42,
+  "epochs": 15,
+  "epoch_size": 120000,
+  "batch_size": 4096,
+  "learning_rate": 5e-06,
+  "weight_decay": 0.0001,
+  "label_smoothing": 0.02,
+  "num_workers": 0,
+  "prefetch_factor": 2,
+  "use_amp": true,
+  "allow_tf32": true,
+  "compile_model": false,
+  "log_interval": 20,
+  "patience": 5,
+  "clean_weight": 0.25,
+  "mnist_c_weight": 0.3,
+  "synthetic_weight": 0.25,
+  "use_testa_partial": true,
+  "testa_weight": 0.2,
+  "testa_train_ratio": 0.7,
+  "mnist_max_samples": null,
+  "qmnist_max_samples": 60000,
+  "emnist_max_samples": 50000,
+  "mnist_c_train_per_corruption": 60000,
+  "mnist_c_val_per_corruption": 800,
+  "testA_weight_raw": 0.45,
+  "testA_weight_preprocess": 0.55,
+  "checkpoint_name": "robust_expert_v2_testa_partial_best.pt"
+}
+{
+  "train_length_per_epoch": 120000,
+  "clean_family_length": 170000,
+  "mnist_c_train_length": 720000,
+  "synthetic_length": 30000,
+  "mnist_c_val_length": 9600,
+  "testA_length": 3500,
+  "testA_train_length": 2449,
+  "testA_validation_length": 1051,
+  "testA_validation_mode": "heldout",
+  "testA_train_ratio": 0.7,
+  "selected_mnist_c": [
+    "impulse_noise",
+    "shot_noise",
+    "dotted_line",
+    "stripe",
+    "spatter",
+    "fog",
+    "glass_blur",
+    "motion_blur",
+    "zigzag",
+    "shear",
+    "translate",
+    "scale"
+  ],
+  "sampling_weights": {
+    "clean_family": 0.25,
+    "mnist_c_selected": 0.3,
+    "synthetic_testa_like": 0.25,
+    "testA_partial": 0.2
+  }
+}
+[train] epoch 1/15 batch 1/29 loss=0.6869 acc=0.8171 lr=5e-06 elapsed=11.2s
+[train] epoch 1/15 batch 20/29 loss=0.6796 acc=0.8175 lr=5e-06 elapsed=65.3s
+[train] epoch 1/15 batch 29/29 loss=0.6766 acc=0.8182 lr=5e-06 elapsed=88.0s
+Epoch 001/015 | train_acc=0.8182 testA_raw=0.7136 testA_preprocess=0.6889 mnistC=0.9773 score=0.7000 best=0.7000@1 | best
+[train] epoch 2/15 batch 1/29 loss=0.6914 acc=0.8127 lr=4.94537e-06 elapsed=2.2s
+[train] epoch 2/15 batch 20/29 loss=0.6761 acc=0.8189 lr=4.94537e-06 elapsed=45.7s
+[train] epoch 2/15 batch 29/29 loss=0.6739 acc=0.8197 lr=4.94537e-06 elapsed=65.3s
+Epoch 002/015 | train_acc=0.8197 testA_raw=0.7203 testA_preprocess=0.6870 mnistC=0.9721 score=0.7020 best=0.7020@2 | best
+[train] epoch 3/15 batch 1/29 loss=0.6988 acc=0.8186 lr=4.78386e-06 elapsed=2.4s
+[train] epoch 3/15 batch 20/29 loss=0.6699 acc=0.8224 lr=4.78386e-06 elapsed=45.7s
+[train] epoch 3/15 batch 29/29 loss=0.6740 acc=0.8204 lr=4.78386e-06 elapsed=65.6s
+Epoch 003/015 | train_acc=0.8204 testA_raw=0.7212 testA_preprocess=0.6870 mnistC=0.9707 score=0.7024 best=0.7024@3 | best
+[train] epoch 4/15 batch 1/29 loss=0.6746 acc=0.8157 lr=4.52254e-06 elapsed=2.4s
+[train] epoch 4/15 batch 20/29 loss=0.6840 acc=0.8163 lr=4.52254e-06 elapsed=45.0s
+[train] epoch 4/15 batch 29/29 loss=0.6804 acc=0.8177 lr=4.52254e-06 elapsed=67.2s
+Epoch 004/015 | train_acc=0.8177 testA_raw=0.7222 testA_preprocess=0.6927 mnistC=0.9780 score=0.7059 best=0.7059@4 | best
+[train] epoch 5/15 batch 1/29 loss=0.6958 acc=0.8164 lr=4.17283e-06 elapsed=2.1s
+[train] epoch 5/15 batch 20/29 loss=0.6683 acc=0.8222 lr=4.17283e-06 elapsed=45.2s
+[train] epoch 5/15 batch 29/29 loss=0.6705 acc=0.8216 lr=4.17283e-06 elapsed=65.6s
+Epoch 005/015 | train_acc=0.8216 testA_raw=0.7212 testA_preprocess=0.6936 mnistC=0.9748 score=0.7060 best=0.7059@4 | no_improve=1
+[train] epoch 6/15 batch 1/29 loss=0.6581 acc=0.8245 lr=3.75e-06 elapsed=2.3s
+[train] epoch 6/15 batch 20/29 loss=0.6758 acc=0.8195 lr=3.75e-06 elapsed=45.6s
+[train] epoch 6/15 batch 29/29 loss=0.6739 acc=0.8206 lr=3.75e-06 elapsed=69.8s
+Epoch 006/015 | train_acc=0.8206 testA_raw=0.7212 testA_preprocess=0.6974 mnistC=0.9731 score=0.7081 best=0.7081@6 | best
+[train] epoch 7/15 batch 1/29 loss=0.6565 acc=0.8242 lr=3.27254e-06 elapsed=2.3s
+[train] epoch 7/15 batch 20/29 loss=0.6692 acc=0.8199 lr=3.27254e-06 elapsed=47.6s
+[train] epoch 7/15 batch 29/29 loss=0.6694 acc=0.8201 lr=3.27254e-06 elapsed=69.1s
+Epoch 007/015 | train_acc=0.8201 testA_raw=0.7203 testA_preprocess=0.6955 mnistC=0.9757 score=0.7067 best=0.7081@6 | no_improve=1
+[train] epoch 8/15 batch 1/29 loss=0.6822 acc=0.8171 lr=2.76132e-06 elapsed=2.2s
+[train] epoch 8/15 batch 20/29 loss=0.6753 acc=0.8193 lr=2.76132e-06 elapsed=45.3s
+[train] epoch 8/15 batch 29/29 loss=0.6734 acc=0.8196 lr=2.76132e-06 elapsed=65.1s
+Epoch 008/015 | train_acc=0.8196 testA_raw=0.7231 testA_preprocess=0.6974 mnistC=0.9748 score=0.7090 best=0.7090@8 | best
+[train] epoch 9/15 batch 1/29 loss=0.6657 acc=0.8206 lr=2.23868e-06 elapsed=2.2s
+[train] epoch 9/15 batch 20/29 loss=0.6726 acc=0.8207 lr=2.23868e-06 elapsed=43.9s
+[train] epoch 9/15 batch 29/29 loss=0.6706 acc=0.8214 lr=2.23868e-06 elapsed=64.1s
+Epoch 009/015 | train_acc=0.8214 testA_raw=0.7222 testA_preprocess=0.6955 mnistC=0.9768 score=0.7075 best=0.7090@8 | no_improve=1
+[train] epoch 10/15 batch 1/29 loss=0.6824 acc=0.8127 lr=1.72746e-06 elapsed=2.3s
+[train] epoch 10/15 batch 20/29 loss=0.6689 acc=0.8218 lr=1.72746e-06 elapsed=47.6s
+[train] epoch 10/15 batch 29/29 loss=0.6673 acc=0.8220 lr=1.72746e-06 elapsed=67.4s
+Epoch 010/015 | train_acc=0.8220 testA_raw=0.7231 testA_preprocess=0.6984 mnistC=0.9766 score=0.7095 best=0.7095@10 | best
+[train] epoch 11/15 batch 1/29 loss=0.6544 acc=0.8267 lr=1.25e-06 elapsed=2.2s
+[train] epoch 11/15 batch 20/29 loss=0.6660 acc=0.8222 lr=1.25e-06 elapsed=44.2s
+[train] epoch 11/15 batch 29/29 loss=0.6690 acc=0.8207 lr=1.25e-06 elapsed=65.1s
+Epoch 011/015 | train_acc=0.8207 testA_raw=0.7241 testA_preprocess=0.6955 mnistC=0.9761 score=0.7084 best=0.7095@10 | no_improve=1
+[train] epoch 12/15 batch 1/29 loss=0.6956 acc=0.8142 lr=8.27173e-07 elapsed=2.3s
+[train] epoch 12/15 batch 20/29 loss=0.6708 acc=0.8205 lr=8.27173e-07 elapsed=43.7s
+[train] epoch 12/15 batch 29/29 loss=0.6691 acc=0.8214 lr=8.27173e-07 elapsed=63.6s
+Epoch 012/015 | train_acc=0.8214 testA_raw=0.7250 testA_preprocess=0.6974 mnistC=0.9729 score=0.7098 best=0.7098@12 | best
+[train] epoch 13/15 batch 1/29 loss=0.6601 acc=0.8210 lr=4.77458e-07 elapsed=2.2s
+[train] epoch 13/15 batch 20/29 loss=0.6669 acc=0.8210 lr=4.77458e-07 elapsed=43.9s
+[train] epoch 13/15 batch 29/29 loss=0.6679 acc=0.8213 lr=4.77458e-07 elapsed=63.4s
+Epoch 013/015 | train_acc=0.8213 testA_raw=0.7241 testA_preprocess=0.6974 mnistC=0.9754 score=0.7094 best=0.7098@12 | no_improve=1
+[train] epoch 14/15 batch 1/29 loss=0.6657 acc=0.8271 lr=2.16136e-07 elapsed=2.2s
+[train] epoch 14/15 batch 20/29 loss=0.6717 acc=0.8208 lr=2.16136e-07 elapsed=44.6s
+[train] epoch 14/15 batch 29/29 loss=0.6717 acc=0.8204 lr=2.16136e-07 elapsed=64.2s
+Epoch 014/015 | train_acc=0.8204 testA_raw=0.7222 testA_preprocess=0.6974 mnistC=0.9746 score=0.7086 best=0.7098@12 | no_improve=2
+[train] epoch 15/15 batch 1/29 loss=0.6702 acc=0.8230 lr=5.4631e-08 elapsed=2.2s
+[train] epoch 15/15 batch 20/29 loss=0.6702 acc=0.8200 lr=5.4631e-08 elapsed=43.8s
+[train] epoch 15/15 batch 29/29 loss=0.6727 acc=0.8194 lr=5.4631e-08 elapsed=67.9s
+Epoch 015/015 | train_acc=0.8194 testA_raw=0.7231 testA_preprocess=0.6965 mnistC=0.9747 score=0.7085 best=0.7098@12 | no_improve=3
+{
+  "best_score": 0.7098477640342531,
+  "best_epoch": 12,
+  "checkpoint": "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_submission\\checkpoints\\robust_expert_v2_testa_partial_best.pt",
+  "history_csv": "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_submission\\logs\\testa_robust_v2_history.csv",
+  "data": {
+    "train_length_per_epoch": 120000,
+    "clean_family_length": 170000,
+    "mnist_c_train_length": 720000,
+    "synthetic_length": 30000,
+    "mnist_c_val_length": 9600,
+    "testA_length": 3500,
+    "testA_train_length": 2449,
+    "testA_validation_length": 1051,
+    "testA_validation_mode": "heldout",
+    "testA_train_ratio": 0.7,
+    "selected_mnist_c": [
+      "impulse_noise",
+      "shot_noise",
+      "dotted_line",
+      "stripe",
+      "spatter",
+      "fog",
+      "glass_blur",
+      "motion_blur",
+      "zigzag",
+      "shear",
+      "translate",
+      "scale"
+    ],
+    "sampling_weights": {
+      "clean_family": 0.25,
+      "mnist_c_selected": 0.3,
+      "synthetic_testa_like": 0.25,
+      "testA_partial": 0.2
+    }
+  }
+}

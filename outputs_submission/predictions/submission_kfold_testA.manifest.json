@@ -1,0 +1,32 @@
+{
+  "mode": "idx",
+  "source": "data\\test_A_images.idx3-ubyte(1)\\test_A_images.idx3-ubyte",
+  "tta_n": 8,
+  "n_samples": 3500,
+  "n_checkpoints": 5,
+  "checkpoints": [
+    {
+      "checkpoint": "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_submission\\checkpoints\\robust_expert_v2_kfold_f0_best.pt",
+      "elapsed_sec": 6.17
+    },
+    {
+      "checkpoint": "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_submission\\checkpoints\\robust_expert_v2_kfold_f1_best.pt",
+      "elapsed_sec": 6.08
+    },
+    {
+      "checkpoint": "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_submission\\checkpoints\\robust_expert_v2_kfold_f2_best.pt",
+      "elapsed_sec": 6.56
+    },
+    {
+      "checkpoint": "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_submission\\checkpoints\\robust_expert_v2_kfold_f3_best.pt",
+      "elapsed_sec": 6.55
+    },
+    {
+      "checkpoint": "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_submission\\checkpoints\\robust_expert_v2_kfold_f4_best.pt",
+      "elapsed_sec": 6.5
+    }
+  ],
+  "output_csv": "outputs_submission\\predictions\\submission_kfold_testA.csv",
+  "view": "raw",
+  "fusion": "probability_mean(raw + TTA averaged within each model, then mean across models)"
+}
