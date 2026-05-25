@@ -27,6 +27,57 @@ def ensemble_probabilities(clean_probabilities: torch.Tensor, robust_probabiliti
     return clean_weight * clean_probabilities + (1.0 - clean_weight) * robust_probabilities
 
 
+def _validate_probability_tensor(probabilities: torch.Tensor, name: str) -> None:
+    if probabilities.ndim != 2:
+        raise ValueError(f"{name} 必须是 [n_samples, n_classes]，实际 shape={tuple(probabilities.shape)}")
+    if not torch.isfinite(probabilities).all():
+        raise ValueError(f"{name} 包含非有限值")
+
+
+def average_probabilities(probability_tensors: list[torch.Tensor] | tuple[torch.Tensor, ...]) -> torch.Tensor:
+    if not probability_tensors:
+        raise ValueError("至少需要一个 probability tensor")
+    first_shape = tuple(probability_tensors[0].shape)
+    for index, probabilities in enumerate(probability_tensors):
+        _validate_probability_tensor(probabilities, f"probability_tensors[{index}]")
+        if tuple(probabilities.shape) != first_shape:
+            raise ValueError(f"probability tensor shape 不一致: {tuple(probabilities.shape)} != {first_shape}")
+    return torch.stack([probabilities.float() for probabilities in probability_tensors], dim=0).mean(dim=0)
+
+
+def weighted_probability_fusion(specialist_probabilities: torch.Tensor, generalist_probabilities: torch.Tensor, weight: float) -> torch.Tensor:
+    _validate_probability_tensor(specialist_probabilities, "specialist_probabilities")
+    _validate_probability_tensor(generalist_probabilities, "generalist_probabilities")
+    if tuple(specialist_probabilities.shape) != tuple(generalist_probabilities.shape):
+        raise ValueError(
+            "specialist/generalist probability shape 不一致: "
+            f"{tuple(specialist_probabilities.shape)} != {tuple(generalist_probabilities.shape)}"
+        )
+    if not 0.0 <= weight <= 1.0:
+        raise ValueError(f"weight 必须在 [0, 1]，收到 {weight}")
+    return weight * specialist_probabilities + (1.0 - weight) * generalist_probabilities
+
+
+def search_specialist_generalist_weight(
+    specialist_probabilities: torch.Tensor,
+    generalist_probabilities: torch.Tensor,
+    labels: torch.Tensor,
+    weights: list[float] | tuple[float, ...] = (0.5, 0.6, 0.7, 0.8, 0.9, 1.0),
+) -> dict:
+    labels = labels.cpu().long()
+    rows = []
+    best = None
+    for weight in weights:
+        fused = weighted_probability_fusion(specialist_probabilities, generalist_probabilities, float(weight))
+        predictions = fused.argmax(dim=1).cpu()
+        accuracy = float((predictions == labels).float().mean().item()) if labels.numel() else 0.0
+        row = {"weight": float(weight), "accuracy": accuracy}
+        rows.append(row)
+        if best is None or accuracy > best["accuracy"]:
+            best = row
+    return {"best_weight": best["weight"] if best else None, "best_accuracy": best["accuracy"] if best else None, "rows": rows}
+
+
 def predict_batch_pair(clean_model, robust_model, images: torch.Tensor, config: ExperimentConfig, device: str, clean_weight: float):
     clean_probabilities = predict_probabilities_with_tta(clean_model, images, config, device)
     robust_probabilities = predict_probabilities_with_tta(robust_model, images, config, device)

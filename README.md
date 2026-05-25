@@ -19,6 +19,67 @@
 
 其中 `evaluation_summary.json` 记录的 mixed validation accuracy 约为 **0.9987**。新实验默认应写入 `outputs/` 或 `outputs_runs/<run_name>/`，不要写入或清空 `outputs_submission/`。
 
+## 当前优化主线：TestA 目标域适配
+
+请把项目里的两个指标分开理解：
+
+1. **MNIST-like benchmark**：`outputs_submission/logs/evaluation_summary.json` 里的约 **0.998** accuracy，说明模型已经具备很强的普通手写数字识别能力。
+2. **TestA benchmark**：当前 TestA raw + K-Fold/TTA ensemble 约 **0.72** accuracy，反映的是期末测试分布的一部分上的目标域适配能力。
+
+这两个数来自不同分布，不能直接当作同一个测试集上的高低对比。后续主线应优先优化 TestA 分布，而不是继续只追 MNIST-like accuracy。
+
+推荐路线：
+
+```text
+generalist pretraining / robust training
+        ↓
+严格 TestA-only specialist fine-tuning
+        ↓
+5-Fold TestA specialist ensemble
+        ↓
+specialist ensemble + generalist weighted fusion
+```
+
+新 TestA specialist 路线默认遵循：
+
+- 使用未见过 TestA 标签的 generalist checkpoint 初始化，保证 OOF 验证更可信。
+- 每个 fold 只使用 TestA train fold 训练，只用 TestA val fold 验证。
+- raw image 是默认主视图；preprocess 只作为诊断，不参与默认选最佳 checkpoint。
+- 默认关闭 CutMix 和 RandomErasing，使用保守增强。
+- 新实验默认写入 `outputs_runs/<experiment_id>/`，不覆盖 `outputs_submission/`。
+
+### TestA specialist 命令示例
+
+TestA-only scratch 5-Fold baseline：
+
+```bash
+python scripts/run_testa_scratch_kfold.py --config experiments/testa_scratch_5fold.yaml
+```
+
+Generalist -> TestA specialist 5-Fold fine-tune：
+
+```bash
+python scripts/run_testa_finetune_kfold.py --config experiments/testa_finetune_from_generalist.yaml
+```
+
+生成 specialist out-of-fold 评估与错误分析：
+
+```bash
+python scripts/eval_testa_specialist_oof.py --config experiments/testa_specialist_5fold.yaml
+```
+
+搜索 specialist + generalist 融合权重：
+
+```bash
+python scripts/predict_testa_fusion.py --config experiments/specialist_generalist_ensemble.yaml --search-only
+```
+
+最终融合预测示例：
+
+```bash
+python scripts/predict_testa_fusion.py --config experiments/specialist_generalist_ensemble.yaml --image-dir <无标签图片目录>
+```
+
 ## 推荐使用方式
 
 ### 1. 提交给老师

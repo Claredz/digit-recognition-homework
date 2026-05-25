@@ -13,6 +13,13 @@ from src.config import ExperimentConfig
 _IMAGE_SUFFIXES = {".png", ".jpg", ".jpeg", ".bmp"}
 
 
+class ToTensorIfNeeded:
+    def __call__(self, image):
+        if torch.is_tensor(image):
+            return image.float()
+        return TF.to_tensor(image)
+
+
 class FolderDigitsDataset(Dataset):
     def __init__(self, root: Path, image_size: int = 28, augment: bool = False):
         self.root = Path(root)
@@ -67,7 +74,7 @@ def build_transform(image_size: int, augment: bool = False):
                 transforms.RandomAffine(degrees=0, translate=(0.08, 0.08)),
             ]
         )
-    operations.extend([transforms.ToTensor(), transforms.Normalize((0.5,), (0.5,))])
+    operations.extend([ToTensorIfNeeded(), transforms.Normalize((0.5,), (0.5,))])
     return transforms.Compose(operations)
 
 
@@ -84,13 +91,13 @@ def build_train_transform(config: ExperimentConfig, correct_emnist: bool = False
         )
     if config.use_gaussian_blur:
         operations.append(transforms.RandomApply([transforms.GaussianBlur(kernel_size=3)], p=0.25))
-    operations.extend([transforms.ToTensor(), transforms.Normalize((0.5,), (0.5,))])
+    operations.extend([ToTensorIfNeeded(), transforms.Normalize((0.5,), (0.5,))])
     return transforms.Compose(operations)
 
 
 def build_eval_transform(config: ExperimentConfig, correct_emnist: bool = False):
     operations = _base_transform_ops(config.image_size, correct_emnist=correct_emnist)
-    operations.extend([transforms.ToTensor(), transforms.Normalize((0.5,), (0.5,))])
+    operations.extend([ToTensorIfNeeded(), transforms.Normalize((0.5,), (0.5,))])
     return transforms.Compose(operations)
 
 

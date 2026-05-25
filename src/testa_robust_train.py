@@ -7,6 +7,7 @@ import random
 import struct
 import time
 from dataclasses import asdict, dataclass
+from datetime import datetime, timezone
 from pathlib import Path
 
 import numpy as np
@@ -21,9 +22,13 @@ from torchvision.transforms import functional as TF
 
 from src.config import ExperimentConfig
 from src.data import CorrectEMNISTOrientation
-from src.evaluate import load_model_from_checkpoint
+from src.error_analysis import save_error_analysis_bundle
+from src.evaluate import load_model_from_checkpoint, save_evaluation_bundle
+from src.experiment_config import git_commit_hash
+from src.model import build_model, count_model_parameters
 from src.preprocess import preprocess_to_mnist_style_image
 from src.robust_data import RandomErodeDilate
+from src.robust_train import freeze_backbone, unfreeze_all
 from src.train import set_seed
 
 SELECTED_MNIST_C = (
@@ -61,7 +66,7 @@ MNIST_C_WEIGHTS = {
 class TestARobustConfig:
     project_root: Path
     output_dir: Path
-    base_checkpoint: Path
+    base_checkpoint: Path | None = None
     model_name: str = "medium_cnn"
     dropout: float = 0.21672530847241062
     image_size: int = 28
@@ -100,6 +105,19 @@ class TestARobustConfig:
     testA_weight_raw: float = 0.45
     testA_weight_preprocess: float = 0.55
     checkpoint_name: str = "robust_expert_v2_best.pt"
+    training_mode: str = "mixed_robust"
+    experiment_id: str = "testa_robust_v2"
+    preprocessing_mode: str = "raw"
+    evaluate_preprocess: bool = False
+    freeze_backbone_epochs: int = 0
+    affine_degrees: float = 5.0
+    translate_ratio: float = 0.04
+    scale_min: float = 0.96
+    scale_max: float = 1.04
+    shear_degrees: float = 2.0
+    use_testa_like_augment: bool = False
+    preprocess_probability: float = 0.0
+    save_validation_artifacts: bool = True
 
     def data_dir(self) -> Path:
         return self.project_root / "data"
@@ -369,9 +387,12 @@ class IdxTestADataset(Dataset):
         labels = self._read_labels(label_path)
         if len(images) != len(labels):
             raise ValueError("testA images/labels 数量不一致")
-        if indices is not None:
-            images = images[indices]
-            labels = labels[indices]
+        if indices is None:
+            self.indices = np.arange(len(labels), dtype=np.int64)
+        else:
+            self.indices = np.asarray(indices, dtype=np.int64)
+            images = images[self.indices]
+            labels = labels[self.indices]
         self.images = images
         self.labels = labels
         self.preprocess = preprocess
@@ -398,6 +419,9 @@ class IdxTestADataset(Dataset):
     def __len__(self) -> int:
         return len(self.labels)
 
+    def sample_ids(self) -> list[int]:
+        return [int(index) for index in self.indices.tolist()]
+
     def __getitem__(self, index: int):
         image = Image.fromarray(self.images[index])
         if self.preprocess:
@@ -408,19 +432,41 @@ class IdxTestADataset(Dataset):
 
 
 class TestAPartialTrainDataset(Dataset):
-    def __init__(self, image_path: Path, label_path: Path, indices: list[int], image_size: int, random_erasing_p: float = 0.0):
+    def __init__(
+        self,
+        image_path: Path,
+        label_path: Path,
+        indices: list[int],
+        image_size: int,
+        random_erasing_p: float = 0.0,
+        preprocess_probability: float = 0.50,
+        use_testa_like_augment: bool = True,
+        affine_degrees: float = 5.0,
+        translate_ratio: float = 0.04,
+        scale_min: float = 0.96,
+        scale_max: float = 1.04,
+        shear_degrees: float = 2.0,
+    ):
         images = IdxTestADataset._read_images(image_path)
         labels = IdxTestADataset._read_labels(label_path)
-        self.images = images[indices]
-        self.labels = labels[indices]
+        self.indices = np.asarray(indices, dtype=np.int64)
+        self.images = images[self.indices]
+        self.labels = labels[self.indices]
+        self.preprocess_probability = preprocess_probability
         layers = [
             transforms.Grayscale(num_output_channels=1),
             transforms.Resize((image_size, image_size)),
-            transforms.RandomAffine(degrees=5, translate=(0.04, 0.04), scale=(0.96, 1.04), shear=2),
+            transforms.RandomAffine(
+                degrees=affine_degrees,
+                translate=(translate_ratio, translate_ratio),
+                scale=(scale_min, scale_max),
+                shear=shear_degrees,
+            ),
             transforms.ToTensor(),
-            TensorTestALikeAugment(),
-            transforms.Normalize((0.5,), (0.5,)),
         ]
+        if use_testa_like_augment:
+            layers.append(TensorTestALikeAugment())
+        layers.append(transforms.Normalize((0.5,), (0.5,)))
         if random_erasing_p > 0:
             layers.append(transforms.RandomErasing(p=random_erasing_p, scale=(0.02, 0.15), ratio=(0.3, 3.3), value=0.0))
         self.transform = transforms.Compose(layers)
@@ -428,9 +474,12 @@ class TestAPartialTrainDataset(Dataset):
     def __len__(self) -> int:
         return len(self.labels)
 
+    def sample_ids(self) -> list[int]:
+        return [int(index) for index in self.indices.tolist()]
+
     def __getitem__(self, index: int):
         image = Image.fromarray(self.images[index])
-        if random.random() < 0.50:
+        if self.preprocess_probability > 0 and random.random() < self.preprocess_probability:
             image = preprocess_to_mnist_style_image(image, auto_invert=True)
         return self.transform(image), int(self.labels[index])
 
@@ -644,7 +693,406 @@ def write_json(path: Path, payload):
     path.write_text(json.dumps(payload, indent=2, ensure_ascii=False), encoding="utf-8")
 
 
+def _testa_idx_paths(config: TestARobustConfig) -> tuple[Path, Path]:
+    data_dir = config.data_dir()
+    return (
+        data_dir / "test_A_images.idx3-ubyte(1)" / "test_A_images.idx3-ubyte",
+        data_dir / "test_A_labels.idx1-ubyte(1)" / "test_A_labels.idx1-ubyte",
+    )
+
+
+def make_specialist_loader(dataset: Dataset, config: TestARobustConfig, shuffle: bool) -> DataLoader:
+    kwargs = {
+        "batch_size": config.batch_size,
+        "shuffle": shuffle,
+        "num_workers": config.num_workers,
+        "pin_memory": True,
+        "persistent_workers": config.num_workers > 0,
+        "drop_last": False,
+    }
+    if config.num_workers > 0:
+        kwargs["prefetch_factor"] = config.prefetch_factor
+    return DataLoader(dataset, **kwargs)
+
+
+def build_testa_specialist_datasets(config: TestARobustConfig):
+    image_path, label_path = _testa_idx_paths(config)
+    labels = IdxTestADataset._read_labels(label_path)
+    split_seed = config.seed + 40
+    if config.use_kfold:
+        train_indices, val_indices = kfold_indices(labels, config.kfold_n_splits, config.kfold_index, split_seed)
+        validation_mode = "kfold"
+    else:
+        train_indices, val_indices = stratified_indices(labels, config.testa_train_ratio, split_seed)
+        validation_mode = "heldout"
+
+    train_dataset = TestAPartialTrainDataset(
+        image_path,
+        label_path,
+        train_indices,
+        config.image_size,
+        random_erasing_p=config.random_erasing_p,
+        preprocess_probability=config.preprocess_probability,
+        use_testa_like_augment=config.use_testa_like_augment,
+        affine_degrees=config.affine_degrees,
+        translate_ratio=config.translate_ratio,
+        scale_min=config.scale_min,
+        scale_max=config.scale_max,
+        shear_degrees=config.shear_degrees,
+    )
+    val_raw = IdxTestADataset(image_path, label_path, preprocess=False, indices=val_indices)
+    val_preprocess = IdxTestADataset(image_path, label_path, preprocess=True, indices=val_indices) if config.evaluate_preprocess else None
+    metadata = {
+        "mode": config.training_mode,
+        "dataset": "TestA-only",
+        "preprocessing_mode": config.preprocessing_mode,
+        "primary_metric": "testA_raw_accuracy",
+        "testA_length": int(len(labels)),
+        "testA_train_length": int(len(train_indices)),
+        "testA_validation_length": int(len(val_indices)),
+        "testA_validation_mode": validation_mode,
+        "kfold_n_splits": config.kfold_n_splits if config.use_kfold else 0,
+        "kfold_index": config.kfold_index if config.use_kfold else -1,
+        "split_seed": split_seed,
+        "augmentation": {
+            "affine_degrees": config.affine_degrees,
+            "translate_ratio": config.translate_ratio,
+            "scale_min": config.scale_min,
+            "scale_max": config.scale_max,
+            "shear_degrees": config.shear_degrees,
+            "mixup_alpha": config.mixup_alpha,
+            "cutmix_alpha": config.cutmix_alpha,
+            "mix_prob": config.mix_prob,
+            "random_erasing_p": config.random_erasing_p,
+            "use_testa_like_augment": config.use_testa_like_augment,
+            "preprocess_probability": config.preprocess_probability,
+        },
+        "train_indices": [int(index) for index in train_indices],
+        "val_indices": [int(index) for index in val_indices],
+    }
+    return train_dataset, val_raw, val_preprocess, metadata
+
+
+def _specialist_experiment_config(config: TestARobustConfig) -> ExperimentConfig:
+    return ExperimentConfig(
+        project_root=config.project_root,
+        output_dir=config.output_dir,
+        model_name=config.model_name,
+        dropout=config.dropout,
+        batch_size=config.batch_size,
+        image_size=config.image_size,
+        use_amp=config.use_amp,
+        allow_tf32=config.allow_tf32,
+        verbose=False,
+    )
+
+
+def _build_specialist_model(config: TestARobustConfig, device: str):
+    exp_config = _specialist_experiment_config(config)
+    if config.base_checkpoint is not None:
+        checkpoint_path = Path(config.base_checkpoint)
+        if not checkpoint_path.exists():
+            raise FileNotFoundError(f"未找到 TestA specialist 初始化 checkpoint: {checkpoint_path}")
+        model, payload = load_model_from_checkpoint(checkpoint_path, exp_config, device)
+        initialized_from_checkpoint = True
+    else:
+        model = build_model(config.model_name, num_classes=10, in_channels=1, dropout=config.dropout)
+        model.to(device)
+        payload = {}
+        initialized_from_checkpoint = False
+    return model, payload, initialized_from_checkpoint
+
+
+@torch.no_grad()
+def collect_probability_bundle(model, loader: DataLoader, device: str, use_amp: bool):
+    model.eval()
+    images_out = []
+    labels_out = []
+    probabilities_out = []
+    for images, labels in loader:
+        images = images.to(device, non_blocking=True)
+        labels = labels.to(device, non_blocking=True)
+        with torch.amp.autocast("cuda", enabled=device == "cuda" and use_amp):
+            probabilities = torch.softmax(model(images), dim=1)
+        images_out.append(images.cpu())
+        labels_out.append(labels.cpu())
+        probabilities_out.append(probabilities.cpu())
+    return torch.cat(images_out), torch.cat(labels_out), torch.cat(probabilities_out)
+
+
+def save_validation_prediction_artifacts(
+    config: TestARobustConfig,
+    model,
+    val_dataset: IdxTestADataset,
+    val_loader: DataLoader,
+    device: str,
+    preprocess_loader: DataLoader | None = None,
+):
+    predictions_dir = config.output_dir / "predictions"
+    evaluation_dir = config.output_dir / "evaluation" / "validation_raw"
+    predictions_dir.mkdir(parents=True, exist_ok=True)
+    evaluation_dir.mkdir(parents=True, exist_ok=True)
+
+    images, labels, probabilities = collect_probability_bundle(model, val_loader, device, config.use_amp)
+    predictions = probabilities.argmax(dim=1)
+    confidences = probabilities.max(dim=1).values
+    sample_ids = val_dataset.sample_ids()
+
+    probability_path = predictions_dir / "validation_probabilities.pt"
+    torch.save(
+        {
+            "sample_ids": sample_ids,
+            "labels": labels,
+            "probabilities": probabilities,
+            "preprocessing_mode": "raw",
+        },
+        probability_path,
+    )
+
+    csv_path = predictions_dir / "validation_predictions.csv"
+    with csv_path.open("w", newline="", encoding="utf-8") as handle:
+        fieldnames = ["sample_id", "label", "prediction", "confidence", "correct"] + [f"prob_{index}" for index in range(10)]
+        writer = csv.DictWriter(handle, fieldnames=fieldnames)
+        writer.writeheader()
+        for row_index, sample_id in enumerate(sample_ids):
+            writer.writerow(
+                {
+                    "sample_id": sample_id,
+                    "label": int(labels[row_index].item()),
+                    "prediction": int(predictions[row_index].item()),
+                    "confidence": float(confidences[row_index].item()),
+                    "correct": bool(predictions[row_index].item() == labels[row_index].item()),
+                    **{f"prob_{class_index}": float(probabilities[row_index, class_index].item()) for class_index in range(10)},
+                }
+            )
+
+    preprocess_probabilities = None
+    if preprocess_loader is not None:
+        _, preprocess_labels, preprocess_probabilities = collect_probability_bundle(model, preprocess_loader, device, config.use_amp)
+        if not torch.equal(preprocess_labels, labels):
+            raise RuntimeError("raw/preprocess validation label order mismatch")
+        torch.save(
+            {
+                "sample_ids": sample_ids,
+                "labels": labels,
+                "probabilities": preprocess_probabilities,
+                "preprocessing_mode": "preprocess",
+            },
+            predictions_dir / "validation_preprocess_probabilities.pt",
+        )
+
+    summary = save_evaluation_bundle(images, labels, predictions, evaluation_dir)
+    error_payload = save_error_analysis_bundle(
+        evaluation_dir,
+        sample_ids=sample_ids,
+        images=images,
+        labels=labels,
+        probabilities=probabilities,
+        preprocess_probabilities=preprocess_probabilities,
+    )
+    return {
+        "validation_predictions_csv": str(csv_path),
+        "validation_probabilities": str(probability_path),
+        "evaluation_dir": str(evaluation_dir),
+        "summary": summary,
+        "error_analysis": error_payload,
+    }
+
+
+def train_testa_specialist(config: TestARobustConfig):
+    set_seed(config.seed)
+    configure_cuda(config)
+    config.checkpoints_dir().mkdir(parents=True, exist_ok=True)
+    config.logs_dir().mkdir(parents=True, exist_ok=True)
+    (config.output_dir / "predictions").mkdir(parents=True, exist_ok=True)
+    (config.output_dir / "evaluation").mkdir(parents=True, exist_ok=True)
+    device = "cuda" if torch.cuda.is_available() else "cpu"
+    print(json.dumps({"stage": "TestA specialist", "device": device, **{k: str(v) if isinstance(v, Path) else v for k, v in asdict(config).items()}}, indent=2, ensure_ascii=False), flush=True)
+
+    train_dataset, val_raw, val_preprocess, metadata = build_testa_specialist_datasets(config)
+    write_json(config.logs_dir() / "testa_specialist_data_manifest.json", metadata)
+    write_json(config.logs_dir() / "testa_split_indices.json", {"train_indices": metadata["train_indices"], "val_indices": metadata["val_indices"]})
+    train_loader = make_specialist_loader(train_dataset, config, shuffle=True)
+    val_batch_config = TestARobustConfig(**{**asdict(config), "batch_size": min(config.batch_size, 4096), "num_workers": max(0, min(config.num_workers, 6))})
+    val_raw_loader = make_specialist_loader(val_raw, val_batch_config, shuffle=False)
+    val_preprocess_loader = make_specialist_loader(val_preprocess, val_batch_config, shuffle=False) if val_preprocess is not None else None
+
+    model, checkpoint_payload, initialized_from_checkpoint = _build_specialist_model(config, device)
+    model = model.to(device)
+    if device == "cuda":
+        model = model.to(memory_format=torch.channels_last)
+    if config.compile_model:
+        model = torch.compile(model, mode="max-autotune")
+
+    criterion = nn.CrossEntropyLoss(label_smoothing=config.label_smoothing)
+    total_params, trainable_params_initial = count_model_parameters(model)
+    phase_plan: list[tuple[str, int, bool]] = []
+    freeze_epochs = config.freeze_backbone_epochs if initialized_from_checkpoint else 0
+    if freeze_epochs > 0:
+        phase_plan.append(("freeze_backbone", min(freeze_epochs, config.epochs), True))
+    remaining_epochs = max(0, config.epochs - sum(phase[1] for phase in phase_plan))
+    if remaining_epochs > 0:
+        phase_plan.append(("full_finetune" if initialized_from_checkpoint else "scratch", remaining_epochs, False))
+    if not phase_plan:
+        phase_plan.append(("full_finetune", config.epochs, False))
+
+    history = {"epochs": [], "metadata": metadata, "config": {k: str(v) if isinstance(v, Path) else v for k, v in asdict(config).items()}}
+    checkpoint_path = config.checkpoints_dir() / config.checkpoint_name
+    csv_path = config.logs_dir() / "testa_specialist_history.csv"
+    best_score = -1.0
+    best_epoch = 0
+    bad_epochs = 0
+    global_epoch = 0
+
+    with csv_path.open("w", newline="", encoding="utf-8") as handle:
+        writer = csv.DictWriter(handle, fieldnames=["epoch", "phase", "train_loss", "train_acc", "testA_raw_acc", "testA_preprocess_acc", "score", "lr", "elapsed_sec"])
+        writer.writeheader()
+        stop_training = False
+        for phase_name, phase_epochs, should_freeze in phase_plan:
+            if should_freeze:
+                freeze_backbone(model)
+            else:
+                unfreeze_all(model)
+            optimizer = torch.optim.AdamW((parameter for parameter in model.parameters() if parameter.requires_grad), lr=config.learning_rate, weight_decay=config.weight_decay)
+            scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=max(1, phase_epochs))
+            scaler = torch.amp.GradScaler("cuda", enabled=device == "cuda" and config.use_amp)
+
+            for _ in range(phase_epochs):
+                global_epoch += 1
+                model.train()
+                start = time.perf_counter()
+                total_loss = 0.0
+                total_correct = 0
+                total = 0
+                for batch_index, (images, labels) in enumerate(train_loader, start=1):
+                    images = images.to(device, non_blocking=True)
+                    if device == "cuda":
+                        images = images.contiguous(memory_format=torch.channels_last)
+                    labels = labels.to(device, non_blocking=True)
+                    mixed_images, labels_a, labels_b, lam, mix_mode = maybe_mixup_cutmix(images, labels, config)
+                    optimizer.zero_grad(set_to_none=True)
+                    with torch.amp.autocast("cuda", enabled=device == "cuda" and config.use_amp):
+                        logits = model(mixed_images)
+                        if mix_mode == "none":
+                            loss = criterion(logits, labels)
+                        else:
+                            loss = lam * criterion(logits, labels_a) + (1.0 - lam) * criterion(logits, labels_b)
+                    if scaler.is_enabled():
+                        scaler.scale(loss).backward()
+                        scaler.step(optimizer)
+                        scaler.update()
+                    else:
+                        loss.backward()
+                        optimizer.step()
+                    pred = logits.argmax(1)
+                    total_loss += float(loss.item()) * images.size(0)
+                    total_correct += int((pred == labels).sum().item())
+                    total += images.size(0)
+                    if batch_index == 1 or batch_index % config.log_interval == 0 or batch_index == len(train_loader):
+                        print(
+                            f"[testa:{phase_name}] epoch {global_epoch}/{config.epochs} batch {batch_index}/{len(train_loader)} "
+                            f"loss={total_loss / max(1, total):.4f} acc={total_correct / max(1, total):.4f} "
+                            f"lr={optimizer.param_groups[0]['lr']:.6g} elapsed={time.perf_counter() - start:.1f}s",
+                            flush=True,
+                        )
+                scheduler.step()
+                raw_result = evaluate_loader(model, val_raw_loader, device, config.use_amp, "testA_raw")
+                preprocess_acc = None
+                if val_preprocess_loader is not None:
+                    preprocess_acc = evaluate_loader(model, val_preprocess_loader, device, config.use_amp, "testA_preprocess")["accuracy"]
+                score = raw_result["accuracy"]
+                row = {
+                    "epoch": global_epoch,
+                    "phase": phase_name,
+                    "train_loss": total_loss / max(1, total),
+                    "train_acc": total_correct / max(1, total),
+                    "testA_raw_acc": raw_result["accuracy"],
+                    "testA_preprocess_acc": preprocess_acc,
+                    "score": score,
+                    "lr": optimizer.param_groups[0]["lr"],
+                    "elapsed_sec": round(time.perf_counter() - start, 2),
+                }
+                writer.writerow(row)
+                handle.flush()
+                history["epochs"].append(row)
+                improved = score > best_score + 1e-4
+                if improved:
+                    best_score = score
+                    best_epoch = global_epoch
+                    bad_epochs = 0
+                    save_checkpoint(checkpoint_path, model, config, global_epoch, score, history)
+                    status = "best"
+                else:
+                    bad_epochs += 1
+                    status = f"no_improve={bad_epochs}"
+                write_json(config.logs_dir() / "testa_specialist_history.json", history)
+                print(
+                    f"Epoch {global_epoch:03d}/{config.epochs:03d} | phase={phase_name} train_acc={row['train_acc']:.4f} "
+                    f"testA_raw={row['testA_raw_acc']:.4f} score={score:.4f} best={best_score:.4f}@{best_epoch} | {status}",
+                    flush=True,
+                )
+                if bad_epochs >= config.patience:
+                    print(f"Early stopping: best={best_score:.4f}@{best_epoch}", flush=True)
+                    stop_training = True
+                    break
+            if stop_training:
+                break
+
+    artifact_summary = None
+    if config.save_validation_artifacts and checkpoint_path.exists():
+        best_model, _ = load_model_from_checkpoint(checkpoint_path, _specialist_experiment_config(config), device)
+        artifact_summary = save_validation_prediction_artifacts(
+            config,
+            best_model,
+            val_raw,
+            val_raw_loader,
+            device,
+            preprocess_loader=val_preprocess_loader,
+        )
+
+    _, trainable_params_final = count_model_parameters(model)
+    manifest = {
+        "experiment_id": config.experiment_id,
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "git_commit": git_commit_hash(config.project_root),
+        "stage": "TestA specialist",
+        "training_mode": config.training_mode,
+        "initialized_from_checkpoint": initialized_from_checkpoint,
+        "base_checkpoint": str(config.base_checkpoint) if config.base_checkpoint else None,
+        "checkpoint": str(checkpoint_path),
+        "history_csv": str(csv_path),
+        "best_score": best_score,
+        "best_epoch": best_epoch,
+        "best_val_accuracy": best_score,
+        "final_val_accuracy": history["epochs"][-1]["testA_raw_acc"] if history["epochs"] else None,
+        "model_name": config.model_name,
+        "seed": config.seed,
+        "fold_index": config.kfold_index if config.use_kfold else None,
+        "n_splits": config.kfold_n_splits if config.use_kfold else None,
+        "preprocessing_mode": config.preprocessing_mode,
+        "augmentation": metadata["augmentation"],
+        "optimizer": "AdamW",
+        "scheduler": "CosineAnnealingLR",
+        "learning_rate": config.learning_rate,
+        "batch_size": config.batch_size,
+        "epochs": config.epochs,
+        "output_dir": str(config.output_dir),
+        "data": {key: value for key, value in metadata.items() if key not in {"train_indices", "val_indices"}},
+        "total_parameters": total_params,
+        "trainable_parameters_initial": trainable_params_initial,
+        "trainable_parameters_final": trainable_params_final,
+        "checkpoint_payload_keys": sorted(checkpoint_payload.keys()) if isinstance(checkpoint_payload, dict) else [],
+        "artifacts": artifact_summary,
+    }
+    write_json(config.logs_dir() / "testa_specialist_manifest.json", manifest)
+    write_json(config.logs_dir() / "run_manifest.json", manifest)
+    print(json.dumps(manifest, indent=2, ensure_ascii=False), flush=True)
+    return manifest
+
+
 def train(config: TestARobustConfig):
+    if config.training_mode in {"testa_scratch", "testa_specialist", "testa_finetune"}:
+        return train_testa_specialist(config)
     set_seed(config.seed)
     configure_cuda(config)
     config.checkpoints_dir().mkdir(parents=True, exist_ok=True)
