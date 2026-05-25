@@ -27,7 +27,7 @@ from src.evaluate import load_model_from_checkpoint, save_evaluation_bundle
 from src.experiment_config import git_commit_hash
 from src.model import build_model, count_model_parameters
 from src.preprocess import preprocess_to_mnist_style_image
-from src.robust_data import RandomErodeDilate
+from src.robust_data import RandomBrightnessContrast, RandomErodeDilate
 from src.robust_train import freeze_backbone, unfreeze_all
 from src.train import set_seed
 
@@ -116,6 +116,11 @@ class TestARobustConfig:
     scale_max: float = 1.04
     shear_degrees: float = 2.0
     use_testa_like_augment: bool = False
+    testa_like_augment_strength: str = "medium"
+    testa_like_morph_p: float | None = None
+    testa_like_blur_p: float = 0.0
+    testa_like_contrast_p: float = 0.0
+    testa_like_dilate_bias: float = 0.5
     preprocess_probability: float = 0.0
     save_validation_artifacts: bool = True
 
@@ -130,11 +135,28 @@ class TestARobustConfig:
 
 
 class TensorTestALikeAugment:
-    def __init__(self, strength: str = "medium"):
-        self.strength = strength
-        self.morph = RandomErodeDilate(p=0.25)
+    def __init__(
+        self,
+        strength: str = "medium",
+        morph_p: float | None = None,
+        blur_p: float = 0.0,
+        contrast_p: float = 0.0,
+        dilate_bias: float = 0.5,
+    ):
+        self.strength = str(strength).strip().lower()
+        self.morph_gate_p = float(morph_p) if morph_p is not None else (0.10 if self.strength == "light" else 0.20)
+        self.morph = RandomErodeDilate(
+            p=1.0 if morph_p is not None or self.strength == "light" else 0.25,
+            dilate_bias=float(dilate_bias),
+        )
+        self.blur_p = float(blur_p)
+        self.blur = transforms.GaussianBlur(kernel_size=3, sigma=(0.1, 0.6))
+        self.contrast_p = float(contrast_p)
+        self.contrast = RandomBrightnessContrast(brightness=(0.90, 1.10), contrast=(0.85, 1.15), p=1.0)
 
     def __call__(self, tensor: torch.Tensor) -> torch.Tensor:
+        if self.strength == "light":
+            return self._call_light(tensor).clamp(0.0, 1.0)
         if random.random() < 0.45:
             tensor = self._gray_or_noisy_background(tensor)
         if random.random() < 0.40:
@@ -143,11 +165,24 @@ class TensorTestALikeAugment:
             tensor = self._occlude(tensor)
         if random.random() < 0.20:
             tensor = self._edge_cutoff(tensor)
-        if random.random() < 0.20:
+        if self.morph_gate_p > 0 and random.random() < self.morph_gate_p:
             tensor = self.morph(tensor)
+        if self.contrast_p > 0 and random.random() < self.contrast_p:
+            tensor = self.contrast(tensor)
+        if self.blur_p > 0 and random.random() < self.blur_p:
+            tensor = self.blur(tensor)
         if random.random() < 0.12:
             tensor = 1.0 - tensor
         return tensor.clamp(0.0, 1.0)
+
+    def _call_light(self, tensor: torch.Tensor) -> torch.Tensor:
+        if self.morph_gate_p > 0 and random.random() < self.morph_gate_p:
+            tensor = self.morph(tensor)
+        if self.contrast_p > 0 and random.random() < self.contrast_p:
+            tensor = self.contrast(tensor)
+        if self.blur_p > 0 and random.random() < self.blur_p:
+            tensor = self.blur(tensor)
+        return tensor
 
     def _gray_or_noisy_background(self, tensor: torch.Tensor) -> torch.Tensor:
         result = tensor.clone()
@@ -441,6 +476,11 @@ class TestAPartialTrainDataset(Dataset):
         random_erasing_p: float = 0.0,
         preprocess_probability: float = 0.50,
         use_testa_like_augment: bool = True,
+        testa_like_augment_strength: str = "medium",
+        testa_like_morph_p: float | None = None,
+        testa_like_blur_p: float = 0.0,
+        testa_like_contrast_p: float = 0.0,
+        testa_like_dilate_bias: float = 0.5,
         affine_degrees: float = 5.0,
         translate_ratio: float = 0.04,
         scale_min: float = 0.96,
@@ -465,7 +505,15 @@ class TestAPartialTrainDataset(Dataset):
             transforms.ToTensor(),
         ]
         if use_testa_like_augment:
-            layers.append(TensorTestALikeAugment())
+            layers.append(
+                TensorTestALikeAugment(
+                    strength=testa_like_augment_strength,
+                    morph_p=testa_like_morph_p,
+                    blur_p=testa_like_blur_p,
+                    contrast_p=testa_like_contrast_p,
+                    dilate_bias=testa_like_dilate_bias,
+                )
+            )
         layers.append(transforms.Normalize((0.5,), (0.5,)))
         if random_erasing_p > 0:
             layers.append(transforms.RandomErasing(p=random_erasing_p, scale=(0.02, 0.15), ratio=(0.3, 3.3), value=0.0))
@@ -540,7 +588,25 @@ def build_datasets(config: TestARobustConfig):
             test_a_train_indices, test_a_val_indices = kfold_indices(all_test_a_labels, config.kfold_n_splits, config.kfold_index, config.seed + 40)
         else:
             test_a_train_indices, test_a_val_indices = stratified_indices(all_test_a_labels, config.testa_train_ratio, config.seed + 40)
-        test_a_train = TestAPartialTrainDataset(test_a_images, test_a_labels, test_a_train_indices, config.image_size, random_erasing_p=config.random_erasing_p)
+        test_a_train = TestAPartialTrainDataset(
+            test_a_images,
+            test_a_labels,
+            test_a_train_indices,
+            config.image_size,
+            random_erasing_p=config.random_erasing_p,
+            preprocess_probability=config.preprocess_probability,
+            use_testa_like_augment=config.use_testa_like_augment,
+            testa_like_augment_strength=config.testa_like_augment_strength,
+            testa_like_morph_p=config.testa_like_morph_p,
+            testa_like_blur_p=config.testa_like_blur_p,
+            testa_like_contrast_p=config.testa_like_contrast_p,
+            testa_like_dilate_bias=config.testa_like_dilate_bias,
+            affine_degrees=config.affine_degrees,
+            translate_ratio=config.translate_ratio,
+            scale_min=config.scale_min,
+            scale_max=config.scale_max,
+            shear_degrees=config.shear_degrees,
+        )
         train_parts["testA_partial"] = test_a_train
         train_weights["testA_partial"] = config.testa_weight
     train = WeightedMixtureDataset(train_parts, train_weights, length=config.epoch_size)
@@ -572,6 +638,12 @@ def build_datasets(config: TestARobustConfig):
         "mixup_alpha": config.mixup_alpha,
         "cutmix_alpha": config.cutmix_alpha,
         "mix_prob": config.mix_prob,
+        "use_testa_like_augment": config.use_testa_like_augment,
+        "testa_like_augment_strength": config.testa_like_augment_strength,
+        "testa_like_morph_p": config.testa_like_morph_p,
+        "testa_like_blur_p": config.testa_like_blur_p,
+        "testa_like_contrast_p": config.testa_like_contrast_p,
+        "testa_like_dilate_bias": config.testa_like_dilate_bias,
         "selected_mnist_c": list(SELECTED_MNIST_C),
         "sampling_weights": train_weights,
     }
@@ -734,6 +806,11 @@ def build_testa_specialist_datasets(config: TestARobustConfig):
         random_erasing_p=config.random_erasing_p,
         preprocess_probability=config.preprocess_probability,
         use_testa_like_augment=config.use_testa_like_augment,
+        testa_like_augment_strength=config.testa_like_augment_strength,
+        testa_like_morph_p=config.testa_like_morph_p,
+        testa_like_blur_p=config.testa_like_blur_p,
+        testa_like_contrast_p=config.testa_like_contrast_p,
+        testa_like_dilate_bias=config.testa_like_dilate_bias,
         affine_degrees=config.affine_degrees,
         translate_ratio=config.translate_ratio,
         scale_min=config.scale_min,
@@ -765,6 +842,11 @@ def build_testa_specialist_datasets(config: TestARobustConfig):
             "mix_prob": config.mix_prob,
             "random_erasing_p": config.random_erasing_p,
             "use_testa_like_augment": config.use_testa_like_augment,
+            "testa_like_augment_strength": config.testa_like_augment_strength,
+            "testa_like_morph_p": config.testa_like_morph_p,
+            "testa_like_blur_p": config.testa_like_blur_p,
+            "testa_like_contrast_p": config.testa_like_contrast_p,
+            "testa_like_dilate_bias": config.testa_like_dilate_bias,
             "preprocess_probability": config.preprocess_probability,
         },
         "train_indices": [int(index) for index in train_indices],

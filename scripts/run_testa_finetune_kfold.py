@@ -37,12 +37,25 @@ def parse_args(default_config: Path = DEFAULT_CONFIG):
     return parser.parse_args()
 
 
+def resolve_init_checkpoint(model: dict, project_root: Path, seed: int, fold_index: int, mode: str) -> Path | None:
+    if mode == "testa_scratch":
+        return None
+    template = model.get("init_checkpoint_template")
+    if template:
+        try:
+            checkpoint = str(template).format(fold=fold_index, fold_index=fold_index, seed=seed)
+        except KeyError as exc:
+            raise ValueError(f"init_checkpoint_template 包含未知占位符: {exc}") from exc
+        return resolve_path(checkpoint, project_root)
+    return resolve_path(model.get("init_checkpoint"), project_root)
+
+
 def build_fold_config(raw_config: dict, project_root: Path, output_base: Path, seed: int, fold_index: int, n_splits: int, args) -> TestARobustConfig:
     model = config_section(raw_config, "model")
     training = config_section(raw_config, "training")
     augmentation = config_section(raw_config, "augmentation")
     mode = str(training.get("mode", "testa_finetune"))
-    init_checkpoint = None if mode == "testa_scratch" else resolve_path(model.get("init_checkpoint"), project_root)
+    init_checkpoint = resolve_init_checkpoint(model, project_root, seed, fold_index, mode)
     fold_dir = output_base / f"seed_{seed}" / f"fold_{fold_index}"
     return TestARobustConfig(
         project_root=project_root,
@@ -79,6 +92,11 @@ def build_fold_config(raw_config: dict, project_root: Path, output_base: Path, s
         scale_max=float(augmentation.get("scale_max", 1.04)),
         shear_degrees=float(augmentation.get("shear_degrees", 2.0)),
         use_testa_like_augment=bool(augmentation.get("use_testa_like_augment", False)),
+        testa_like_augment_strength=str(augmentation.get("testa_like_augment_strength", "medium")),
+        testa_like_morph_p=augmentation.get("testa_like_morph_p"),
+        testa_like_blur_p=float(augmentation.get("testa_like_blur_p", 0.0)),
+        testa_like_contrast_p=float(augmentation.get("testa_like_contrast_p", 0.0)),
+        testa_like_dilate_bias=float(augmentation.get("testa_like_dilate_bias", 0.5)),
         preprocess_probability=float(augmentation.get("preprocess_probability", 0.0)),
         save_validation_artifacts=True,
     )

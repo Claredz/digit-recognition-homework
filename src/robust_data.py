@@ -62,15 +62,16 @@ class RandomBrightnessContrast:
 
 
 class RandomErodeDilate:
-    def __init__(self, p: float = 0.35):
+    def __init__(self, p: float = 0.35, dilate_bias: float = 0.5):
         self.p = p
+        self.dilate_bias = float(dilate_bias)
 
     def __call__(self, tensor: torch.Tensor) -> torch.Tensor:
         if random.random() >= self.p:
             return tensor
         kernel = random.choice([2, 3])
         batch = tensor.unsqueeze(0)
-        if random.random() < 0.5:
+        if random.random() < self.dilate_bias:
             morphed = F.max_pool2d(batch, kernel_size=kernel, stride=1, padding=kernel // 2)
         else:
             morphed = -F.max_pool2d(-batch, kernel_size=kernel, stride=1, padding=kernel // 2)
