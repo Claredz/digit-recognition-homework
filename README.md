@@ -24,9 +24,37 @@
 请把项目里的两个指标分开理解：
 
 1. **MNIST-like benchmark**：`outputs_submission/logs/evaluation_summary.json` 里的约 **0.998** accuracy，说明模型已经具备很强的普通手写数字识别能力。
-2. **TestA benchmark**：当前 TestA raw + K-Fold/TTA ensemble 约 **0.72** accuracy，反映的是期末测试分布的一部分上的目标域适配能力。
+2. **TestA benchmark**：旧 TestA mixed robust / K-Fold 路线约 **0.72**；最新 TestA-partial 初始化 specialist 路线的可信 OOF accuracy 为 **0.7420**，full TestA raw+TTA 5-fold ensemble 为 **0.7831**。
 
-这两个数来自不同分布，不能直接当作同一个测试集上的高低对比。后续主线应优先优化 TestA 分布，而不是继续只追 MNIST-like accuracy。
+这几个数来自不同评估方式，不能直接当作同一个测试集上的高低对比：MNIST-like 的 0.998 是普通手写数字分布；TestA OOF 的 0.7420 是每个样本由没见过它的 fold 模型预测，更适合作为可信验证；full TestA 的 0.7831 会更乐观，更适合看最终冲分潜力。
+
+### 当前最好 TestA 结果
+
+目前最强的 TestA 路线是：
+
+```text
+robust_expert_v2_testa_partial_best_epoch12_score07098.pt
+        ↓
+5-Fold TestA-only specialist fine-tuning
+        ↓
+40 epoch, lr=1e-4, MixUp=0.1, RandomErasing=0.05, CutMix=0
+        ↓
+raw view + TTA
+        ↓
+specialist-only probability mean
+```
+
+关键结果：
+
+| 评估方式 | 结果 | 说明 |
+|---|---:|---|
+| TestA-partial init + 40 epoch specialist OOF | **0.7420** | 最可信的 TestA 内部验证指标 |
+| TestA-partial init + 5-fold raw-only full TestA ensemble | **0.7777** | full TestA 上的集成结果，偏乐观 |
+| TestA-partial init + 5-fold raw+TTA full TestA ensemble | **0.7831** | 当前 full TestA 最好结果，偏乐观 |
+| pre-TestA robust init + 40 epoch specialist OOF | 0.7026 | 更严格初始化，但分数较低 |
+| 旧 mixed robust K-Fold raw+TTA | 约 0.7223 | 旧路线结果 |
+
+融合搜索显示 specialist + generalist 加权时最优权重为 `w=1.0`，即 **specialist-only** 最好；generalist 概率融合没有提升 OOF。
 
 推荐路线：
 
