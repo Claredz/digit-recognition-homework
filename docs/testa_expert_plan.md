@@ -93,3 +93,56 @@ python scripts/eval_testa_expert_ensemble_oof.py \
 - 严禁覆盖 `outputs_submission/`
 - ensemble 脚本默认输出到 `outputs_runs/expert_ensemble_analysis/`，并显式拒绝指向 `outputs_submission/`
 - 缺失 OOF 时脚本会清晰报错并打印需要先运行的命令
+
+---
+
+## 实测结果（截至 2026-05-26）
+
+### 单专家 OOF accuracy
+
+| 实验 | init checkpoint | OOF | 备注 |
+|---|---|---:|---|
+| `testa_partial_init_lr1e4_mixup01_erasing005_e40` | v2_testa_partial (0.71) | **0.7420** | 当前主线 baseline |
+| `testa_medium_raw_seed2026_e40` (40 epoch) | robust_expert_best (v1) | 0.7034 | 不同 seed/init，无 morph |
+| `testa_medium_raw_anti1_morph015_e40` (40 epoch) | robust_expert_best (v1) | 0.7028 | dilate-biased morph_p=0.15 |
+| `testa_large_raw_scratch_e60` (60 epoch scratch) | none | 0.6822 | large_cnn from scratch |
+
+### 关键发现：epoch 不够是真问题
+
+3 个新专家的 e20/e30 第一版几乎全部 best_epoch 都在训练后期，e40/e60 重训后单专家 OOF 提升 +0.012 ~ +0.060。所以"更长 epoch"这一步必须做，否则 5-fold 报告的 best_val_accuracy 是被早停截断的下界。
+
+### 4-专家 ensemble 结果
+
+`testa_partial_init_lr1e4_mixup01_erasing005_e40 + seed2026_e40 + anti1_e40 + large_e60`，grid step 0.1，286 个权重候选：
+
+| 候选 | overall | c1_ratio | c8_acc | X→1 |
+|---|---:|---:|---:|---:|
+| baseline (e40 alone) | 0.7420 | 1.275 | 0.6918 | 169 |
+| **best overall** `[0.3, 0.0, 0.3, 0.4]` | **0.7426** | 1.285 | 0.6858 | 166 |
+| match baseline + 减 bias `[0.3, 0.0, 0.4, 0.3]` | 0.7420 | 1.262 | 0.6828 | 162 |
+| best c8 acc `[0.3, 0.0, 0.1, 0.6]` | 0.7374 | 1.272 | 0.6918 | 162 |
+| **best X→1** `[0.1, 0.1, 0.5, 0.3]` | 0.7317 | **1.233** | 0.6707 | **155** |
+
+### 严格阈值评估
+
+文档里设的 4 条同时满足阈值：
+
+| 指标 | baseline | 阈值 | 最强候选实际 |
+|---|---:|---:|---:|
+| overall acc | 0.7420 | ≥ 0.7450 | 0.7426 ❌ |
+| class 1 ratio | 1.274 | ≤ 1.20 | 1.200 ❌（独立达成）|
+| class 8 acc | 0.6918 | ≥ 0.71 | 0.6918 ❌（仅持平） |
+| total X→1 | 169 | ≤ 154 | 155 ❌（差 1）|
+
+**没有任何组合同时满足全部 4 条**。所以这一轮的结论是：
+
+1. **微弱有效**：best overall 比 baseline 高 0.0006（接近随机方差水平）
+2. **bias 方向可调**：可以用权重换 0.0103 overall accuracy 来减 14 个 X→1 错误（`[0.1, 0.1, 0.5, 0.3]`），这在追求 class 8/9 等"被压制类"上是有意义的工程权衡
+3. **没有清晰的全面胜利**——init checkpoint 决定了 ceiling，3 个新专家从 v1 init 起步，比 e40 用的 v2 partial init 弱 0.04 是结构性的
+
+### 下一步建议（按 ROI）
+
+1. **同 init、多 seed**：从 `robust_expert_v2_testa_partial_best_epoch12_score07098.pt` 出发，训 seed=2026 / 3407 的 medium_cnn——这才是真正测试"seed 多样性"的实验，预期单专家 ~0.74，集成可能突破 0.745
+2. **保留 large_cnn 实验**：单独 0.6822 不够强，但 weight=0.3-0.6 在 best overall 和 c8 acc 维度都被选中——它学到的特征跟 medium 不一样
+3. **当前不应该提交 ensemble**：strict 阈值未达，按文档约定不算 real win
+
