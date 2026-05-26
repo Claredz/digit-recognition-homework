@@ -325,18 +325,24 @@ README.md
 
 详见 [`docs/final_expert_system_plan.md`](docs/final_expert_system_plan.md)。
 
-### 当前最强结果（截至2026-05-27）
+### 训练最终结果（全部完成：2026-05-27）
 
-| 实验 | OOF acc | class1 ratio | class8 acc | X→1 |
-|---|---:|---:|---:|---:|
-| 基线 `testa_partial_init_lr1e4_mixup01_erasing005_e40` | 0.7420 | 1.2746 | 0.6918 | 169 |
-| `testa_medium_v2_anti1_margin_seed42_e60` | 0.7474 | 1.2098 | 0.6798 | 146 |
-| `testa_medium_v2_anti1_margin_seed2026_e60` | 0.7451 | 1.1969 | 0.6888 | 144 |
-| **`testa_preact_resnet_tiny_v2_raw_seed42_e60`** | **0.7514** | 1.2021 | 0.6918 | **127** |
-| **4-expert ensemble (preact+anti1+raw)** | **0.7731** | 1.2435 | 0.7251 | 138 |
+| 排名 | 实验 | OOF acc | class1 ratio | class8 acc | X→1 | 结论 |
+|---|---:|---:|---:|---:|---:|---|
+| 🥇 | **5-expert final ensemble** | **0.7766** | 1.2228 | **0.7251** | 131 | 最终提交 |
+| 🥈 | `preact_resnet_tiny_anti1_seed42` | **0.7569** | **1.1503** | 0.6949 | **110** | 最强单专家 |
+| 🥉 | `preact_resnet_tiny_raw_seed42` | 0.7514 | 1.2021 | 0.6918 | 127 | 异构突破 |
+| 4 | `medium_anti1_seed42` | 0.7474 | 1.2098 | 0.6798 | 146 | |
+| 5 | `medium_anti1_seed3407` | 0.7477 | 1.2435 | 0.6858 | 161 | |
+| 6 | `medium_raw_seed3407` | 0.7471 | 1.2720 | 0.6918 | 168 | |
+| 7 | `medium_anti1_seed2026` | 0.7451 | 1.1969 | 0.6888 | 144 | bias 最佳 |
+| 8 | 基线 `testa_partial_e40` | 0.7420 | 1.2746 | 0.6918 | 169 | 参照 |
+| ❌ | `large_cnn` | 0.6823 | 1.2927 | 0.6375 | 178 | 淘汰 |
+| ❌ | `convnext_micro` | 0.6129 | 1.1036 | 0.4804 | 149 | 淘汰 |
 
-**结论**: 异构架构 (PreActResNet) 是最大单一突破 — 单专家 OOF 0.7514，X→1 仅 127。
-与 anti1 medium 专家融合后 ensemble OOF 达到 **0.7731**（+0.031 vs 基线），class8 accuracy 达到 **0.7251**。
+**相对基线**: OOF +0.0346, class1 ratio 1.275→1.223, class8 0.692→0.725, X→1 169→131。
+
+**核心策略**: 异构架构(PreActResNet) + anti-class-1 margin loss + multi-seed ensemble。
 
 ### 新增架构
 
