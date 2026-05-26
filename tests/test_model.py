@@ -36,6 +36,20 @@ def test_build_model_accepts_aliases():
     assert isinstance(build_model("small"), SmallCNN)
     assert isinstance(build_model("medium_cnn"), MediumCNN)
     assert normalize_model_name("medium-cnn") == "medium_cnn"
+    assert normalize_model_name("convnext") == "convnext_micro"
+
+
+@pytest.mark.parametrize(
+    "model_name",
+    ["preact_resnet_tiny", "wide_resnet_tiny", "convnext_micro", "convstem_vit", "mobilenetv3_28"],
+)
+def test_heterogeneous_models_return_logits_for_ten_classes(model_name):
+    model = build_model(model_name, num_classes=10, in_channels=1, dropout=0.1)
+    batch = torch.randn(2, 1, 28, 28)
+
+    logits = model(batch)
+
+    assert logits.shape == (2, 10)
 
 
 def test_build_model_rejects_unknown_name():

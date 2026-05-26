@@ -321,4 +321,38 @@ README.md
 预测 CSV（如果老师要求）
 ```
 
+## 多专家异构系统（Multi-Expert System）
+
+详见 [`docs/final_expert_system_plan.md`](docs/final_expert_system_plan.md)。
+
+### 当前最强结果（截至2026-05-27）
+
+| 实验 | OOF acc | class1 ratio | class8 acc | X→1 |
+|---|---:|---:|---:|---:|
+| 基线 `testa_partial_init_lr1e4_mixup01_erasing005_e40` | 0.7420 | 1.2746 | 0.6918 | 169 |
+| `testa_medium_v2_anti1_margin_seed42_e60` | 0.7474 | 1.2098 | 0.6798 | 146 |
+| `testa_medium_v2_anti1_margin_seed2026_e60` | 0.7451 | **1.1969** | 0.6888 | **144** |
+| 6-expert ensemble (grid 0.05) | **0.7486** | 1.2124 | 0.6828 | 146 |
+
+anti-class-1 损失有效将 class1 over-prediction 从 1.27 降至 1.20 以下，同时 OOF accuracy 从 0.742 提至 0.749。
+
+### 新增架构
+
+| 架构 | 参数量 | 说明 |
+|---|---|---|
+| `preact_resnet_tiny` | ~1.3M | PreAct ResNet 风格 |
+| `wide_resnet_tiny` | ~2.8M | wider channels |
+| `convnext_micro` | ~0.8M | depthwise + LayerNorm |
+| `convstem_vit` | ~1.1M | CNN stem + Transformer |
+| `mobilenetv3_28` | ~1.5M | inverted residual + SE |
+
+### 新功能
+
+- `scripts/eval_testa_specialist_oof.py --baseline-experiment-id <id>` 输出扩展诊断 JSON
+- `scripts/eval_testa_expert_ensemble_oof.py --two-stage --grid-step 0.05` 两段式网格搜索
+- `scripts/domain_aware_ensemble.py` 启发式域感知集成
+- `src/losses.py` AntiClass1MarginLoss
+- `src/data_registry.py` DomainRegistry + DomainBalancedSampler
+
+
 如果老师只允许提交一个 notebook，优先保证 `submission_notebook.ipynb` 能完整独立运行，并保留高分结果说明。

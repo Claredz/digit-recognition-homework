@@ -23,8 +23,9 @@ from torchvision.transforms import functional as TF
 from src.config import ExperimentConfig
 from src.data import CorrectEMNISTOrientation
 from src.error_analysis import save_error_analysis_bundle
-from src.evaluate import load_model_from_checkpoint, save_evaluation_bundle
+from src.evaluate import checkpoint_state_dict, load_model_from_checkpoint, save_evaluation_bundle
 from src.experiment_config import git_commit_hash
+from src.losses import build_criterion
 from src.model import build_model, count_model_parameters
 from src.preprocess import preprocess_to_mnist_style_image
 from src.robust_data import RandomBrightnessContrast, RandomErodeDilate
@@ -123,6 +124,14 @@ class TestARobustConfig:
     testa_like_dilate_bias: float = 0.5
     preprocess_probability: float = 0.0
     save_validation_artifacts: bool = True
+    # Phase B.2: anti-class-1 margin loss (training-time correction for the
+    # systematic class-1 over-prediction). All four fields default to disabled
+    # → backward compatible: old TestARobustConfig usage continues to behave
+    # as plain CrossEntropyLoss(label_smoothing).
+    anti_class1_enabled: bool = False
+    anti_class1_lambda: float = 0.05
+    anti_class1_margin: float = 0.2
+    anti_class1_target_class: int = 1
 
     def data_dir(self) -> Path:
         return self.project_root / "data"
@@ -870,18 +879,29 @@ def _specialist_experiment_config(config: TestARobustConfig) -> ExperimentConfig
 
 
 def _build_specialist_model(config: TestARobustConfig, device: str):
-    exp_config = _specialist_experiment_config(config)
+    model = build_model(config.model_name, num_classes=10, in_channels=1, dropout=config.dropout)
+    model.to(device)
+    payload = {}
+    initialized_from_checkpoint = False
     if config.base_checkpoint is not None:
         checkpoint_path = Path(config.base_checkpoint)
         if not checkpoint_path.exists():
             raise FileNotFoundError(f"未找到 TestA specialist 初始化 checkpoint: {checkpoint_path}")
-        model, payload = load_model_from_checkpoint(checkpoint_path, exp_config, device)
-        initialized_from_checkpoint = True
-    else:
-        model = build_model(config.model_name, num_classes=10, in_channels=1, dropout=config.dropout)
-        model.to(device)
-        payload = {}
-        initialized_from_checkpoint = False
+        payload = torch.load(checkpoint_path, map_location=device)
+        source_state = checkpoint_state_dict(payload)
+        current_state = model.state_dict()
+        compatible_state = {
+            key: value
+            for key, value in source_state.items()
+            if key in current_state and current_state[key].shape == value.shape
+        }
+        current_state.update(compatible_state)
+        model.load_state_dict(current_state)
+        initialized_from_checkpoint = bool(compatible_state)
+        print(
+            f"[init] partial checkpoint load: {len(compatible_state)}/{len(current_state)} tensors from {checkpoint_path}",
+            flush=True,
+        )
     return model, payload, initialized_from_checkpoint
 
 
@@ -1006,7 +1026,15 @@ def train_testa_specialist(config: TestARobustConfig):
     if config.compile_model:
         model = torch.compile(model, mode="max-autotune")
 
-    criterion = nn.CrossEntropyLoss(label_smoothing=config.label_smoothing)
+    criterion = build_criterion(
+        label_smoothing=config.label_smoothing,
+        anti_class1_loss_config={
+            "enabled": config.anti_class1_enabled,
+            "lambda": config.anti_class1_lambda,
+            "margin": config.anti_class1_margin,
+            "target_class": config.anti_class1_target_class,
+        },
+    )
     total_params, trainable_params_initial = count_model_parameters(model)
     phase_plan: list[tuple[str, int, bool]] = []
     freeze_epochs = config.freeze_backbone_epochs if initialized_from_checkpoint else 0
@@ -1211,7 +1239,15 @@ def train(config: TestARobustConfig):
     if config.compile_model:
         model = torch.compile(model, mode="max-autotune")
 
-    criterion = nn.CrossEntropyLoss(label_smoothing=config.label_smoothing)
+    criterion = build_criterion(
+        label_smoothing=config.label_smoothing,
+        anti_class1_loss_config={
+            "enabled": config.anti_class1_enabled,
+            "lambda": config.anti_class1_lambda,
+            "margin": config.anti_class1_margin,
+            "target_class": config.anti_class1_target_class,
+        },
+    )
     optimizer = torch.optim.AdamW(model.parameters(), lr=config.learning_rate, weight_decay=config.weight_decay)
     scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=max(1, config.epochs))
     scaler = torch.amp.GradScaler("cuda", enabled=device == "cuda" and config.use_amp)

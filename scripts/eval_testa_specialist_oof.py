@@ -12,13 +12,20 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from src.error_analysis import save_error_analysis_bundle
+from src.error_analysis import save_error_analysis_bundle, save_extended_diagnostics
 from src.evaluate import save_evaluation_bundle
-from src.experiment_config import assert_safe_output_dir, config_list, load_experiment_config, resolve_experiment_output_dir
+from src.experiment_config import (
+    assert_safe_output_dir,
+    config_list,
+    load_experiment_config,
+    resolve_experiment_output_dir,
+    validate_experiment_config,
+)
 from src.testa_robust_train import IdxTestADataset
 
 
 DEFAULT_CONFIG = PROJECT_ROOT / "experiments" / "testa_specialist_5fold.yaml"
+DEFAULT_BASELINE_EXPERIMENT_ID = "testa_partial_init_lr1e4_mixup01_erasing005_e40"
 
 
 def parse_args():
@@ -27,6 +34,15 @@ def parse_args():
     parser.add_argument("--project-root", type=Path, default=PROJECT_ROOT)
     parser.add_argument("--allow-partial", action="store_true", help="Allow missing OOF samples for smoke runs.")
     parser.add_argument("--allow-outputs-submission", action="store_true")
+    parser.add_argument(
+        "--baseline-experiment-id",
+        type=str,
+        default=DEFAULT_BASELINE_EXPERIMENT_ID,
+        help=(
+            "baseline experiment_id to compute error_overlap against; default = "
+            f"{DEFAULT_BASELINE_EXPERIMENT_ID}. Set to 'none' or '' to skip overlap."
+        ),
+    )
     return parser.parse_args()
 
 
@@ -38,10 +54,45 @@ def load_fold_probabilities(fold_dir: Path):
     return payload["sample_ids"], payload["labels"].cpu().long(), payload["probabilities"].cpu().float(), str(path)
 
 
+def _maybe_load_baseline(project_root: Path, experiment_id: str | None):
+    """Try to load an existing baseline OOF predictions for overlap comparison.
+
+    Returns (sample_ids, labels_tensor, predictions_tensor) or (None, None, None)
+    when the baseline is absent or explicitly disabled.
+    """
+    if not experiment_id or experiment_id.lower() == "none":
+        return None, None, None
+    baseline_oof = project_root / "outputs_runs" / experiment_id / "oof" / "oof_probabilities.pt"
+    if not baseline_oof.exists():
+        return None, None, None
+    payload = torch.load(baseline_oof, map_location="cpu", weights_only=False)
+    sample_ids = [int(sid) for sid in payload["sample_ids"]]
+    labels = payload["labels"].cpu().long()
+    probabilities = payload["probabilities"].cpu().float()
+    predictions = probabilities.argmax(dim=1)
+    return sample_ids, labels, predictions
+
+
+def _maybe_load_fold_summaries(output_base: Path) -> list[dict]:
+    """Read aggregate_summary.json so extended diagnostics can include best-epoch info."""
+    aggregate_path = output_base / "aggregate_summary.json"
+    if not aggregate_path.exists():
+        return []
+    try:
+        payload = json.loads(aggregate_path.read_text(encoding="utf-8"))
+        folds = payload.get("folds", [])
+        if isinstance(folds, list):
+            return folds
+    except Exception:
+        return []
+    return []
+
+
 def main():
     args = parse_args()
     project_root = args.project_root.resolve()
     raw_config = load_experiment_config(args.config)
+    validate_experiment_config(raw_config, strict=False)
     output_base = resolve_experiment_output_dir(raw_config, project_root)
     assert_safe_output_dir(output_base, project_root, allow_outputs_submission=args.allow_outputs_submission)
     seeds = [int(seed) for seed in config_list(raw_config, "seeds", [raw_config.get("seed", 42)])]
@@ -99,6 +150,27 @@ def main():
 
     summary = save_evaluation_bundle(images, labels, predictions, oof_dir)
     error_analysis = save_error_analysis_bundle(oof_dir, ordered_ids, images, labels, probabilities)
+
+    # Phase A.2b: extended diagnostics (class-1 bias, X→1 errors, baseline overlap, confidence dist)
+    baseline_id = args.baseline_experiment_id
+    if baseline_id == raw_config["experiment_id"]:
+        # avoid trivial self-overlap (would report 100%)
+        baseline_id = None
+    baseline_ids, baseline_labels, baseline_predictions = _maybe_load_baseline(project_root, baseline_id)
+    fold_summaries = _maybe_load_fold_summaries(output_base)
+
+    extended = save_extended_diagnostics(
+        oof_dir,
+        ordered_ids,
+        labels,
+        probabilities,
+        fold_summaries=fold_summaries if fold_summaries else None,
+        baseline_predictions=baseline_predictions,
+        baseline_sample_ids=baseline_ids,
+        baseline_labels=baseline_labels,
+        baseline_experiment_id=baseline_id if baseline_predictions is not None else None,
+    )
+
     payload = {
         "experiment_id": raw_config["experiment_id"],
         "accuracy": accuracy,
@@ -108,9 +180,21 @@ def main():
         "oof_predictions": str(csv_path),
         "summary": summary,
         "error_analysis": error_analysis,
+        "extended_diagnostics_path": str(oof_dir / "extended_diagnostics.json"),
+        "class_1_overprediction_ratio": extended.get("class_1_overprediction_ratio"),
+        "class_8_accuracy": extended.get("class_8_accuracy"),
+        "total_x_to_1_errors": extended.get("total_x_to_1_errors"),
+        "baseline_experiment_id": baseline_id if baseline_predictions is not None else None,
     }
     (oof_dir / "oof_metrics.json").write_text(json.dumps(payload, indent=2, ensure_ascii=False), encoding="utf-8")
-    print(json.dumps({"accuracy": accuracy, "num_samples": int(labels.numel()), "output_dir": str(oof_dir)}, indent=2, ensure_ascii=False))
+    print(json.dumps({
+        "accuracy": accuracy,
+        "num_samples": int(labels.numel()),
+        "class_1_overprediction_ratio": extended.get("class_1_overprediction_ratio"),
+        "class_8_accuracy": extended.get("class_8_accuracy"),
+        "total_x_to_1_errors": extended.get("total_x_to_1_errors"),
+        "output_dir": str(oof_dir),
+    }, indent=2, ensure_ascii=False))
 
 
 if __name__ == "__main__":

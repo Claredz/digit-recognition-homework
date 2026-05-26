@@ -109,9 +109,20 @@ def normalize_model_name(model_name: str) -> str:
         "large": "large_cnn",
         "largecnn": "large_cnn",
         "large_cnn": "large_cnn",
+        "preact_resnet": "preact_resnet_tiny",
+        "preact_resnet_tiny": "preact_resnet_tiny",
+        "tiny_resnet": "preact_resnet_tiny",
+        "wide_resnet_tiny": "wide_resnet_tiny",
+        "convnext": "convnext_micro",
+        "convnext_micro": "convnext_micro",
+        "convstem_vit": "convstem_vit",
+        "vit": "convstem_vit",
+        "mobilenetv3": "mobilenetv3_28",
+        "mobilenetv3_28": "mobilenetv3_28",
     }
     if normalized not in aliases:
-        raise ValueError(f"不支持的 model_name='{model_name}'。请使用 small_cnn、medium_cnn 或 large_cnn。")
+        available = sorted(aliases.values())
+        raise ValueError(f"unknown model_name={model_name!r}; available: {available}")
     return aliases[normalized]
 
 
@@ -137,7 +148,14 @@ def build_model(
         return SmallCNN(num_classes=num_classes, in_channels=in_channels, dropout=dropout)
     if normalized_name == "medium_cnn":
         return MediumCNN(num_classes=num_classes, in_channels=in_channels, dropout=dropout)
-    return LargeCNN(num_classes=num_classes, in_channels=in_channels, dropout=dropout)
+    if normalized_name == "large_cnn":
+        return LargeCNN(num_classes=num_classes, in_channels=in_channels, dropout=dropout)
+
+    from src.models.heterogeneous import HETERO_MODEL_NAMES, build_heterogeneous_model
+
+    if normalized_name in HETERO_MODEL_NAMES:
+        return build_heterogeneous_model(normalized_name, num_classes=num_classes, in_channels=in_channels, dropout=dropout)
+    raise ValueError(f"unknown model_name={model_name!r}")
 
 
 def count_model_parameters(model: nn.Module) -> tuple[int, int]:

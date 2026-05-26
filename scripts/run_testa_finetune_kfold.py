@@ -17,7 +17,9 @@ from src.experiment_config import (
     load_experiment_config,
     resolve_experiment_output_dir,
     resolve_path,
+    validate_experiment_config,
     write_config_snapshot,
+    write_run_manifest,
 )
 from src.testa_robust_train import TestARobustConfig, train as train_fold
 
@@ -57,6 +59,11 @@ def build_fold_config(raw_config: dict, project_root: Path, output_base: Path, s
     mode = str(training.get("mode", "testa_finetune"))
     init_checkpoint = resolve_init_checkpoint(model, project_root, seed, fold_index, mode)
     fold_dir = output_base / f"seed_{seed}" / f"fold_{fold_index}"
+    # Phase B.2: optional anti-class-1 margin loss. Section is missing in legacy
+    # YAMLs → defaults below preserve old plain-CE behavior exactly.
+    anti_cfg = training.get("anti_class1_loss") or {}
+    if not isinstance(anti_cfg, dict):
+        anti_cfg = {}
     return TestARobustConfig(
         project_root=project_root,
         output_dir=fold_dir,
@@ -99,6 +106,10 @@ def build_fold_config(raw_config: dict, project_root: Path, output_base: Path, s
         testa_like_dilate_bias=float(augmentation.get("testa_like_dilate_bias", 0.5)),
         preprocess_probability=float(augmentation.get("preprocess_probability", 0.0)),
         save_validation_artifacts=True,
+        anti_class1_enabled=bool(anti_cfg.get("enabled", False)),
+        anti_class1_lambda=float(anti_cfg.get("lambda", 0.05)),
+        anti_class1_margin=float(anti_cfg.get("margin", 0.2)),
+        anti_class1_target_class=int(anti_cfg.get("target_class", 1)),
     )
 
 
@@ -106,6 +117,8 @@ def run_from_config(default_config: Path = DEFAULT_CONFIG, forced_mode: str | No
     args = parse_args(default_config)
     project_root = args.project_root.resolve()
     raw_config = load_experiment_config(args.config)
+    # Phase A.1: schema validation (warning-only; backward compatible)
+    validate_experiment_config(raw_config, strict=False)
     if forced_mode is not None:
         raw_config.setdefault("training", {})["mode"] = forced_mode
         if forced_mode == "testa_scratch":
@@ -149,6 +162,36 @@ def run_from_config(default_config: Path = DEFAULT_CONFIG, forced_mode: str | No
     }
     summary_path = output_base / "aggregate_summary.json"
     summary_path.write_text(json.dumps(summary, indent=2, ensure_ascii=False), encoding="utf-8")
+
+    # Phase A.1: write a unified manifest.json alongside (NOT replacing) aggregate_summary.json
+    manifest_payload: dict = {
+        "experiment_id": raw_config["experiment_id"],
+        "config_path": str(args.config),
+        "model_name": str(config_section(raw_config, "model").get("model_name", "medium_cnn")),
+        "training_mode": str(config_section(raw_config, "training").get("mode", "testa_finetune")),
+        "seeds": seeds,
+        "n_splits": n_splits,
+        "init_checkpoint": str(config_section(raw_config, "model").get("init_checkpoint") or ""),
+        "init_checkpoint_template": str(config_section(raw_config, "model").get("init_checkpoint_template") or ""),
+        "anti_class1_enabled": bool(
+            (config_section(raw_config, "training").get("anti_class1_loss") or {}).get("enabled", False)
+        ),
+        "checkpoints": [
+            {
+                "seed": row["seed"],
+                "fold_index": row["fold_index"],
+                "checkpoint": row["checkpoint"],
+                "best_val_accuracy": row["best_val_accuracy"],
+                "best_epoch": row["best_epoch"],
+            }
+            for row in fold_summaries
+        ],
+        "mean_best_val_accuracy": summary["mean_best_val_accuracy"],
+        "aggregate_summary_path": str(summary_path),
+        "project_root": str(project_root),
+    }
+    manifest_path = write_run_manifest(output_base, manifest_payload)
+    print(f"[TestA specialist] manifest: {manifest_path}")
     print(f"\n[TestA specialist] summary: {summary_path}")
     return summary
 
