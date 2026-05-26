@@ -331,10 +331,12 @@ README.md
 |---|---:|---:|---:|---:|
 | 基线 `testa_partial_init_lr1e4_mixup01_erasing005_e40` | 0.7420 | 1.2746 | 0.6918 | 169 |
 | `testa_medium_v2_anti1_margin_seed42_e60` | 0.7474 | 1.2098 | 0.6798 | 146 |
-| `testa_medium_v2_anti1_margin_seed2026_e60` | 0.7451 | **1.1969** | 0.6888 | **144** |
-| 6-expert ensemble (grid 0.05) | **0.7486** | 1.2124 | 0.6828 | 146 |
+| `testa_medium_v2_anti1_margin_seed2026_e60` | 0.7451 | 1.1969 | 0.6888 | 144 |
+| **`testa_preact_resnet_tiny_v2_raw_seed42_e60`** | **0.7514** | 1.2021 | 0.6918 | **127** |
+| **4-expert ensemble (preact+anti1+raw)** | **0.7731** | 1.2435 | 0.7251 | 138 |
 
-anti-class-1 损失有效将 class1 over-prediction 从 1.27 降至 1.20 以下，同时 OOF accuracy 从 0.742 提至 0.749。
+**结论**: 异构架构 (PreActResNet) 是最大单一突破 — 单专家 OOF 0.7514，X→1 仅 127。
+与 anti1 medium 专家融合后 ensemble OOF 达到 **0.7731**（+0.031 vs 基线），class8 accuracy 达到 **0.7251**。
 
 ### 新增架构
 

@@ -1,27 +1,26 @@
 #!/usr/bin/env python
 """
 Heuristic domain-aware ensemble script.
-
-Loads a set of expert OOF probabilities and uses HeuristicDomainRouter
-to produce per-sample weights driven by prediction conflicts and class-1
-bias heuristics.  Outputs router-per-sample weights, final predictions,
-and diagnostics.
 """
 
 from __future__ import annotations
 
 import argparse
 import json
+import sys
 from pathlib import Path
 from typing import Any
 
 import torch
 
+_proj = Path(__file__).resolve().parents[1]
+if str(_proj) not in sys.path:
+    sys.path.insert(0, str(_proj))
+
 from src.ensemble.domain_router import HeuristicDomainRouter, save_router_log
 from src.error_analysis import (
     class_1_bias_summary,
-    class_overprediction_ratio,
-    per_class_accuracy,
+    class_accuracy,
     top_confused_pairs,
     x_to_target_errors,
 )
@@ -73,10 +72,11 @@ def main():
     )
     weights = router.route(probs_list)
 
-    fused = torch.stack(probs_list, dim=0) * weights.T.unsqueeze(0)
-    fused_prob = fused.sum(dim=0)
-    predictions = fused_prob.argmax(dim=-1)
-    labels = torch.tensor(ref_labels)
+    fused = torch.zeros_like(probs_list[0])
+    for i, p in enumerate(probs_list):
+        fused += weights[:, i].unsqueeze(1) * p
+    predictions = fused.argmax(dim=-1)
+    labels = ref_labels.clone().detach() if isinstance(ref_labels, torch.Tensor) else torch.as_tensor(ref_labels)
 
     acc = float((predictions == labels).float().mean())
     bias = class_1_bias_summary(predictions, labels)
@@ -91,7 +91,7 @@ def main():
         "n_samples": len(ref_ids),
         "overall_accuracy": acc,
         "class_1_overprediction_ratio": bias.get("class_1_overprediction_ratio"),
-        "class_8_accuracy": per_class_accuracy(predictions, labels, target_class=8),
+        "class_8_accuracy": class_accuracy(predictions, labels, target_class=8),
         "total_x_to_1_errors": x_to_target_errors(predictions, labels).get("total_x_to_target"),
         "top_confused_pairs": top_confused_pairs(predictions, labels, n=10),
     }
