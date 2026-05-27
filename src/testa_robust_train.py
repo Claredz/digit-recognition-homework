@@ -1150,15 +1150,20 @@ def train_testa_specialist(config: TestARobustConfig):
 
     artifact_summary = None
     if config.save_validation_artifacts and checkpoint_path.exists():
-        best_model, _ = load_model_from_checkpoint(checkpoint_path, _specialist_experiment_config(config), device)
-        artifact_summary = save_validation_prediction_artifacts(
-            config,
-            best_model,
-            val_raw,
+        try:
+            best_model, _ = load_model_from_checkpoint(checkpoint_path, _specialist_experiment_config(config), device)
+            artifact_summary = save_validation_prediction_artifacts(
+                config,
+                best_model,
+                val_raw,
             val_raw_loader,
             device,
             preprocess_loader=val_preprocess_loader,
         )
+        except Exception:
+            import traceback
+            print(f"[WARN] validation artifact save failed for fold {config.kfold_index}:", flush=True)
+            traceback.print_exc()
 
     _, trainable_params_final = count_model_parameters(model)
     manifest = {

@@ -185,29 +185,22 @@ def main():
     domain_ds = build_all_domain_datasets(project_root / "data")
     print(f"[all_domain] Loaded {len(domain_ds)} domains: {list(domain_ds.keys())}")
 
-    # Create unified dataset with domain labels
-    all_samples: list[tuple[torch.Tensor, int]] = []
-    domain_counts: dict[str, int] = {}
-    for name, ds in domain_ds.items():
-        n = 0
-        for i in range(len(ds)):
-            img, lbl = ds[i]
-            all_samples.append((img, lbl))
-            n += 1
-        domain_counts[name] = n
+    # Use ConcatDataset approach - MUCH faster than pre-iterating
+    domains = list(domain_ds.values())
+    domain_names = list(domain_ds.keys())
+    domain_sizes = [len(ds) for ds in domains]
+    total_size = sum(domain_sizes)
+    for name, n in zip(domain_names, domain_sizes):
         print(f"  {name}: {n} samples")
+    print(f"[all_domain] Total: {total_size} samples")
 
-    unified = _ListDataset(all_samples)
-    print(f"[all_domain] Total: {len(unified)} samples")
-
-    # Balanced sampling weights
-    total = sum(domain_counts.values())
+    # Build balanced sampler: each domain gets equal weight
     sample_weights = []
-    offset = 0
-    for name, n in domain_counts.items():
-        weight = total / max(1, len(domain_counts)) / max(1, n)
+    for i, n in enumerate(domain_sizes):
+        weight = total_size / max(1, len(domains)) / max(1, n)
         sample_weights.extend([weight] * n)
-    sampler = WeightedRandomSampler(sample_weights, num_samples=min(len(unified), 200000), replacement=True)
+    sampler = WeightedRandomSampler(sample_weights, num_samples=min(total_size, 200000), replacement=True)
+    unified = torch.utils.data.ConcatDataset(domains)
     loader = DataLoader(unified, batch_size=args.batch_size, sampler=sampler, num_workers=0, pin_memory=True)
 
     # Build model
@@ -217,10 +210,11 @@ def main():
     scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, args.epochs)
     scaler = torch.amp.GradScaler("cuda") if device == "cuda" else None
 
+    domain_counts = dict(zip(domain_names, domain_sizes))
     results: dict[str, Any] = {
         "model": args.model,
         "epochs": args.epochs,
-        "domains": list(domain_counts.keys()),
+        "domains": domain_names,
         "domain_counts": domain_counts,
         "per_epoch": [],
     }
@@ -231,7 +225,7 @@ def main():
 
         # Evaluate on each domain
         domain_accs: dict[str, float] = {}
-        for name, ds in domain_ds.items():
+        for name, ds in zip(domain_names, domains):
             dl = DataLoader(ds, batch_size=args.batch_size, shuffle=False, num_workers=0)
             domain_accs[name] = evaluate_domain(model, dl, device)
 

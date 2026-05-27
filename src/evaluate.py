@@ -32,16 +32,30 @@ def load_model_from_checkpoint(checkpoint_path: Path, config: ExperimentConfig, 
         print(f"[load] checkpoint={checkpoint_path} device={device}", flush=True)
     checkpoint_payload = torch.load(checkpoint_path, map_location=device)
     checkpoint_config = checkpoint_payload.get("config", {}) if isinstance(checkpoint_payload, dict) else {}
-    model_name = checkpoint_payload.get("model_name") if isinstance(checkpoint_payload, dict) else None
-    model_name = model_name or checkpoint_config.get("model_name", config.model_name)
+    checkpoint_model_name = checkpoint_payload.get("model_name") if isinstance(checkpoint_payload, dict) else None
+    checkpoint_model_name = checkpoint_model_name or checkpoint_config.get("model_name", config.model_name)
     dropout = checkpoint_config.get("dropout", config.dropout) if isinstance(checkpoint_config, dict) else config.dropout
-    model = build_model(model_name, num_classes=config.num_classes, in_channels=config.in_channels, dropout=dropout)
-    model.load_state_dict(checkpoint_state_dict(checkpoint_payload))
-    model.to(device)
-    model.eval()
-    if config.verbose:
-        print(f"[load] model={model_name} dropout={dropout}", flush=True)
-    return model, checkpoint_payload
+
+    # Try the config's model_name first (supports heterogeneous fine-tuning),
+    # fall back to the checkpoint's model_name for backward compatibility.
+    for model_name in (config.model_name, checkpoint_model_name):
+        try:
+            model = build_model(model_name, num_classes=config.num_classes, in_channels=config.in_channels, dropout=dropout)
+            source_state = checkpoint_state_dict(checkpoint_payload)
+            current_state = model.state_dict()
+            compatible = {k: v for k, v in source_state.items() if k in current_state and current_state[k].shape == v.shape}
+            if compatible:
+                current_state.update(compatible)
+                model.load_state_dict(current_state)
+                model.to(device)
+                model.eval()
+                if config.verbose:
+                    print(f"[load] model={model_name} matched={len(compatible)}/{len(current_state)}", flush=True)
+                return model, checkpoint_payload
+        except Exception:
+            continue
+
+    raise RuntimeError(f"Failed to load checkpoint {checkpoint_path} with any model")
 
 
 def save_evaluation_bundle(
