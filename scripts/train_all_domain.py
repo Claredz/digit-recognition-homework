@@ -41,7 +41,7 @@ def _load_mnist_family(data_dir: Path) -> dict[str, Dataset]:
     try:
         clean = CleanFamilyDataset(
             data_dir, image_size=28, seed=42,
-            mnist_max_samples=None, qmnist_max_samples=60000, emnist_max_samples=50000,
+            mnist_max=None, qmnist_max=60000, emnist_max=50000,
         )
         ds["clean_family"] = clean
         print(f"  clean_family: {len(clean)} samples (MNIST+QMNIST+EMNIST)")
