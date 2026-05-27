@@ -1,0 +1,39 @@
+experiment_id: testa_mobilenetv3_28_raw_seed42_e60
+output_root: outputs_runs
+seed: 42
+seeds: [42]
+folds: 5
+
+model:
+  model_name: mobilenetv3_28
+  dropout: 0.1
+  init_checkpoint: outputs_submission/checkpoints/robust_expert_v2_testa_partial_best_epoch12_score07098.pt
+
+training:
+  mode: testa_finetune
+  epochs: 60
+  batch_size: 256
+  learning_rate: 0.0003
+  weight_decay: 0.0001
+  label_smoothing: 0.02
+  patience: 12
+  freeze_backbone_epochs: 0
+  use_amp: true
+  allow_tf32: true
+  num_workers: 0
+
+augmentation:
+  preprocessing_mode: raw
+  evaluate_preprocess: false
+  mixup_alpha: 0.1
+  cutmix_alpha: 0.0
+  mix_prob: 0.5
+  random_erasing_p: 0.05
+  affine_degrees: 5.0
+  translate_ratio: 0.04
+  scale_min: 0.96
+  scale_max: 1.04
+  shear_degrees: 2.0
+
+ensemble:
+  fusion_weights: [0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
