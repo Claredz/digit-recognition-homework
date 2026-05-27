@@ -342,7 +342,11 @@ README.md
 
 **核心发现**: WideResNet 是最大单一突破 — scratch 训练即超过 ensemble；加宽通道(48→96→192)比加深层更有效。
 
-`convstem_vit` 和 `mobilenetv3_28` 训练中，结果待更新。
+| ❌ | `convstem_vit` | 0.6017 | — | — | — | 淘汰 |
+| ❌ | `mobilenetv3_28` | 0.4877 | — | — | — | 淘汰 |
+
+**最终 ensemble**: wide_resnet(0.7) + anti1_seed2026(0.2) + raw_seed3407(0.1) = **OOF 0.7891**。
+相对基线: OOF **+0.0471**, class1 1.275→**1.130**, class8 0.692→**0.764**, X→1 169→**99**。
 
 ### 新增架构
 
