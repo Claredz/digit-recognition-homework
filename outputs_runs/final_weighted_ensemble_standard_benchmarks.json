@@ -1,0 +1,38 @@
+{
+  "ensemble": [
+    {
+      "label": "wide_resnet_tiny_raw_seed42",
+      "weight": 0.7,
+      "n_folds": 5
+    },
+    {
+      "label": "medium_anti1_seed2026",
+      "weight": 0.2,
+      "n_folds": 5
+    },
+    {
+      "label": "medium_raw_seed3407",
+      "weight": 0.1,
+      "n_folds": 5
+    }
+  ],
+  "standard_holdouts": [
+    {
+      "domain": "mnist_test",
+      "accuracy": 0.9902,
+      "num_samples": 10000
+    },
+    {
+      "domain": "emnist_digits_test",
+      "accuracy": 0.9901,
+      "num_samples": 40000
+    },
+    {
+      "domain": "qmnist_test10k",
+      "accuracy": 0.9902,
+      "num_samples": 10000
+    }
+  ],
+  "standard_average": 0.9901666666666666,
+  "testa_oof_accuracy": 0.7891
+}

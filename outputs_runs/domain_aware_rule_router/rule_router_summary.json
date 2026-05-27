@@ -1,0 +1,164 @@
+{
+  "experts": [
+    {
+      "label": "wide_resnet_tiny_raw_seed42",
+      "base_weight": 0.7
+    },
+    {
+      "label": "medium_anti1_seed2026",
+      "base_weight": 0.2
+    },
+    {
+      "label": "medium_raw_seed3407",
+      "base_weight": 0.1
+    }
+  ],
+  "templates": {
+    "testa": [
+      0.7,
+      0.2,
+      0.1
+    ],
+    "mnist": [
+      0.35,
+      0.35,
+      0.3
+    ],
+    "balanced": [
+      0.5,
+      0.3,
+      0.2
+    ],
+    "anti1": [
+      0.45,
+      0.45,
+      0.1
+    ]
+  },
+  "objectives": {
+    "hidden_b_balanced": {
+      "TestA": 0.45,
+      "MNIST-family": 0.35,
+      "MNIST-C": 0.2
+    },
+    "hidden_b_easy": {
+      "TestA": 0.35,
+      "MNIST-family": 0.45,
+      "MNIST-C": 0.2
+    },
+    "hidden_b_hard": {
+      "TestA": 0.7,
+      "MNIST-family": 0.15,
+      "MNIST-C": 0.15
+    }
+  },
+  "static_results": {
+    "TestA": {
+      "testa": 0.7891428470611572,
+      "mnist": 0.7751428484916687,
+      "balanced": 0.7837142944335938,
+      "anti1": 0.7794285416603088
+    },
+    "MNIST-family": {
+      "testa": 0.9895676970481873,
+      "mnist": 0.9934166669845581,
+      "balanced": 0.9923763871192932,
+      "anti1": 0.9927330613136292
+    },
+    "MNIST-C": {
+      "testa": 0.9496374726295471,
+      "mnist": 0.9659374952316284,
+      "balanced": 0.9608500003814697,
+      "anti1": 0.9632437229156494
+    },
+    "local/external digits": {
+      "testa": 0.5845828652381897,
+      "mnist": 0.6264979839324951,
+      "balanced": 0.6137903332710266,
+      "anti1": 0.6202165484428406
+    }
+  },
+  "objective_results": {
+    "hidden_b_balanced": {
+      "objective_score": 0.8925369381904602,
+      "params": {
+        "medium_conf": 0.7,
+        "wide_conf": 0.7,
+        "anti1_delta": 0.15,
+        "wide_slack": 0.1
+      },
+      "domain_eval": {
+        "TestA": {
+          "accuracy": 0.7834285497665405,
+          "num_samples": 3500
+        },
+        "MNIST-family": {
+          "accuracy": 0.9927330613136292,
+          "num_samples": 67291
+        },
+        "MNIST-C": {
+          "accuracy": 0.9626874923706055,
+          "num_samples": 160000
+        },
+        "local/external digits": {
+          "accuracy": 0.6163955330848694,
+          "num_samples": 34546
+        }
+      }
+    },
+    "hidden_b_easy": {
+      "objective_score": 0.9134945869445801,
+      "params": {
+        "medium_conf": 0.7,
+        "wide_conf": 0.7,
+        "anti1_delta": 0.15,
+        "wide_slack": 0.15
+      },
+      "domain_eval": {
+        "TestA": {
+          "accuracy": 0.7831428647041321,
+          "num_samples": 3500
+        },
+        "MNIST-family": {
+          "accuracy": 0.992851972579956,
+          "num_samples": 67291
+        },
+        "MNIST-C": {
+          "accuracy": 0.963056206703186,
+          "num_samples": 160000
+        },
+        "local/external digits": {
+          "accuracy": 0.616540253162384,
+          "num_samples": 34546
+        }
+      }
+    },
+    "hidden_b_hard": {
+      "objective_score": 0.8417130708694458,
+      "params": {
+        "medium_conf": 0.7,
+        "wide_conf": 0.7,
+        "anti1_delta": 0.15,
+        "wide_slack": 0.1
+      },
+      "domain_eval": {
+        "TestA": {
+          "accuracy": 0.7834285497665405,
+          "num_samples": 3500
+        },
+        "MNIST-family": {
+          "accuracy": 0.9927330613136292,
+          "num_samples": 67291
+        },
+        "MNIST-C": {
+          "accuracy": 0.9626874923706055,
+          "num_samples": 160000
+        },
+        "local/external digits": {
+          "accuracy": 0.6163955330848694,
+          "num_samples": 34546
+        }
+      }
+    }
+  }
+}

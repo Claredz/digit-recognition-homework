@@ -1,0 +1,2922 @@
+{
+  "device": "cuda",
+  "experts": [
+    {
+      "label": "wide_resnet_tiny_raw_seed42",
+      "base_weight": 0.7
+    },
+    {
+      "label": "medium_anti1_seed2026",
+      "base_weight": 0.2
+    },
+    {
+      "label": "medium_raw_seed3407",
+      "base_weight": 0.1
+    }
+  ],
+  "domain_weights": {
+    "hidden_b_balanced": {
+      "TestA": 0.45,
+      "MNIST-family": 0.35,
+      "MNIST-C": 0.2
+    },
+    "hidden_b_easy": {
+      "TestA": 0.35,
+      "MNIST-family": 0.45,
+      "MNIST-C": 0.2
+    },
+    "hidden_b_hard": {
+      "TestA": 0.7,
+      "MNIST-family": 0.15,
+      "MNIST-C": 0.15
+    }
+  },
+  "static": {
+    "testa_fixed": {
+      "TestA": {
+        "accuracy": 0.7891428470611572,
+        "num_samples": 3500,
+        "mean_weights": [
+          0.7,
+          0.2,
+          0.1
+        ]
+      },
+      "MNIST-family": {
+        "accuracy": 0.9895676970481873,
+        "num_samples": 67291,
+        "mean_weights": [
+          0.7,
+          0.2,
+          0.1
+        ]
+      },
+      "MNIST-C": {
+        "accuracy": 0.9496374726295471,
+        "num_samples": 160000,
+        "mean_weights": [
+          0.7,
+          0.2,
+          0.1
+        ]
+      },
+      "local/external digits": {
+        "accuracy": 0.5845828652381897,
+        "num_samples": 34546,
+        "mean_weights": [
+          0.7,
+          0.2,
+          0.1
+        ]
+      }
+    },
+    "mnist_template": {
+      "TestA": {
+        "accuracy": 0.7751428484916687,
+        "num_samples": 3500,
+        "mean_weights": [
+          0.35,
+          0.35,
+          0.3
+        ]
+      },
+      "MNIST-family": {
+        "accuracy": 0.9934166669845581,
+        "num_samples": 67291,
+        "mean_weights": [
+          0.35,
+          0.35,
+          0.3
+        ]
+      },
+      "MNIST-C": {
+        "accuracy": 0.9659374952316284,
+        "num_samples": 160000,
+        "mean_weights": [
+          0.35,
+          0.35,
+          0.3
+        ]
+      },
+      "local/external digits": {
+        "accuracy": 0.6264979839324951,
+        "num_samples": 34546,
+        "mean_weights": [
+          0.35,
+          0.35,
+          0.3
+        ]
+      }
+    },
+    "balanced_template": {
+      "TestA": {
+        "accuracy": 0.7837142944335938,
+        "num_samples": 3500,
+        "mean_weights": [
+          0.5,
+          0.3,
+          0.2
+        ]
+      },
+      "MNIST-family": {
+        "accuracy": 0.9923763871192932,
+        "num_samples": 67291,
+        "mean_weights": [
+          0.5,
+          0.3,
+          0.2
+        ]
+      },
+      "MNIST-C": {
+        "accuracy": 0.9608500003814697,
+        "num_samples": 160000,
+        "mean_weights": [
+          0.5,
+          0.3,
+          0.2
+        ]
+      },
+      "local/external digits": {
+        "accuracy": 0.6137903332710266,
+        "num_samples": 34546,
+        "mean_weights": [
+          0.5,
+          0.3,
+          0.2
+        ]
+      }
+    },
+    "anti1_template": {
+      "TestA": {
+        "accuracy": 0.7794285416603088,
+        "num_samples": 3500,
+        "mean_weights": [
+          0.45,
+          0.45,
+          0.1
+        ]
+      },
+      "MNIST-family": {
+        "accuracy": 0.9927330613136292,
+        "num_samples": 67291,
+        "mean_weights": [
+          0.45,
+          0.45,
+          0.1
+        ]
+      },
+      "MNIST-C": {
+        "accuracy": 0.9632437229156494,
+        "num_samples": 160000,
+        "mean_weights": [
+          0.45,
+          0.45,
+          0.1
+        ]
+      },
+      "local/external digits": {
+        "accuracy": 0.6202165484428406,
+        "num_samples": 34546,
+        "mean_weights": [
+          0.45,
+          0.45,
+          0.1
+        ]
+      }
+    }
+  },
+  "results": [
+    {
+      "config": {
+        "model_type": "linear",
+        "objective": "hidden_b_balanced",
+        "kl_coef": 0.0,
+        "entropy_coef": 0.0,
+        "lr": 0.003,
+        "weight_decay": 0.0001,
+        "epochs": 220,
+        "patience": 35
+      },
+      "mean_objective_score": 0.891385789513588,
+      "mean_metrics": {
+        "TestA": {
+          "accuracy": 0.7787428498268127,
+          "mean_weights": [
+            0.4261945128440857,
+            0.30180362462997434,
+            0.27200184762477875
+          ],
+          "num_samples": 3500
+        },
+        "MNIST-family": {
+          "accuracy": 0.9933186054229737,
+          "mean_weights": [
+            0.3031816005706787,
+            0.3664293646812439,
+            0.3303890585899353
+          ],
+          "num_samples": 67291
+        },
+        "MNIST-C": {
+          "accuracy": 0.9664499759674072,
+          "mean_weights": [
+            0.30708485245704653,
+            0.359954309463501,
+            0.3329608142375946
+          ],
+          "num_samples": 160000
+        },
+        "local/external digits": {
+          "accuracy": 0.6214380860328674,
+          "mean_weights": [
+            0.33135806322097777,
+            0.3236805617809296,
+            0.34496138989925385
+          ],
+          "num_samples": 34546
+        }
+      },
+      "folds": [
+        {
+          "fold": 0,
+          "best_val_accuracy_on_combined_holdout": 0.9714248776435852,
+          "epochs_ran": 36,
+          "metrics": {
+            "TestA": {
+              "accuracy": 0.767714262008667,
+              "num_samples": 3500,
+              "mean_weights": [
+                0.28800272941589355,
+                0.3943956792354584,
+                0.3176015615463257
+              ]
+            },
+            "MNIST-family": {
+              "accuracy": 0.9935058355331421,
+              "num_samples": 67291,
+              "mean_weights": [
+                0.33253222703933716,
+                0.3044127821922302,
+                0.3630550503730774
+              ]
+            },
+            "MNIST-C": {
+              "accuracy": 0.9671249985694885,
+              "num_samples": 160000,
+              "mean_weights": [
+                0.3209778368473053,
+                0.323501855134964,
+                0.3555202782154083
+              ]
+            },
+            "local/external digits": {
+              "accuracy": 0.6314190030097961,
+              "num_samples": 34546,
+              "mean_weights": [
+                0.28049585223197937,
+                0.37966403365135193,
+                0.3398401439189911
+              ]
+            },
+            "objective_score": 0.8866234600543976
+          }
+        },
+        {
+          "fold": 1,
+          "best_val_accuracy_on_combined_holdout": 0.9726808071136475,
+          "epochs_ran": 54,
+          "metrics": {
+            "TestA": {
+              "accuracy": 0.7837142944335938,
+              "num_samples": 3500,
+              "mean_weights": [
+                0.5312700867652893,
+                0.19398698210716248,
+                0.2747429311275482
+              ]
+            },
+            "MNIST-family": {
+              "accuracy": 0.993342399597168,
+              "num_samples": 67291,
+              "mean_weights": [
+                0.2771208584308624,
+                0.3957330584526062,
+                0.327146053314209
+              ]
+            },
+            "MNIST-C": {
+              "accuracy": 0.9664749503135681,
+              "num_samples": 160000,
+              "mean_weights": [
+                0.2942446172237396,
+                0.3481694161891937,
+                0.35758593678474426
+              ]
+            },
+            "local/external digits": {
+              "accuracy": 0.617235004901886,
+              "num_samples": 34546,
+              "mean_weights": [
+                0.36771729588508606,
+                0.20303875207901,
+                0.4292439818382263
+              ]
+            },
+            "objective_score": 0.8936362624168396
+          }
+        },
+        {
+          "fold": 2,
+          "best_val_accuracy_on_combined_holdout": 0.9720091819763184,
+          "epochs_ran": 37,
+          "metrics": {
+            "TestA": {
+              "accuracy": 0.7742857336997986,
+              "num_samples": 3500,
+              "mean_weights": [
+                0.36877578496932983,
+                0.27915823459625244,
+                0.3520659804344177
+              ]
+            },
+            "MNIST-family": {
+              "accuracy": 0.993342399597168,
+              "num_samples": 67291,
+              "mean_weights": [
+                0.33401429653167725,
+                0.3750261962413788,
+                0.29095953702926636
+              ]
+            },
+            "MNIST-C": {
+              "accuracy": 0.96732497215271,
+              "num_samples": 160000,
+              "mean_weights": [
+                0.32241758704185486,
+                0.35251569747924805,
+                0.3250666856765747
+              ]
+            },
+            "local/external digits": {
+              "accuracy": 0.6234585642814636,
+              "num_samples": 34546,
+              "mean_weights": [
+                0.2674191892147064,
+                0.2522161900997162,
+                0.4803646206855774
+              ]
+            },
+            "objective_score": 0.8895634144544602
+          }
+        },
+        {
+          "fold": 3,
+          "best_val_accuracy_on_combined_holdout": 0.9710559248924255,
+          "epochs_ran": 53,
+          "metrics": {
+            "TestA": {
+              "accuracy": 0.7839999794960022,
+              "num_samples": 3500,
+              "mean_weights": [
+                0.4738685190677643,
+                0.33417612314224243,
+                0.1919553130865097
+              ]
+            },
+            "MNIST-family": {
+              "accuracy": 0.993312656879425,
+              "num_samples": 67291,
+              "mean_weights": [
+                0.2952393889427185,
+                0.3354242742061615,
+                0.3693363666534424
+              ]
+            },
+            "MNIST-C": {
+              "accuracy": 0.9659749865531921,
+              "num_samples": 160000,
+              "mean_weights": [
+                0.30111163854599,
+                0.3626457750797272,
+                0.33624258637428284
+              ]
+            },
+            "local/external digits": {
+              "accuracy": 0.6192902326583862,
+              "num_samples": 34546,
+              "mean_weights": [
+                0.34692177176475525,
+                0.4319085478782654,
+                0.22116966545581818
+              ]
+            },
+            "objective_score": 0.8936544179916381
+          }
+        },
+        {
+          "fold": 4,
+          "best_val_accuracy_on_combined_holdout": 0.9705576300621033,
+          "epochs_ran": 82,
+          "metrics": {
+            "TestA": {
+              "accuracy": 0.7839999794960022,
+              "num_samples": 3500,
+              "mean_weights": [
+                0.4690554440021515,
+                0.3073011040687561,
+                0.2236434519290924
+              ]
+            },
+            "MNIST-family": {
+              "accuracy": 0.9930897355079651,
+              "num_samples": 67291,
+              "mean_weights": [
+                0.2770012319087982,
+                0.4215505123138428,
+                0.3014482855796814
+              ]
+            },
+            "MNIST-C": {
+              "accuracy": 0.9653499722480774,
+              "num_samples": 160000,
+              "mean_weights": [
+                0.2966725826263428,
+                0.41293880343437195,
+                0.2903885841369629
+              ]
+            },
+            "local/external digits": {
+              "accuracy": 0.6157876253128052,
+              "num_samples": 34546,
+              "mean_weights": [
+                0.3942362070083618,
+                0.3515752851963043,
+                0.25418853759765625
+              ]
+            },
+            "objective_score": 0.8934513926506042
+          }
+        }
+      ]
+    },
+    {
+      "config": {
+        "model_type": "linear",
+        "objective": "hidden_b_balanced",
+        "kl_coef": 0.02,
+        "entropy_coef": 0.0,
+        "lr": 0.003,
+        "weight_decay": 0.0001,
+        "epochs": 220,
+        "patience": 35
+      },
+      "mean_objective_score": 0.8918226939439773,
+      "mean_metrics": {
+        "TestA": {
+          "accuracy": 0.7795999884605408,
+          "mean_weights": [
+            0.45309611558914187,
+            0.29999407529830935,
+            0.24690980613231658
+          ],
+          "num_samples": 3500
+        },
+        "MNIST-family": {
+          "accuracy": 0.9933512926101684,
+          "mean_weights": [
+            0.3563096284866333,
+            0.34899328351020814,
+            0.29469709992408755
+          ],
+          "num_samples": 67291
+        },
+        "MNIST-C": {
+          "accuracy": 0.9666487336158752,
+          "mean_weights": [
+            0.35257344245910643,
+            0.34541324377059934,
+            0.3020132839679718
+          ],
+          "num_samples": 160000
+        },
+        "local/external digits": {
+          "accuracy": 0.6217680931091308,
+          "mean_weights": [
+            0.3435826003551483,
+            0.31930309236049653,
+            0.33711434006690977
+          ],
+          "num_samples": 34546
+        }
+      },
+      "folds": [
+        {
+          "fold": 0,
+          "best_val_accuracy_on_combined_holdout": 0.971403181552887,
+          "epochs_ran": 36,
+          "metrics": {
+            "TestA": {
+              "accuracy": 0.767714262008667,
+              "num_samples": 3500,
+              "mean_weights": [
+                0.288656085729599,
+                0.39436665177345276,
+                0.31697726249694824
+              ]
+            },
+            "MNIST-family": {
+              "accuracy": 0.9935504198074341,
+              "num_samples": 67291,
+              "mean_weights": [
+                0.33355697989463806,
+                0.3035099506378174,
+                0.36293303966522217
+              ]
+            },
+            "MNIST-C": {
+              "accuracy": 0.9670687317848206,
+              "num_samples": 160000,
+              "mean_weights": [
+                0.3219880759716034,
+                0.32262688875198364,
+                0.3553850054740906
+              ]
+            },
+            "local/external digits": {
+              "accuracy": 0.6309269070625305,
+              "num_samples": 34546,
+              "mean_weights": [
+                0.2822323739528656,
+                0.3798767626285553,
+                0.3378908932209015
+              ]
+            },
+            "objective_score": 0.8866278111934662
+          }
+        },
+        {
+          "fold": 1,
+          "best_val_accuracy_on_combined_holdout": 0.9725291132926941,
+          "epochs_ran": 54,
+          "metrics": {
+            "TestA": {
+              "accuracy": 0.7857142686843872,
+              "num_samples": 3500,
+              "mean_weights": [
+                0.5505181550979614,
+                0.22348204255104065,
+                0.22599981725215912
+              ]
+            },
+            "MNIST-family": {
+              "accuracy": 0.993357241153717,
+              "num_samples": 67291,
+              "mean_weights": [
+                0.34491658210754395,
+                0.3530787229537964,
+                0.30200475454330444
+              ]
+            },
+            "MNIST-C": {
+              "accuracy": 0.9663312435150146,
+              "num_samples": 160000,
+              "mean_weights": [
+                0.35441792011260986,
+                0.3251480758190155,
+                0.32043397426605225
+              ]
+            },
+            "local/external digits": {
+              "accuracy": 0.618306040763855,
+              "num_samples": 34546,
+              "mean_weights": [
+                0.4012925624847412,
+                0.2114616483449936,
+                0.3872458338737488
+              ]
+            },
+            "objective_score": 0.8945127040147781
+          }
+        },
+        {
+          "fold": 2,
+          "best_val_accuracy_on_combined_holdout": 0.9719658493995667,
+          "epochs_ran": 37,
+          "metrics": {
+            "TestA": {
+              "accuracy": 0.7739999890327454,
+              "num_samples": 3500,
+              "mean_weights": [
+                0.3693804144859314,
+                0.28163519501686096,
+                0.34898436069488525
+              ]
+            },
+            "MNIST-family": {
+              "accuracy": 0.993357241153717,
+              "num_samples": 67291,
+              "mean_weights": [
+                0.33853501081466675,
+                0.37323248386383057,
+                0.2882325053215027
+              ]
+            },
+            "MNIST-C": {
+              "accuracy": 0.9672874808311462,
+              "num_samples": 160000,
+              "mean_weights": [
+                0.32572659850120544,
+                0.35134798288345337,
+                0.3229253888130188
+              ]
+            },
+            "local/external digits": {
+              "accuracy": 0.6238638162612915,
+              "num_samples": 34546,
+              "mean_weights": [
+                0.2666358947753906,
+                0.2551822364330292,
+                0.4781818985939026
+              ]
+            },
+            "objective_score": 0.8894325256347656
+          }
+        },
+        {
+          "fold": 3,
+          "best_val_accuracy_on_combined_holdout": 0.9714892506599426,
+          "epochs_ran": 53,
+          "metrics": {
+            "TestA": {
+              "accuracy": 0.7851428389549255,
+              "num_samples": 3500,
+              "mean_weights": [
+                0.49926963448524475,
+                0.30306515097618103,
+                0.1976652443408966
+              ]
+            },
+            "MNIST-family": {
+              "accuracy": 0.9933720827102661,
+              "num_samples": 67291,
+              "mean_weights": [
+                0.3419037163257599,
+                0.34529563784599304,
+                0.31280064582824707
+              ]
+            },
+            "MNIST-C": {
+              "accuracy": 0.9666562080383301,
+              "num_samples": 160000,
+              "mean_weights": [
+                0.33810722827911377,
+                0.35589656233787537,
+                0.3059961795806885
+              ]
+            },
+            "local/external digits": {
+              "accuracy": 0.6195507645606995,
+              "num_samples": 34546,
+              "mean_weights": [
+                0.360666424036026,
+                0.3501169681549072,
+                0.28921663761138916
+              ]
+            },
+            "objective_score": 0.8943257480859756
+          }
+        },
+        {
+          "fold": 4,
+          "best_val_accuracy_on_combined_holdout": 0.9705576300621033,
+          "epochs_ran": 195,
+          "metrics": {
+            "TestA": {
+              "accuracy": 0.7854285836219788,
+              "num_samples": 3500,
+              "mean_weights": [
+                0.5576562881469727,
+                0.29742133617401123,
+                0.14492234587669373
+              ]
+            },
+            "MNIST-family": {
+              "accuracy": 0.993119478225708,
+              "num_samples": 67291,
+              "mean_weights": [
+                0.42263585329055786,
+                0.36984962224960327,
+                0.20751455426216125
+              ]
+            },
+            "MNIST-C": {
+              "accuracy": 0.9659000039100647,
+              "num_samples": 160000,
+              "mean_weights": [
+                0.42262738943099976,
+                0.37204670906066895,
+                0.2053258717060089
+              ]
+            },
+            "local/external digits": {
+              "accuracy": 0.6161929368972778,
+              "num_samples": 34546,
+              "mean_weights": [
+                0.40708574652671814,
+                0.3998778462409973,
+                0.19303643703460693
+              ]
+            },
+            "objective_score": 0.8942146807909012
+          }
+        }
+      ]
+    },
+    {
+      "config": {
+        "model_type": "linear",
+        "objective": "hidden_b_balanced",
+        "kl_coef": 0.05,
+        "entropy_coef": 0.0,
+        "lr": 0.003,
+        "weight_decay": 0.0001,
+        "epochs": 220,
+        "patience": 35
+      },
+      "mean_objective_score": 0.8922150176763534,
+      "mean_metrics": {
+        "TestA": {
+          "accuracy": 0.7806285619735718,
+          "mean_weights": [
+            0.460376238822937,
+            0.29543190002441405,
+            0.24419184625148774
+          ],
+          "num_samples": 3500
+        },
+        "MNIST-family": {
+          "accuracy": 0.993238341808319,
+          "mean_weights": [
+            0.375968873500824,
+            0.3306796610355377,
+            0.293351474404335
+          ],
+          "num_samples": 67291
+        },
+        "MNIST-C": {
+          "accuracy": 0.9664937257766724,
+          "mean_weights": [
+            0.3709802269935608,
+            0.3281258225440979,
+            0.3008939325809479
+          ],
+          "num_samples": 160000
+        },
+        "local/external digits": {
+          "accuracy": 0.6212701916694641,
+          "mean_weights": [
+            0.3516144335269928,
+            0.31256898641586306,
+            0.33581658005714415
+          ],
+          "num_samples": 34546
+        }
+      },
+      "folds": [
+        {
+          "fold": 0,
+          "best_val_accuracy_on_combined_holdout": 0.9713815450668335,
+          "epochs_ran": 36,
+          "metrics": {
+            "TestA": {
+              "accuracy": 0.767714262008667,
+              "num_samples": 3500,
+              "mean_weights": [
+                0.2888755798339844,
+                0.3941636383533478,
+                0.31696078181266785
+              ]
+            },
+            "MNIST-family": {
+              "accuracy": 0.9935504198074341,
+              "num_samples": 67291,
+              "mean_weights": [
+                0.33448243141174316,
+                0.3031073808670044,
+                0.36241021752357483
+              ]
+            },
+            "MNIST-C": {
+              "accuracy": 0.967074990272522,
+              "num_samples": 160000,
+              "mean_weights": [
+                0.32280024886131287,
+                0.32222336530685425,
+                0.3549764156341553
+              ]
+            },
+            "local/external digits": {
+              "accuracy": 0.6309847831726074,
+              "num_samples": 34546,
+              "mean_weights": [
+                0.2820682227611542,
+                0.3805057406425476,
+                0.33742600679397583
+              ]
+            },
+            "objective_score": 0.8866290628910065
+          }
+        },
+        {
+          "fold": 1,
+          "best_val_accuracy_on_combined_holdout": 0.9728540778160095,
+          "epochs_ran": 158,
+          "metrics": {
+            "TestA": {
+              "accuracy": 0.7879999876022339,
+              "num_samples": 3500,
+              "mean_weights": [
+                0.6036595702171326,
+                0.2548619210720062,
+                0.14147843420505524
+              ]
+            },
+            "MNIST-family": {
+              "accuracy": 0.9932383298873901,
+              "num_samples": 67291,
+              "mean_weights": [
+                0.4808585047721863,
+                0.28815677762031555,
+                0.23098473250865936
+              ]
+            },
+            "MNIST-C": {
+              "accuracy": 0.9667499661445618,
+              "num_samples": 160000,
+              "mean_weights": [
+                0.46829238533973694,
+                0.27566301822662354,
+                0.25604456663131714
+              ]
+            },
+            "local/external digits": {
+              "accuracy": 0.6173218488693237,
+              "num_samples": 34546,
+              "mean_weights": [
+                0.38797715306282043,
+                0.2766229510307312,
+                0.33539992570877075
+              ]
+            },
+            "objective_score": 0.8955834031105041
+          }
+        },
+        {
+          "fold": 2,
+          "best_val_accuracy_on_combined_holdout": 0.9719658493995667,
+          "epochs_ran": 37,
+          "metrics": {
+            "TestA": {
+              "accuracy": 0.7739999890327454,
+              "num_samples": 3500,
+              "mean_weights": [
+                0.3690860867500305,
+                0.283670037984848,
+                0.34724393486976624
+              ]
+            },
+            "MNIST-family": {
+              "accuracy": 0.993357241153717,
+              "num_samples": 67291,
+              "mean_weights": [
+                0.33998510241508484,
+                0.37366896867752075,
+                0.2863459289073944
+              ]
+            },
+            "MNIST-C": {
+              "accuracy": 0.9673061966896057,
+              "num_samples": 160000,
+              "mean_weights": [
+                0.3270825743675232,
+                0.35151877999305725,
+                0.32139861583709717
+              ]
+            },
+            "local/external digits": {
+              "accuracy": 0.6242401599884033,
+              "num_samples": 34546,
+              "mean_weights": [
+                0.26548320055007935,
+                0.2594427168369293,
+                0.4750741124153137
+              ]
+            },
+            "objective_score": 0.8894362688064574
+          }
+        },
+        {
+          "fold": 3,
+          "best_val_accuracy_on_combined_holdout": 0.9714459180831909,
+          "epochs_ran": 49,
+          "metrics": {
+            "TestA": {
+              "accuracy": 0.7882857322692871,
+              "num_samples": 3500,
+              "mean_weights": [
+                0.5078415274620056,
+                0.26875269412994385,
+                0.22340571880340576
+              ]
+            },
+            "MNIST-family": {
+              "accuracy": 0.9932234883308411,
+              "num_samples": 67291,
+              "mean_weights": [
+                0.3342560827732086,
+                0.35343456268310547,
+                0.3123093843460083
+              ]
+            },
+            "MNIST-C": {
+              "accuracy": 0.9666687250137329,
+              "num_samples": 160000,
+              "mean_weights": [
+                0.33572983741760254,
+                0.35038289427757263,
+                0.31388726830482483
+              ]
+            },
+            "local/external digits": {
+              "accuracy": 0.6164534091949463,
+              "num_samples": 34546,
+              "mean_weights": [
+                0.37603265047073364,
+                0.29126495122909546,
+                0.3327023684978485
+              ]
+            },
+            "objective_score": 0.8956905454397202
+          }
+        },
+        {
+          "fold": 4,
+          "best_val_accuracy_on_combined_holdout": 0.969821035861969,
+          "epochs_ran": 81,
+          "metrics": {
+            "TestA": {
+              "accuracy": 0.7851428389549255,
+              "num_samples": 3500,
+              "mean_weights": [
+                0.532418429851532,
+                0.27571120858192444,
+                0.19187036156654358
+              ]
+            },
+            "MNIST-family": {
+              "accuracy": 0.9928222298622131,
+              "num_samples": 67291,
+              "mean_weights": [
+                0.390262246131897,
+                0.33503061532974243,
+                0.2747071087360382
+              ]
+            },
+            "MNIST-C": {
+              "accuracy": 0.9646687507629395,
+              "num_samples": 160000,
+              "mean_weights": [
+                0.4009960889816284,
+                0.34084105491638184,
+                0.25816279649734497
+              ]
+            },
+            "local/external digits": {
+              "accuracy": 0.6173507571220398,
+              "num_samples": 34546,
+              "mean_weights": [
+                0.4465109407901764,
+                0.3550085723400116,
+                0.198480486869812
+              ]
+            },
+            "objective_score": 0.8937358081340789
+          }
+        }
+      ]
+    },
+    {
+      "config": {
+        "model_type": "linear",
+        "objective": "hidden_b_easy",
+        "kl_coef": 0.02,
+        "entropy_coef": 0.0,
+        "lr": 0.003,
+        "weight_decay": 0.0001,
+        "epochs": 220,
+        "patience": 35
+      },
+      "mean_objective_score": 0.9135034692287445,
+      "mean_metrics": {
+        "TestA": {
+          "accuracy": 0.7802857041358948,
+          "mean_weights": [
+            0.4556557297706604,
+            0.29865739941596986,
+            0.24568688571453096
+          ],
+          "num_samples": 3500
+        },
+        "MNIST-family": {
+          "accuracy": 0.9933988451957703,
+          "mean_weights": [
+            0.3596720039844513,
+            0.35275170803070066,
+            0.28757629096508025
+          ],
+          "num_samples": 67291
+        },
+        "MNIST-C": {
+          "accuracy": 0.9668699622154235,
+          "mean_weights": [
+            0.3539959669113159,
+            0.3486295461654663,
+            0.2973744869232178
+          ],
+          "num_samples": 160000
+        },
+        "local/external digits": {
+          "accuracy": 0.6227522850036621,
+          "mean_weights": [
+            0.33299832940101626,
+            0.3239651173353195,
+            0.34303656220436096
+          ],
+          "num_samples": 34546
+        }
+      },
+      "folds": [
+        {
+          "fold": 0,
+          "best_val_accuracy_on_combined_holdout": 0.9713815450668335,
+          "epochs_ran": 36,
+          "metrics": {
+            "TestA": {
+              "accuracy": 0.767714262008667,
+              "num_samples": 3500,
+              "mean_weights": [
+                0.2884591221809387,
+                0.3943363130092621,
+                0.3172045946121216
+              ]
+            },
+            "MNIST-family": {
+              "accuracy": 0.993535578250885,
+              "num_samples": 67291,
+              "mean_weights": [
+                0.3335048258304596,
+                0.30377668142318726,
+                0.36271849274635315
+              ]
+            },
+            "MNIST-C": {
+              "accuracy": 0.9670937061309814,
+              "num_samples": 160000,
+              "mean_weights": [
+                0.32182249426841736,
+                0.32281172275543213,
+                0.3553658127784729
+              ]
+            },
+            "local/external digits": {
+              "accuracy": 0.6308979392051697,
+              "num_samples": 34546,
+              "mean_weights": [
+                0.28193891048431396,
+                0.3806883692741394,
+                0.337372750043869
+              ]
+            },
+            "objective_score": 0.909209743142128
+          }
+        },
+        {
+          "fold": 1,
+          "best_val_accuracy_on_combined_holdout": 0.9727457761764526,
+          "epochs_ran": 53,
+          "metrics": {
+            "TestA": {
+              "accuracy": 0.7874285578727722,
+              "num_samples": 3500,
+              "mean_weights": [
+                0.5541979074478149,
+                0.21209371089935303,
+                0.23370841145515442
+              ]
+            },
+            "MNIST-family": {
+              "accuracy": 0.9934166669845581,
+              "num_samples": 67291,
+              "mean_weights": [
+                0.34178221225738525,
+                0.3593173027038574,
+                0.2989004850387573
+              ]
+            },
+            "MNIST-C": {
+              "accuracy": 0.9665312170982361,
+              "num_samples": 160000,
+              "mean_weights": [
+                0.34950292110443115,
+                0.32851892709732056,
+                0.3219781219959259
+              ]
+            },
+            "local/external digits": {
+              "accuracy": 0.619029700756073,
+              "num_samples": 34546,
+              "mean_weights": [
+                0.39188599586486816,
+                0.20167545974254608,
+                0.40643855929374695
+              ]
+            },
+            "objective_score": 0.9159437388181686
+          }
+        },
+        {
+          "fold": 2,
+          "best_val_accuracy_on_combined_holdout": 0.9720091819763184,
+          "epochs_ran": 37,
+          "metrics": {
+            "TestA": {
+              "accuracy": 0.7739999890327454,
+              "num_samples": 3500,
+              "mean_weights": [
+                0.36824294924736023,
+                0.28318339586257935,
+                0.3485736846923828
+              ]
+            },
+            "MNIST-family": {
+              "accuracy": 0.993342399597168,
+              "num_samples": 67291,
+              "mean_weights": [
+                0.3385559916496277,
+                0.37323522567749023,
+                0.2882087826728821
+              ]
+            },
+            "MNIST-C": {
+              "accuracy": 0.96732497215271,
+              "num_samples": 160000,
+              "mean_weights": [
+                0.32533562183380127,
+                0.35188984870910645,
+                0.3227744996547699
+              ]
+            },
+            "local/external digits": {
+              "accuracy": 0.6240954399108887,
+              "num_samples": 34546,
+              "mean_weights": [
+                0.2660766541957855,
+                0.257530152797699,
+                0.4763932228088379
+              ]
+            },
+            "objective_score": 0.9113690704107285
+          }
+        },
+        {
+          "fold": 3,
+          "best_val_accuracy_on_combined_holdout": 0.971619188785553,
+          "epochs_ran": 52,
+          "metrics": {
+            "TestA": {
+              "accuracy": 0.7854285836219788,
+              "num_samples": 3500,
+              "mean_weights": [
+                0.4982634484767914,
+                0.30107319355010986,
+                0.20066334307193756
+              ]
+            },
+            "MNIST-family": {
+              "accuracy": 0.9934166669845581,
+              "num_samples": 67291,
+              "mean_weights": [
+                0.34105560183525085,
+                0.3483055531978607,
+                0.3106388449668884
+              ]
+            },
+            "MNIST-C": {
+              "accuracy": 0.9667437076568604,
+              "num_samples": 160000,
+              "mean_weights": [
+                0.33589810132980347,
+                0.35890403389930725,
+                0.30519789457321167
+              ]
+            },
+            "local/external digits": {
+              "accuracy": 0.6206796765327454,
+              "num_samples": 34546,
+              "mean_weights": [
+                0.34637612104415894,
+                0.3549567461013794,
+                0.29866713285446167
+              ]
+            },
+            "objective_score": 0.9152862459421158
+          }
+        },
+        {
+          "fold": 4,
+          "best_val_accuracy_on_combined_holdout": 0.9710559248924255,
+          "epochs_ran": 220,
+          "metrics": {
+            "TestA": {
+              "accuracy": 0.7868571281433105,
+              "num_samples": 3500,
+              "mean_weights": [
+                0.5691152215003967,
+                0.3026003837585449,
+                0.12828439474105835
+              ]
+            },
+            "MNIST-family": {
+              "accuracy": 0.9932829141616821,
+              "num_samples": 67291,
+              "mean_weights": [
+                0.4434613883495331,
+                0.3791237771511078,
+                0.17741484940052032
+              ]
+            },
+            "MNIST-C": {
+              "accuracy": 0.9666562080383301,
+              "num_samples": 160000,
+              "mean_weights": [
+                0.43742069602012634,
+                0.38102319836616516,
+                0.1815561056137085
+              ]
+            },
+            "local/external digits": {
+              "accuracy": 0.6190586686134338,
+              "num_samples": 34546,
+              "mean_weights": [
+                0.3787139654159546,
+                0.42497485876083374,
+                0.19631114602088928
+              ]
+            },
+            "objective_score": 0.9157085478305816
+          }
+        }
+      ]
+    },
+    {
+      "config": {
+        "model_type": "linear",
+        "objective": "hidden_b_hard",
+        "kl_coef": 0.02,
+        "entropy_coef": 0.0,
+        "lr": 0.003,
+        "weight_decay": 0.0001,
+        "epochs": 220,
+        "patience": 35
+      },
+      "mean_objective_score": 0.8396343022584916,
+      "mean_metrics": {
+        "TestA": {
+          "accuracy": 0.7796000003814697,
+          "mean_weights": [
+            0.4540685534477234,
+            0.2968074083328247,
+            0.24912403225898744
+          ],
+          "num_samples": 3500
+        },
+        "MNIST-family": {
+          "accuracy": 0.9932561993598938,
+          "mean_weights": [
+            0.35475138425827024,
+            0.3430138289928436,
+            0.3022348344326019
+          ],
+          "num_samples": 67291
+        },
+        "MNIST-C": {
+          "accuracy": 0.9661724805831909,
+          "mean_weights": [
+            0.354508763551712,
+            0.33916397094726564,
+            0.30632724463939665
+          ],
+          "num_samples": 160000
+        },
+        "local/external digits": {
+          "accuracy": 0.6192960262298584,
+          "mean_weights": [
+            0.36414275169372556,
+            0.3107453674077988,
+            0.3251118928194046
+          ],
+          "num_samples": 34546
+        }
+      },
+      "folds": [
+        {
+          "fold": 0,
+          "best_val_accuracy_on_combined_holdout": 0.971403181552887,
+          "epochs_ran": 36,
+          "metrics": {
+            "TestA": {
+              "accuracy": 0.767714262008667,
+              "num_samples": 3500,
+              "mean_weights": [
+                0.288613498210907,
+                0.3942584693431854,
+                0.3171280026435852
+              ]
+            },
+            "MNIST-family": {
+              "accuracy": 0.993535578250885,
+              "num_samples": 67291,
+              "mean_weights": [
+                0.3336164355278015,
+                0.30322563648223877,
+                0.3631579577922821
+              ]
+            },
+            "MNIST-C": {
+              "accuracy": 0.9670937061309814,
+              "num_samples": 160000,
+              "mean_weights": [
+                0.32210877537727356,
+                0.3223588168621063,
+                0.35553237795829773
+              ]
+            },
+            "local/external digits": {
+              "accuracy": 0.6310137510299683,
+              "num_samples": 34546,
+              "mean_weights": [
+                0.2819477915763855,
+                0.37976211309432983,
+                0.33829012513160706
+              ]
+            },
+            "objective_score": 0.8314943760633469
+          }
+        },
+        {
+          "fold": 1,
+          "best_val_accuracy_on_combined_holdout": 0.9718575477600098,
+          "epochs_ran": 50,
+          "metrics": {
+            "TestA": {
+              "accuracy": 0.7868571281433105,
+              "num_samples": 3500,
+              "mean_weights": [
+                0.5530741214752197,
+                0.2144722044467926,
+                0.2324536293745041
+              ]
+            },
+            "MNIST-family": {
+              "accuracy": 0.993357241153717,
+              "num_samples": 67291,
+              "mean_weights": [
+                0.3423735499382019,
+                0.34954729676246643,
+                0.30807918310165405
+              ]
+            },
+            "MNIST-C": {
+              "accuracy": 0.9656187295913696,
+              "num_samples": 160000,
+              "mean_weights": [
+                0.35761576890945435,
+                0.31843212246894836,
+                0.3239521086215973
+              ]
+            },
+            "local/external digits": {
+              "accuracy": 0.6143113374710083,
+              "num_samples": 34546,
+              "mean_weights": [
+                0.4359273612499237,
+                0.19603759050369263,
+                0.36803510785102844
+              ]
+            },
+            "objective_score": 0.8446463853120803
+          }
+        },
+        {
+          "fold": 2,
+          "best_val_accuracy_on_combined_holdout": 0.9719875454902649,
+          "epochs_ran": 37,
+          "metrics": {
+            "TestA": {
+              "accuracy": 0.7742857336997986,
+              "num_samples": 3500,
+              "mean_weights": [
+                0.3716903626918793,
+                0.2773822844028473,
+                0.3509273827075958
+              ]
+            },
+            "MNIST-family": {
+              "accuracy": 0.993342399597168,
+              "num_samples": 67291,
+              "mean_weights": [
+                0.3378416895866394,
+                0.37418630719184875,
+                0.2879720628261566
+              ]
+            },
+            "MNIST-C": {
+              "accuracy": 0.9672562479972839,
+              "num_samples": 160000,
+              "mean_weights": [
+                0.3264768123626709,
+                0.35027074813842773,
+                0.323252409696579
+              ]
+            },
+            "local/external digits": {
+              "accuracy": 0.6233428120613098,
+              "num_samples": 34546,
+              "mean_weights": [
+                0.269127756357193,
+                0.24768643081188202,
+                0.4831857979297638
+              ]
+            },
+            "objective_score": 0.8360898107290267
+          }
+        },
+        {
+          "fold": 3,
+          "best_val_accuracy_on_combined_holdout": 0.9710342884063721,
+          "epochs_ran": 54,
+          "metrics": {
+            "TestA": {
+              "accuracy": 0.7842857241630554,
+              "num_samples": 3500,
+              "mean_weights": [
+                0.4962984025478363,
+                0.31372156739234924,
+                0.18998001515865326
+              ]
+            },
+            "MNIST-family": {
+              "accuracy": 0.993208646774292,
+              "num_samples": 67291,
+              "mean_weights": [
+                0.34110790491104126,
+                0.34076908230781555,
+                0.31812310218811035
+              ]
+            },
+            "MNIST-C": {
+              "accuracy": 0.9659749865531921,
+              "num_samples": 160000,
+              "mean_weights": [
+                0.3406815230846405,
+                0.3540611267089844,
+                0.30525732040405273
+              ]
+            },
+            "local/external digits": {
+              "accuracy": 0.6165692210197449,
+              "num_samples": 34546,
+              "mean_weights": [
+                0.3850911557674408,
+                0.35578101873397827,
+                0.25912782549858093
+              ]
+            },
+            "objective_score": 0.8428775519132614
+          }
+        },
+        {
+          "fold": 4,
+          "best_val_accuracy_on_combined_holdout": 0.9698427319526672,
+          "epochs_ran": 195,
+          "metrics": {
+            "TestA": {
+              "accuracy": 0.7848571538925171,
+              "num_samples": 3500,
+              "mean_weights": [
+                0.5606663823127747,
+                0.284202516078949,
+                0.15513113141059875
+              ]
+            },
+            "MNIST-family": {
+              "accuracy": 0.992837131023407,
+              "num_samples": 67291,
+              "mean_weights": [
+                0.41881734132766724,
+                0.34734082221984863,
+                0.23384186625480652
+              ]
+            },
+            "MNIST-C": {
+              "accuracy": 0.9649187326431274,
+              "num_samples": 160000,
+              "mean_weights": [
+                0.4256609380245209,
+                0.35069704055786133,
+                0.2236420065164566
+              ]
+            },
+            "local/external digits": {
+              "accuracy": 0.6112430095672607,
+              "num_samples": 34546,
+              "mean_weights": [
+                0.44861969351768494,
+                0.3744596838951111,
+                0.17692060768604279
+              ]
+            },
+            "objective_score": 0.8430633872747421
+          }
+        }
+      ]
+    },
+    {
+      "config": {
+        "model_type": "mlp",
+        "objective": "hidden_b_balanced",
+        "kl_coef": 0.02,
+        "entropy_coef": 0.0,
+        "lr": 0.002,
+        "weight_decay": 0.0002,
+        "epochs": 260,
+        "patience": 40
+      },
+      "mean_objective_score": 0.8918025398254394,
+      "mean_metrics": {
+        "TestA": {
+          "accuracy": 0.7793142914772033,
+          "mean_weights": [
+            0.4659118115901947,
+            0.2953480064868927,
+            0.2387401878833771
+          ],
+          "num_samples": 3500
+        },
+        "MNIST-family": {
+          "accuracy": 0.9934553265571594,
+          "mean_weights": [
+            0.406350189447403,
+            0.34285348653793335,
+            0.2507963448762894
+          ],
+          "num_samples": 67291
+        },
+        "MNIST-C": {
+          "accuracy": 0.9670087218284606,
+          "mean_weights": [
+            0.39516180753707886,
+            0.3456337034702301,
+            0.25920446813106535
+          ],
+          "num_samples": 160000
+        },
+        "local/external digits": {
+          "accuracy": 0.6252590656280518,
+          "mean_weights": [
+            0.32326977849006655,
+            0.3771144598722458,
+            0.299615752696991
+          ],
+          "num_samples": 34546
+        }
+      },
+      "folds": [
+        {
+          "fold": 0,
+          "best_val_accuracy_on_combined_holdout": 0.9721397757530212,
+          "epochs_ran": 222,
+          "metrics": {
+            "TestA": {
+              "accuracy": 0.7954285740852356,
+              "num_samples": 3500,
+              "mean_weights": [
+                0.6097984313964844,
+                0.2549046277999878,
+                0.1352970153093338
+              ]
+            },
+            "MNIST-family": {
+              "accuracy": 0.993357241153717,
+              "num_samples": 67291,
+              "mean_weights": [
+                0.4938449561595917,
+                0.3401619791984558,
+                0.1659931093454361
+              ]
+            },
+            "MNIST-C": {
+              "accuracy": 0.9673999547958374,
+              "num_samples": 160000,
+              "mean_weights": [
+                0.47328832745552063,
+                0.3491380214691162,
+                0.17757365107536316
+              ]
+            },
+            "local/external digits": {
+              "accuracy": 0.6232848763465881,
+              "num_samples": 34546,
+              "mean_weights": [
+                0.3070012629032135,
+                0.44457995891571045,
+                0.24841877818107605
+              ]
+            },
+            "objective_score": 0.8990978837013245
+          }
+        },
+        {
+          "fold": 1,
+          "best_val_accuracy_on_combined_holdout": 0.9721174836158752,
+          "epochs_ran": 57,
+          "metrics": {
+            "TestA": {
+              "accuracy": 0.7860000133514404,
+              "num_samples": 3500,
+              "mean_weights": [
+                0.5594713687896729,
+                0.24933776259422302,
+                0.19119083881378174
+              ]
+            },
+            "MNIST-family": {
+              "accuracy": 0.9931789040565491,
+              "num_samples": 67291,
+              "mean_weights": [
+                0.42398229241371155,
+                0.31919074058532715,
+                0.2568269968032837
+              ]
+            },
+            "MNIST-C": {
+              "accuracy": 0.9654062390327454,
+              "num_samples": 160000,
+              "mean_weights": [
+                0.41621169447898865,
+                0.3186192214488983,
+                0.26516902446746826
+              ]
+            },
+            "local/external digits": {
+              "accuracy": 0.6170613169670105,
+              "num_samples": 34546,
+              "mean_weights": [
+                0.4252144396305084,
+                0.2970182001590729,
+                0.2777673304080963
+              ]
+            },
+            "objective_score": 0.8943938702344895
+          }
+        },
+        {
+          "fold": 2,
+          "best_val_accuracy_on_combined_holdout": 0.9722691774368286,
+          "epochs_ran": 41,
+          "metrics": {
+            "TestA": {
+              "accuracy": 0.7622857093811035,
+              "num_samples": 3500,
+              "mean_weights": [
+                0.29919013381004333,
+                0.456652969121933,
+                0.2441568821668625
+              ]
+            },
+            "MNIST-family": {
+              "accuracy": 0.9936841726303101,
+              "num_samples": 67291,
+              "mean_weights": [
+                0.31049373745918274,
+                0.39742860198020935,
+                0.2920777201652527
+              ]
+            },
+            "MNIST-C": {
+              "accuracy": 0.9673562049865723,
+              "num_samples": 160000,
+              "mean_weights": [
+                0.3109191954135895,
+                0.4040220081806183,
+                0.28505879640579224
+              ]
+            },
+            "local/external digits": {
+              "accuracy": 0.6352399587631226,
+              "num_samples": 34546,
+              "mean_weights": [
+                0.28840172290802,
+                0.46494320034980774,
+                0.24665510654449463
+              ]
+            },
+            "objective_score": 0.8842892706394195
+          }
+        },
+        {
+          "fold": 3,
+          "best_val_accuracy_on_combined_holdout": 0.9717058539390564,
+          "epochs_ran": 41,
+          "metrics": {
+            "TestA": {
+              "accuracy": 0.7602857351303101,
+              "num_samples": 3500,
+              "mean_weights": [
+                0.2549479007720947,
+                0.2539077699184418,
+                0.4911442697048187
+              ]
+            },
+            "MNIST-family": {
+              "accuracy": 0.993580162525177,
+              "num_samples": 67291,
+              "mean_weights": [
+                0.3172430694103241,
+                0.3065035343170166,
+                0.3762533962726593
+              ]
+            },
+            "MNIST-C": {
+              "accuracy": 0.9669749736785889,
+              "num_samples": 160000,
+              "mean_weights": [
+                0.30720213055610657,
+                0.2951887249946594,
+                0.3976091146469116
+              ]
+            },
+            "local/external digits": {
+              "accuracy": 0.6296242475509644,
+              "num_samples": 34546,
+              "mean_weights": [
+                0.2532070577144623,
+                0.23910589516162872,
+                0.507686972618103
+              ]
+            },
+            "objective_score": 0.8832766324281692
+          }
+        },
+        {
+          "fold": 4,
+          "best_val_accuracy_on_combined_holdout": 0.9717275500297546,
+          "epochs_ran": 224,
+          "metrics": {
+            "TestA": {
+              "accuracy": 0.7925714254379272,
+              "num_samples": 3500,
+              "mean_weights": [
+                0.6061512231826782,
+                0.26193690299987793,
+                0.13191193342208862
+              ]
+            },
+            "MNIST-family": {
+              "accuracy": 0.993476152420044,
+              "num_samples": 67291,
+              "mean_weights": [
+                0.4861868917942047,
+                0.35098257660865784,
+                0.16283050179481506
+              ]
+            },
+            "MNIST-C": {
+              "accuracy": 0.9679062366485596,
+              "num_samples": 160000,
+              "mean_weights": [
+                0.46818768978118896,
+                0.3612005412578583,
+                0.17061175405979156
+              ]
+            },
+            "local/external digits": {
+              "accuracy": 0.6210849285125732,
+              "num_samples": 34546,
+              "mean_weights": [
+                0.3425244092941284,
+                0.43992504477500916,
+                0.21755057573318481
+              ]
+            },
+            "objective_score": 0.8979550421237945
+          }
+        }
+      ]
+    },
+    {
+      "config": {
+        "model_type": "mlp",
+        "objective": "hidden_b_easy",
+        "kl_coef": 0.02,
+        "entropy_coef": 0.0,
+        "lr": 0.002,
+        "weight_decay": 0.0002,
+        "epochs": 260,
+        "patience": 40
+      },
+      "mean_objective_score": 0.9128581988811492,
+      "mean_metrics": {
+        "TestA": {
+          "accuracy": 0.7782285690307618,
+          "mean_weights": [
+            0.4611537218093872,
+            0.30156174302101135,
+            0.23728452026844024
+          ],
+          "num_samples": 3500
+        },
+        "MNIST-family": {
+          "accuracy": 0.9934404611587524,
+          "mean_weights": [
+            0.4009948015213013,
+            0.3493736445903778,
+            0.2496315985918045
+          ],
+          "num_samples": 67291
+        },
+        "MNIST-C": {
+          "accuracy": 0.9671499609947205,
+          "mean_weights": [
+            0.3886915028095245,
+            0.35262845158576966,
+            0.2586800158023834
+          ],
+          "num_samples": 160000
+        },
+        "local/external digits": {
+          "accuracy": 0.6260522365570068,
+          "mean_weights": [
+            0.3130467593669891,
+            0.3865966767072678,
+            0.30035656988620757
+          ],
+          "num_samples": 34546
+        }
+      },
+      "folds": [
+        {
+          "fold": 0,
+          "best_val_accuracy_on_combined_holdout": 0.972183108329773,
+          "epochs_ran": 195,
+          "metrics": {
+            "TestA": {
+              "accuracy": 0.792285680770874,
+              "num_samples": 3500,
+              "mean_weights": [
+                0.5989121198654175,
+                0.2714877128601074,
+                0.1296001672744751
+              ]
+            },
+            "MNIST-family": {
+              "accuracy": 0.9932829141616821,
+              "num_samples": 67291,
+              "mean_weights": [
+                0.4921112358570099,
+                0.34216082096099854,
+                0.16572795808315277
+              ]
+            },
+            "MNIST-C": {
+              "accuracy": 0.9675874710083008,
+              "num_samples": 160000,
+              "mean_weights": [
+                0.4680067300796509,
+                0.3559057414531708,
+                0.17608751356601715
+              ]
+            },
+            "local/external digits": {
+              "accuracy": 0.6234296560287476,
+              "num_samples": 34546,
+              "mean_weights": [
+                0.2966090440750122,
+                0.4748028516769409,
+                0.22858810424804688
+              ]
+            },
+            "objective_score": 0.917794793844223
+          }
+        },
+        {
+          "fold": 1,
+          "best_val_accuracy_on_combined_holdout": 0.9722908139228821,
+          "epochs_ran": 59,
+          "metrics": {
+            "TestA": {
+              "accuracy": 0.7868571281433105,
+              "num_samples": 3500,
+              "mean_weights": [
+                0.5540017485618591,
+                0.26076140999794006,
+                0.18523681163787842
+              ]
+            },
+            "MNIST-family": {
+              "accuracy": 0.993208646774292,
+              "num_samples": 67291,
+              "mean_weights": [
+                0.41113126277923584,
+                0.34161168336868286,
+                0.2472570836544037
+              ]
+            },
+            "MNIST-C": {
+              "accuracy": 0.9657812118530273,
+              "num_samples": 160000,
+              "mean_weights": [
+                0.4029053747653961,
+                0.3388335704803467,
+                0.25826096534729004
+              ]
+            },
+            "local/external digits": {
+              "accuracy": 0.6187402606010437,
+              "num_samples": 34546,
+              "mean_weights": [
+                0.40680184960365295,
+                0.3110960125923157,
+                0.28210213780403137
+              ]
+            },
+            "objective_score": 0.9155001282691955
+          }
+        },
+        {
+          "fold": 2,
+          "best_val_accuracy_on_combined_holdout": 0.9722474813461304,
+          "epochs_ran": 41,
+          "metrics": {
+            "TestA": {
+              "accuracy": 0.7622857093811035,
+              "num_samples": 3500,
+              "mean_weights": [
+                0.29890185594558716,
+                0.4567701816558838,
+                0.24432796239852905
+              ]
+            },
+            "MNIST-family": {
+              "accuracy": 0.9936841726303101,
+              "num_samples": 67291,
+              "mean_weights": [
+                0.31091365218162537,
+                0.39740073680877686,
+                0.29168564081192017
+              ]
+            },
+            "MNIST-C": {
+              "accuracy": 0.9673624634742737,
+              "num_samples": 160000,
+              "mean_weights": [
+                0.31105515360832214,
+                0.40414541959762573,
+                0.28479939699172974
+              ]
+            },
+            "local/external digits": {
+              "accuracy": 0.6353268027305603,
+              "num_samples": 34546,
+              "mean_weights": [
+                0.2882380485534668,
+                0.46499425172805786,
+                0.24676769971847534
+              ]
+            },
+            "objective_score": 0.9074303686618804
+          }
+        },
+        {
+          "fold": 3,
+          "best_val_accuracy_on_combined_holdout": 0.9716842174530029,
+          "epochs_ran": 41,
+          "metrics": {
+            "TestA": {
+              "accuracy": 0.7602857351303101,
+              "num_samples": 3500,
+              "mean_weights": [
+                0.25448882579803467,
+                0.2549249827861786,
+                0.49058616161346436
+              ]
+            },
+            "MNIST-family": {
+              "accuracy": 0.993580162525177,
+              "num_samples": 67291,
+              "mean_weights": [
+                0.31654953956604004,
+                0.3077884316444397,
+                0.3756621181964874
+              ]
+            },
+            "MNIST-C": {
+              "accuracy": 0.9670062065124512,
+              "num_samples": 160000,
+              "mean_weights": [
+                0.3065456449985504,
+                0.2962852716445923,
+                0.3971690833568573
+              ]
+            },
+            "local/external digits": {
+              "accuracy": 0.6296532154083252,
+              "num_samples": 34546,
+              "mean_weights": [
+                0.25295665860176086,
+                0.2397080510854721,
+                0.5073353052139282
+              ]
+            },
+            "objective_score": 0.9066123217344284
+          }
+        },
+        {
+          "fold": 4,
+          "best_val_accuracy_on_combined_holdout": 0.9719225168228149,
+          "epochs_ran": 196,
+          "metrics": {
+            "TestA": {
+              "accuracy": 0.7894285917282104,
+              "num_samples": 3500,
+              "mean_weights": [
+                0.5994640588760376,
+                0.2638644278049469,
+                0.1366714984178543
+              ]
+            },
+            "MNIST-family": {
+              "accuracy": 0.993446409702301,
+              "num_samples": 67291,
+              "mean_weights": [
+                0.4742683172225952,
+                0.3579065501689911,
+                0.16782519221305847
+              ]
+            },
+            "MNIST-C": {
+              "accuracy": 0.9680124521255493,
+              "num_samples": 160000,
+              "mean_weights": [
+                0.4549446105957031,
+                0.3679722547531128,
+                0.1770831197500229
+              ]
+            },
+            "local/external digits": {
+              "accuracy": 0.6231112480163574,
+              "num_samples": 34546,
+              "mean_weights": [
+                0.32062819600105286,
+                0.44238221645355225,
+                0.2369896024465561
+              ]
+            },
+            "objective_score": 0.9169533818960189
+          }
+        }
+      ]
+    }
+  ],
+  "best_by_objective": {
+    "hidden_b_balanced": {
+      "config": {
+        "model_type": "linear",
+        "objective": "hidden_b_balanced",
+        "kl_coef": 0.05,
+        "entropy_coef": 0.0,
+        "lr": 0.003,
+        "weight_decay": 0.0001,
+        "epochs": 220,
+        "patience": 35
+      },
+      "mean_objective_score": 0.8922150176763534,
+      "mean_metrics": {
+        "TestA": {
+          "accuracy": 0.7806285619735718,
+          "mean_weights": [
+            0.460376238822937,
+            0.29543190002441405,
+            0.24419184625148774
+          ],
+          "num_samples": 3500
+        },
+        "MNIST-family": {
+          "accuracy": 0.993238341808319,
+          "mean_weights": [
+            0.375968873500824,
+            0.3306796610355377,
+            0.293351474404335
+          ],
+          "num_samples": 67291
+        },
+        "MNIST-C": {
+          "accuracy": 0.9664937257766724,
+          "mean_weights": [
+            0.3709802269935608,
+            0.3281258225440979,
+            0.3008939325809479
+          ],
+          "num_samples": 160000
+        },
+        "local/external digits": {
+          "accuracy": 0.6212701916694641,
+          "mean_weights": [
+            0.3516144335269928,
+            0.31256898641586306,
+            0.33581658005714415
+          ],
+          "num_samples": 34546
+        }
+      },
+      "folds": [
+        {
+          "fold": 0,
+          "best_val_accuracy_on_combined_holdout": 0.9713815450668335,
+          "epochs_ran": 36,
+          "metrics": {
+            "TestA": {
+              "accuracy": 0.767714262008667,
+              "num_samples": 3500,
+              "mean_weights": [
+                0.2888755798339844,
+                0.3941636383533478,
+                0.31696078181266785
+              ]
+            },
+            "MNIST-family": {
+              "accuracy": 0.9935504198074341,
+              "num_samples": 67291,
+              "mean_weights": [
+                0.33448243141174316,
+                0.3031073808670044,
+                0.36241021752357483
+              ]
+            },
+            "MNIST-C": {
+              "accuracy": 0.967074990272522,
+              "num_samples": 160000,
+              "mean_weights": [
+                0.32280024886131287,
+                0.32222336530685425,
+                0.3549764156341553
+              ]
+            },
+            "local/external digits": {
+              "accuracy": 0.6309847831726074,
+              "num_samples": 34546,
+              "mean_weights": [
+                0.2820682227611542,
+                0.3805057406425476,
+                0.33742600679397583
+              ]
+            },
+            "objective_score": 0.8866290628910065
+          }
+        },
+        {
+          "fold": 1,
+          "best_val_accuracy_on_combined_holdout": 0.9728540778160095,
+          "epochs_ran": 158,
+          "metrics": {
+            "TestA": {
+              "accuracy": 0.7879999876022339,
+              "num_samples": 3500,
+              "mean_weights": [
+                0.6036595702171326,
+                0.2548619210720062,
+                0.14147843420505524
+              ]
+            },
+            "MNIST-family": {
+              "accuracy": 0.9932383298873901,
+              "num_samples": 67291,
+              "mean_weights": [
+                0.4808585047721863,
+                0.28815677762031555,
+                0.23098473250865936
+              ]
+            },
+            "MNIST-C": {
+              "accuracy": 0.9667499661445618,
+              "num_samples": 160000,
+              "mean_weights": [
+                0.46829238533973694,
+                0.27566301822662354,
+                0.25604456663131714
+              ]
+            },
+            "local/external digits": {
+              "accuracy": 0.6173218488693237,
+              "num_samples": 34546,
+              "mean_weights": [
+                0.38797715306282043,
+                0.2766229510307312,
+                0.33539992570877075
+              ]
+            },
+            "objective_score": 0.8955834031105041
+          }
+        },
+        {
+          "fold": 2,
+          "best_val_accuracy_on_combined_holdout": 0.9719658493995667,
+          "epochs_ran": 37,
+          "metrics": {
+            "TestA": {
+              "accuracy": 0.7739999890327454,
+              "num_samples": 3500,
+              "mean_weights": [
+                0.3690860867500305,
+                0.283670037984848,
+                0.34724393486976624
+              ]
+            },
+            "MNIST-family": {
+              "accuracy": 0.993357241153717,
+              "num_samples": 67291,
+              "mean_weights": [
+                0.33998510241508484,
+                0.37366896867752075,
+                0.2863459289073944
+              ]
+            },
+            "MNIST-C": {
+              "accuracy": 0.9673061966896057,
+              "num_samples": 160000,
+              "mean_weights": [
+                0.3270825743675232,
+                0.35151877999305725,
+                0.32139861583709717
+              ]
+            },
+            "local/external digits": {
+              "accuracy": 0.6242401599884033,
+              "num_samples": 34546,
+              "mean_weights": [
+                0.26548320055007935,
+                0.2594427168369293,
+                0.4750741124153137
+              ]
+            },
+            "objective_score": 0.8894362688064574
+          }
+        },
+        {
+          "fold": 3,
+          "best_val_accuracy_on_combined_holdout": 0.9714459180831909,
+          "epochs_ran": 49,
+          "metrics": {
+            "TestA": {
+              "accuracy": 0.7882857322692871,
+              "num_samples": 3500,
+              "mean_weights": [
+                0.5078415274620056,
+                0.26875269412994385,
+                0.22340571880340576
+              ]
+            },
+            "MNIST-family": {
+              "accuracy": 0.9932234883308411,
+              "num_samples": 67291,
+              "mean_weights": [
+                0.3342560827732086,
+                0.35343456268310547,
+                0.3123093843460083
+              ]
+            },
+            "MNIST-C": {
+              "accuracy": 0.9666687250137329,
+              "num_samples": 160000,
+              "mean_weights": [
+                0.33572983741760254,
+                0.35038289427757263,
+                0.31388726830482483
+              ]
+            },
+            "local/external digits": {
+              "accuracy": 0.6164534091949463,
+              "num_samples": 34546,
+              "mean_weights": [
+                0.37603265047073364,
+                0.29126495122909546,
+                0.3327023684978485
+              ]
+            },
+            "objective_score": 0.8956905454397202
+          }
+        },
+        {
+          "fold": 4,
+          "best_val_accuracy_on_combined_holdout": 0.969821035861969,
+          "epochs_ran": 81,
+          "metrics": {
+            "TestA": {
+              "accuracy": 0.7851428389549255,
+              "num_samples": 3500,
+              "mean_weights": [
+                0.532418429851532,
+                0.27571120858192444,
+                0.19187036156654358
+              ]
+            },
+            "MNIST-family": {
+              "accuracy": 0.9928222298622131,
+              "num_samples": 67291,
+              "mean_weights": [
+                0.390262246131897,
+                0.33503061532974243,
+                0.2747071087360382
+              ]
+            },
+            "MNIST-C": {
+              "accuracy": 0.9646687507629395,
+              "num_samples": 160000,
+              "mean_weights": [
+                0.4009960889816284,
+                0.34084105491638184,
+                0.25816279649734497
+              ]
+            },
+            "local/external digits": {
+              "accuracy": 0.6173507571220398,
+              "num_samples": 34546,
+              "mean_weights": [
+                0.4465109407901764,
+                0.3550085723400116,
+                0.198480486869812
+              ]
+            },
+            "objective_score": 0.8937358081340789
+          }
+        }
+      ]
+    },
+    "hidden_b_easy": {
+      "config": {
+        "model_type": "linear",
+        "objective": "hidden_b_easy",
+        "kl_coef": 0.02,
+        "entropy_coef": 0.0,
+        "lr": 0.003,
+        "weight_decay": 0.0001,
+        "epochs": 220,
+        "patience": 35
+      },
+      "mean_objective_score": 0.9135034692287445,
+      "mean_metrics": {
+        "TestA": {
+          "accuracy": 0.7802857041358948,
+          "mean_weights": [
+            0.4556557297706604,
+            0.29865739941596986,
+            0.24568688571453096
+          ],
+          "num_samples": 3500
+        },
+        "MNIST-family": {
+          "accuracy": 0.9933988451957703,
+          "mean_weights": [
+            0.3596720039844513,
+            0.35275170803070066,
+            0.28757629096508025
+          ],
+          "num_samples": 67291
+        },
+        "MNIST-C": {
+          "accuracy": 0.9668699622154235,
+          "mean_weights": [
+            0.3539959669113159,
+            0.3486295461654663,
+            0.2973744869232178
+          ],
+          "num_samples": 160000
+        },
+        "local/external digits": {
+          "accuracy": 0.6227522850036621,
+          "mean_weights": [
+            0.33299832940101626,
+            0.3239651173353195,
+            0.34303656220436096
+          ],
+          "num_samples": 34546
+        }
+      },
+      "folds": [
+        {
+          "fold": 0,
+          "best_val_accuracy_on_combined_holdout": 0.9713815450668335,
+          "epochs_ran": 36,
+          "metrics": {
+            "TestA": {
+              "accuracy": 0.767714262008667,
+              "num_samples": 3500,
+              "mean_weights": [
+                0.2884591221809387,
+                0.3943363130092621,
+                0.3172045946121216
+              ]
+            },
+            "MNIST-family": {
+              "accuracy": 0.993535578250885,
+              "num_samples": 67291,
+              "mean_weights": [
+                0.3335048258304596,
+                0.30377668142318726,
+                0.36271849274635315
+              ]
+            },
+            "MNIST-C": {
+              "accuracy": 0.9670937061309814,
+              "num_samples": 160000,
+              "mean_weights": [
+                0.32182249426841736,
+                0.32281172275543213,
+                0.3553658127784729
+              ]
+            },
+            "local/external digits": {
+              "accuracy": 0.6308979392051697,
+              "num_samples": 34546,
+              "mean_weights": [
+                0.28193891048431396,
+                0.3806883692741394,
+                0.337372750043869
+              ]
+            },
+            "objective_score": 0.909209743142128
+          }
+        },
+        {
+          "fold": 1,
+          "best_val_accuracy_on_combined_holdout": 0.9727457761764526,
+          "epochs_ran": 53,
+          "metrics": {
+            "TestA": {
+              "accuracy": 0.7874285578727722,
+              "num_samples": 3500,
+              "mean_weights": [
+                0.5541979074478149,
+                0.21209371089935303,
+                0.23370841145515442
+              ]
+            },
+            "MNIST-family": {
+              "accuracy": 0.9934166669845581,
+              "num_samples": 67291,
+              "mean_weights": [
+                0.34178221225738525,
+                0.3593173027038574,
+                0.2989004850387573
+              ]
+            },
+            "MNIST-C": {
+              "accuracy": 0.9665312170982361,
+              "num_samples": 160000,
+              "mean_weights": [
+                0.34950292110443115,
+                0.32851892709732056,
+                0.3219781219959259
+              ]
+            },
+            "local/external digits": {
+              "accuracy": 0.619029700756073,
+              "num_samples": 34546,
+              "mean_weights": [
+                0.39188599586486816,
+                0.20167545974254608,
+                0.40643855929374695
+              ]
+            },
+            "objective_score": 0.9159437388181686
+          }
+        },
+        {
+          "fold": 2,
+          "best_val_accuracy_on_combined_holdout": 0.9720091819763184,
+          "epochs_ran": 37,
+          "metrics": {
+            "TestA": {
+              "accuracy": 0.7739999890327454,
+              "num_samples": 3500,
+              "mean_weights": [
+                0.36824294924736023,
+                0.28318339586257935,
+                0.3485736846923828
+              ]
+            },
+            "MNIST-family": {
+              "accuracy": 0.993342399597168,
+              "num_samples": 67291,
+              "mean_weights": [
+                0.3385559916496277,
+                0.37323522567749023,
+                0.2882087826728821
+              ]
+            },
+            "MNIST-C": {
+              "accuracy": 0.96732497215271,
+              "num_samples": 160000,
+              "mean_weights": [
+                0.32533562183380127,
+                0.35188984870910645,
+                0.3227744996547699
+              ]
+            },
+            "local/external digits": {
+              "accuracy": 0.6240954399108887,
+              "num_samples": 34546,
+              "mean_weights": [
+                0.2660766541957855,
+                0.257530152797699,
+                0.4763932228088379
+              ]
+            },
+            "objective_score": 0.9113690704107285
+          }
+        },
+        {
+          "fold": 3,
+          "best_val_accuracy_on_combined_holdout": 0.971619188785553,
+          "epochs_ran": 52,
+          "metrics": {
+            "TestA": {
+              "accuracy": 0.7854285836219788,
+              "num_samples": 3500,
+              "mean_weights": [
+                0.4982634484767914,
+                0.30107319355010986,
+                0.20066334307193756
+              ]
+            },
+            "MNIST-family": {
+              "accuracy": 0.9934166669845581,
+              "num_samples": 67291,
+              "mean_weights": [
+                0.34105560183525085,
+                0.3483055531978607,
+                0.3106388449668884
+              ]
+            },
+            "MNIST-C": {
+              "accuracy": 0.9667437076568604,
+              "num_samples": 160000,
+              "mean_weights": [
+                0.33589810132980347,
+                0.35890403389930725,
+                0.30519789457321167
+              ]
+            },
+            "local/external digits": {
+              "accuracy": 0.6206796765327454,
+              "num_samples": 34546,
+              "mean_weights": [
+                0.34637612104415894,
+                0.3549567461013794,
+                0.29866713285446167
+              ]
+            },
+            "objective_score": 0.9152862459421158
+          }
+        },
+        {
+          "fold": 4,
+          "best_val_accuracy_on_combined_holdout": 0.9710559248924255,
+          "epochs_ran": 220,
+          "metrics": {
+            "TestA": {
+              "accuracy": 0.7868571281433105,
+              "num_samples": 3500,
+              "mean_weights": [
+                0.5691152215003967,
+                0.3026003837585449,
+                0.12828439474105835
+              ]
+            },
+            "MNIST-family": {
+              "accuracy": 0.9932829141616821,
+              "num_samples": 67291,
+              "mean_weights": [
+                0.4434613883495331,
+                0.3791237771511078,
+                0.17741484940052032
+              ]
+            },
+            "MNIST-C": {
+              "accuracy": 0.9666562080383301,
+              "num_samples": 160000,
+              "mean_weights": [
+                0.43742069602012634,
+                0.38102319836616516,
+                0.1815561056137085
+              ]
+            },
+            "local/external digits": {
+              "accuracy": 0.6190586686134338,
+              "num_samples": 34546,
+              "mean_weights": [
+                0.3787139654159546,
+                0.42497485876083374,
+                0.19631114602088928
+              ]
+            },
+            "objective_score": 0.9157085478305816
+          }
+        }
+      ]
+    },
+    "hidden_b_hard": {
+      "config": {
+        "model_type": "linear",
+        "objective": "hidden_b_hard",
+        "kl_coef": 0.02,
+        "entropy_coef": 0.0,
+        "lr": 0.003,
+        "weight_decay": 0.0001,
+        "epochs": 220,
+        "patience": 35
+      },
+      "mean_objective_score": 0.8396343022584916,
+      "mean_metrics": {
+        "TestA": {
+          "accuracy": 0.7796000003814697,
+          "mean_weights": [
+            0.4540685534477234,
+            0.2968074083328247,
+            0.24912403225898744
+          ],
+          "num_samples": 3500
+        },
+        "MNIST-family": {
+          "accuracy": 0.9932561993598938,
+          "mean_weights": [
+            0.35475138425827024,
+            0.3430138289928436,
+            0.3022348344326019
+          ],
+          "num_samples": 67291
+        },
+        "MNIST-C": {
+          "accuracy": 0.9661724805831909,
+          "mean_weights": [
+            0.354508763551712,
+            0.33916397094726564,
+            0.30632724463939665
+          ],
+          "num_samples": 160000
+        },
+        "local/external digits": {
+          "accuracy": 0.6192960262298584,
+          "mean_weights": [
+            0.36414275169372556,
+            0.3107453674077988,
+            0.3251118928194046
+          ],
+          "num_samples": 34546
+        }
+      },
+      "folds": [
+        {
+          "fold": 0,
+          "best_val_accuracy_on_combined_holdout": 0.971403181552887,
+          "epochs_ran": 36,
+          "metrics": {
+            "TestA": {
+              "accuracy": 0.767714262008667,
+              "num_samples": 3500,
+              "mean_weights": [
+                0.288613498210907,
+                0.3942584693431854,
+                0.3171280026435852
+              ]
+            },
+            "MNIST-family": {
+              "accuracy": 0.993535578250885,
+              "num_samples": 67291,
+              "mean_weights": [
+                0.3336164355278015,
+                0.30322563648223877,
+                0.3631579577922821
+              ]
+            },
+            "MNIST-C": {
+              "accuracy": 0.9670937061309814,
+              "num_samples": 160000,
+              "mean_weights": [
+                0.32210877537727356,
+                0.3223588168621063,
+                0.35553237795829773
+              ]
+            },
+            "local/external digits": {
+              "accuracy": 0.6310137510299683,
+              "num_samples": 34546,
+              "mean_weights": [
+                0.2819477915763855,
+                0.37976211309432983,
+                0.33829012513160706
+              ]
+            },
+            "objective_score": 0.8314943760633469
+          }
+        },
+        {
+          "fold": 1,
+          "best_val_accuracy_on_combined_holdout": 0.9718575477600098,
+          "epochs_ran": 50,
+          "metrics": {
+            "TestA": {
+              "accuracy": 0.7868571281433105,
+              "num_samples": 3500,
+              "mean_weights": [
+                0.5530741214752197,
+                0.2144722044467926,
+                0.2324536293745041
+              ]
+            },
+            "MNIST-family": {
+              "accuracy": 0.993357241153717,
+              "num_samples": 67291,
+              "mean_weights": [
+                0.3423735499382019,
+                0.34954729676246643,
+                0.30807918310165405
+              ]
+            },
+            "MNIST-C": {
+              "accuracy": 0.9656187295913696,
+              "num_samples": 160000,
+              "mean_weights": [
+                0.35761576890945435,
+                0.31843212246894836,
+                0.3239521086215973
+              ]
+            },
+            "local/external digits": {
+              "accuracy": 0.6143113374710083,
+              "num_samples": 34546,
+              "mean_weights": [
+                0.4359273612499237,
+                0.19603759050369263,
+                0.36803510785102844
+              ]
+            },
+            "objective_score": 0.8446463853120803
+          }
+        },
+        {
+          "fold": 2,
+          "best_val_accuracy_on_combined_holdout": 0.9719875454902649,
+          "epochs_ran": 37,
+          "metrics": {
+            "TestA": {
+              "accuracy": 0.7742857336997986,
+              "num_samples": 3500,
+              "mean_weights": [
+                0.3716903626918793,
+                0.2773822844028473,
+                0.3509273827075958
+              ]
+            },
+            "MNIST-family": {
+              "accuracy": 0.993342399597168,
+              "num_samples": 67291,
+              "mean_weights": [
+                0.3378416895866394,
+                0.37418630719184875,
+                0.2879720628261566
+              ]
+            },
+            "MNIST-C": {
+              "accuracy": 0.9672562479972839,
+              "num_samples": 160000,
+              "mean_weights": [
+                0.3264768123626709,
+                0.35027074813842773,
+                0.323252409696579
+              ]
+            },
+            "local/external digits": {
+              "accuracy": 0.6233428120613098,
+              "num_samples": 34546,
+              "mean_weights": [
+                0.269127756357193,
+                0.24768643081188202,
+                0.4831857979297638
+              ]
+            },
+            "objective_score": 0.8360898107290267
+          }
+        },
+        {
+          "fold": 3,
+          "best_val_accuracy_on_combined_holdout": 0.9710342884063721,
+          "epochs_ran": 54,
+          "metrics": {
+            "TestA": {
+              "accuracy": 0.7842857241630554,
+              "num_samples": 3500,
+              "mean_weights": [
+                0.4962984025478363,
+                0.31372156739234924,
+                0.18998001515865326
+              ]
+            },
+            "MNIST-family": {
+              "accuracy": 0.993208646774292,
+              "num_samples": 67291,
+              "mean_weights": [
+                0.34110790491104126,
+                0.34076908230781555,
+                0.31812310218811035
+              ]
+            },
+            "MNIST-C": {
+              "accuracy": 0.9659749865531921,
+              "num_samples": 160000,
+              "mean_weights": [
+                0.3406815230846405,
+                0.3540611267089844,
+                0.30525732040405273
+              ]
+            },
+            "local/external digits": {
+              "accuracy": 0.6165692210197449,
+              "num_samples": 34546,
+              "mean_weights": [
+                0.3850911557674408,
+                0.35578101873397827,
+                0.25912782549858093
+              ]
+            },
+            "objective_score": 0.8428775519132614
+          }
+        },
+        {
+          "fold": 4,
+          "best_val_accuracy_on_combined_holdout": 0.9698427319526672,
+          "epochs_ran": 195,
+          "metrics": {
+            "TestA": {
+              "accuracy": 0.7848571538925171,
+              "num_samples": 3500,
+              "mean_weights": [
+                0.5606663823127747,
+                0.284202516078949,
+                0.15513113141059875
+              ]
+            },
+            "MNIST-family": {
+              "accuracy": 0.992837131023407,
+              "num_samples": 67291,
+              "mean_weights": [
+                0.41881734132766724,
+                0.34734082221984863,
+                0.23384186625480652
+              ]
+            },
+            "MNIST-C": {
+              "accuracy": 0.9649187326431274,
+              "num_samples": 160000,
+              "mean_weights": [
+                0.4256609380245209,
+                0.35069704055786133,
+                0.2236420065164566
+              ]
+            },
+            "local/external digits": {
+              "accuracy": 0.6112430095672607,
+              "num_samples": 34546,
+              "mean_weights": [
+                0.44861969351768494,
+                0.3744596838951111,
+                0.17692060768604279
+              ]
+            },
+            "objective_score": 0.8430633872747421
+          }
+        }
+      ]
+    }
+  }
+}
