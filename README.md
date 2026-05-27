@@ -329,20 +329,20 @@ README.md
 
 | 排名 | 实验 | OOF acc | class1 ratio | class8 acc | X→1 | 结论 |
 |---|---:|---:|---:|---:|---:|---|
-| 🥇 | **5-expert final ensemble** | **0.7766** | 1.2228 | **0.7251** | 131 | 最终提交 |
-| 🥈 | `preact_resnet_tiny_anti1_seed42` | **0.7569** | **1.1503** | 0.6949 | **110** | 最强单专家 |
-| 🥉 | `preact_resnet_tiny_raw_seed42` | 0.7514 | 1.2021 | 0.6918 | 127 | 异构突破 |
-| 4 | `medium_anti1_seed42` | 0.7474 | 1.2098 | 0.6798 | 146 | |
-| 5 | `medium_anti1_seed3407` | 0.7477 | 1.2435 | 0.6858 | 161 | |
+| 🥇 | **5-expert ensemble (wide+anti1)** | **0.7889** | 1.1451 | **0.7674** | 106 | 最终提交 |
+| 🥈 | `wide_resnet_tiny_raw_seed42` | **0.7797** | **1.0984** | **0.7644** | **89** | 最强单专家 |
+| 🥉 | `preact_resnet_tiny_anti1_seed42` | 0.7569 | 1.1503 | 0.6949 | 110 | |
+| 4 | `preact_resnet_tiny_raw_seed42` | 0.7514 | 1.2021 | 0.6918 | 127 | |
+| 5 | `medium_anti1_seed42` | 0.7474 | 1.2098 | 0.6798 | 146 | |
 | 6 | `medium_raw_seed3407` | 0.7471 | 1.2720 | 0.6918 | 168 | |
-| 7 | `medium_anti1_seed2026` | 0.7451 | 1.1969 | 0.6888 | 144 | bias 最佳 |
-| 8 | 基线 `testa_partial_e40` | 0.7420 | 1.2746 | 0.6918 | 169 | 参照 |
-| ❌ | `large_cnn` | 0.6823 | 1.2927 | 0.6375 | 178 | 淘汰 |
-| ❌ | `convnext_micro` | 0.6129 | 1.1036 | 0.4804 | 149 | 淘汰 |
+| 7 | 基线 `testa_partial_e40` | 0.7420 | 1.2746 | 0.6918 | 169 | 参照 |
+| ❌ | `large_cnn` / `convnext_micro` | <0.69 | — | — | — | 淘汰 |
 
-**相对基线**: OOF +0.0346, class1 ratio 1.275→1.223, class8 0.692→0.725, X→1 169→131。
+**相对基线**: OOF 0.7420→**0.7889** (+0.0469), class1 1.275→**1.145**, class8 0.692→**0.767**, X→1 169→**106**。
 
-**核心策略**: 异构架构(PreActResNet) + anti-class-1 margin loss + multi-seed ensemble。
+**核心发现**: WideResNet 是最大单一突破 — scratch 训练即超过 ensemble；加宽通道(48→96→192)比加深层更有效。
+
+`convstem_vit` 和 `mobilenetv3_28` 训练中，结果待更新。
 
 ### 新增架构
 
