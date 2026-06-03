@@ -1,0 +1,48 @@
+{
+  "source": "data\\test_A_images.idx3-ubyte(1)\\test_A_images.idx3-ubyte",
+  "output_csv": "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_runs\\final_weighted_ensemble_predictions\\smoke_tta1.csv",
+  "probabilities": "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_runs\\final_weighted_ensemble_predictions\\smoke_tta1.probabilities.pt",
+  "n_samples": 3500,
+  "tta_n": 1,
+  "batch_size": 1024,
+  "fusion": "sum_experts(weight * mean_fold_probabilities)",
+  "experts": [
+    {
+      "label": "wide_resnet_tiny_raw_seed42",
+      "model_name": "wide_resnet_tiny",
+      "weight": 0.7,
+      "checkpoints": [
+        "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_runs\\testa_wide_resnet_tiny_raw_seed42_e60\\seed_42\\fold_0\\checkpoints\\testa_specialist_best.pt",
+        "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_runs\\testa_wide_resnet_tiny_raw_seed42_e60\\seed_42\\fold_1\\checkpoints\\testa_specialist_best.pt",
+        "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_runs\\testa_wide_resnet_tiny_raw_seed42_e60\\seed_42\\fold_2\\checkpoints\\testa_specialist_best.pt",
+        "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_runs\\testa_wide_resnet_tiny_raw_seed42_e60\\seed_42\\fold_3\\checkpoints\\testa_specialist_best.pt",
+        "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_runs\\testa_wide_resnet_tiny_raw_seed42_e60\\seed_42\\fold_4\\checkpoints\\testa_specialist_best.pt"
+      ]
+    },
+    {
+      "label": "medium_anti1_seed2026",
+      "model_name": "medium_cnn",
+      "weight": 0.2,
+      "checkpoints": [
+        "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_runs\\testa_medium_v2_anti1_margin_seed2026_e60\\seed_2026\\fold_0\\checkpoints\\testa_specialist_best.pt",
+        "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_runs\\testa_medium_v2_anti1_margin_seed2026_e60\\seed_2026\\fold_1\\checkpoints\\testa_specialist_best.pt",
+        "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_runs\\testa_medium_v2_anti1_margin_seed2026_e60\\seed_2026\\fold_2\\checkpoints\\testa_specialist_best.pt",
+        "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_runs\\testa_medium_v2_anti1_margin_seed2026_e60\\seed_2026\\fold_3\\checkpoints\\testa_specialist_best.pt",
+        "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_runs\\testa_medium_v2_anti1_margin_seed2026_e60\\seed_2026\\fold_4\\checkpoints\\testa_specialist_best.pt"
+      ]
+    },
+    {
+      "label": "medium_raw_seed3407",
+      "model_name": "medium_cnn",
+      "weight": 0.1,
+      "checkpoints": [
+        "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_runs\\testa_medium_v2_raw_seed3407_e60\\seed_3407\\fold_0\\checkpoints\\testa_specialist_best.pt",
+        "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_runs\\testa_medium_v2_raw_seed3407_e60\\seed_3407\\fold_1\\checkpoints\\testa_specialist_best.pt",
+        "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_runs\\testa_medium_v2_raw_seed3407_e60\\seed_3407\\fold_2\\checkpoints\\testa_specialist_best.pt",
+        "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_runs\\testa_medium_v2_raw_seed3407_e60\\seed_3407\\fold_3\\checkpoints\\testa_specialist_best.pt",
+        "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_runs\\testa_medium_v2_raw_seed3407_e60\\seed_3407\\fold_4\\checkpoints\\testa_specialist_best.pt"
+      ]
+    }
+  ],
+  "mean_top1_confidence": 0.7846050330655916
+}
