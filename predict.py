@@ -59,6 +59,43 @@ class MediumCNN(nn.Module):
         return self.classifier(features)
 
 
+class LargeCNN(nn.Module):
+    def __init__(self, num_classes: int = 10, in_channels: int = 1, dropout: float = 0.25):
+        super().__init__()
+        self.features = nn.Sequential(
+            nn.Conv2d(in_channels, 64, kernel_size=3, padding=1),
+            nn.BatchNorm2d(64),
+            nn.SiLU(inplace=True),
+            nn.Conv2d(64, 64, kernel_size=3, padding=1),
+            nn.BatchNorm2d(64),
+            nn.SiLU(inplace=True),
+            nn.MaxPool2d(kernel_size=2),
+            nn.Conv2d(64, 128, kernel_size=3, padding=1),
+            nn.BatchNorm2d(128),
+            nn.SiLU(inplace=True),
+            nn.Conv2d(128, 128, kernel_size=3, padding=1),
+            nn.BatchNorm2d(128),
+            nn.SiLU(inplace=True),
+            nn.MaxPool2d(kernel_size=2),
+            nn.Conv2d(128, 256, kernel_size=3, padding=1),
+            nn.BatchNorm2d(256),
+            nn.SiLU(inplace=True),
+            nn.Conv2d(256, 256, kernel_size=3, padding=1),
+            nn.BatchNorm2d(256),
+            nn.SiLU(inplace=True),
+            nn.AdaptiveAvgPool2d(1),
+        )
+        self.classifier = nn.Sequential(
+            nn.Flatten(),
+            nn.Dropout(p=dropout),
+            nn.Linear(256, num_classes),
+        )
+
+    def forward(self, inputs: torch.Tensor) -> torch.Tensor:
+        features = self.features(inputs)
+        return self.classifier(features)
+
+
 class PreActBlock(nn.Module):
     def __init__(self, in_channels: int, out_channels: int, stride: int = 1, dropout: float = 0.0):
         super().__init__()
@@ -134,8 +171,12 @@ def build_model_from_checkpoint(checkpoint_path: Path, device: str) -> nn.Module
 
     if model_name == "wide_resnet_tiny":
         model = PreActResNetTiny(num_classes=10, in_channels=1, dropout=dropout, widths=(48, 96, 192))
+    elif model_name == "preact_resnet_tiny":
+        model = PreActResNetTiny(num_classes=10, in_channels=1, dropout=dropout, widths=(32, 64, 128))
     elif model_name == "medium_cnn":
         model = MediumCNN(num_classes=10, in_channels=1, dropout=dropout)
+    elif model_name == "large_cnn":
+        model = LargeCNN(num_classes=10, in_channels=1, dropout=dropout)
     else:
         raise ValueError(f"未知的 model_name={model_name!r}，checkpoint: {checkpoint_path}")
 
