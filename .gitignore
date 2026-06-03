@@ -5,4 +5,8 @@ __pycache__/
 outputs/
 outputs_runs/
 data/
+build/
+!build/钟兴涛-25120617.zip
+!build/test_data/
+
 *.pyc
