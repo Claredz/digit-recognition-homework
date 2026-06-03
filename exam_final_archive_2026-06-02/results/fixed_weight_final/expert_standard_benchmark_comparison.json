@@ -1,0 +1,32 @@
+[
+  {
+    "label": "wide_resnet_tiny (best expert)",
+    "mnist_test": 0.9815,
+    "emnist_digits_test": 0.980525,
+    "qmnist_test10k": 0.9815
+  },
+  {
+    "label": "medium_v2_anti1_margin_seed42",
+    "mnist_test": 0.9939,
+    "emnist_digits_test": 0.9936,
+    "qmnist_test10k": 0.994
+  },
+  {
+    "label": "medium_v2_anti1_margin_seed2026",
+    "mnist_test": 0.9939,
+    "emnist_digits_test": 0.9938,
+    "qmnist_test10k": 0.9939
+  },
+  {
+    "label": "medium_v2_raw_seed3407",
+    "mnist_test": 0.9937,
+    "emnist_digits_test": 0.99385,
+    "qmnist_test10k": 0.9937
+  },
+  {
+    "label": "clean_model (outputs_submission)",
+    "mnist_test": 0.9973,
+    "emnist_digits_test": 0.9973,
+    "qmnist_test10k": 0.9973
+  }
+]

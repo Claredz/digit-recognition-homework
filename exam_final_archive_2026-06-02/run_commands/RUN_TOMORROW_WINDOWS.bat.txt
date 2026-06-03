@@ -1,0 +1,18 @@
+cd /d "E:\ALL\学习\AI导论作业-识别手写数字"
+
+REM Image-folder mode, use this if the official test set is a folder of PNG/JPG/BMP images.
+C:\Users\claredz\anaconda3\python.exe scripts\predict_final_weighted_ensemble.py ^
+  --image-dir "<老师给的图片文件夹路径>" ^
+  --output "outputs_runs\final_weighted_ensemble_predictions\submission_final_weighted.csv" ^
+  --tta-n 8 ^
+  --batch-size 256
+
+REM IDX mode, use this if the official test set is an unlabeled IDX image file.
+C:\Users\claredz\anaconda3\python.exe scripts\predict_final_weighted_ensemble.py ^
+  --idx-images "<老师给的idx图像文件路径>" ^
+  --output "outputs_runs\final_weighted_ensemble_predictions\submission_final_weighted.csv" ^
+  --tta-n 8 ^
+  --batch-size 256
+
+REM Submit this file after the run:
+REM outputs_runs\final_weighted_ensemble_predictions\submission_final_weighted.csv

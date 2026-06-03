@@ -1,0 +1,215 @@
+{
+  "archive_name": "exam_final_archive_2026-06-02",
+  "created_at": "2026-06-02T16:04:25.474498+00:00",
+  "purpose": "考试前最终结果归档：固定权重最终提交系统 + 动态调权系统备份",
+  "recommended_submission_system": "fixed_weight_final",
+  "recommended_python": "C:\\Users\\claredz\\anaconda3\\python.exe",
+  "environment": {
+    "python": "C:\\Users\\claredz\\anaconda3\\python.exe",
+    "torch": "2.11.0+cu128",
+    "cuda_available": true,
+    "cuda_device": "NVIDIA GeForce RTX 5060 Laptop GPU"
+  },
+  "final_results": {
+    "testa_oof_accuracy": 0.7891,
+    "mnist_test": 0.9902,
+    "emnist_digits_test": 0.9901,
+    "qmnist_test10k": 0.9902,
+    "mnist_family": 0.9895676985035146,
+    "mnist_c": 0.9496375,
+    "local_external_digits": 0.5845828750072367,
+    "risk_sets": {
+      "hasyv2_digits": 0.3911764705882353,
+      "penbased_rendered": 0.5885795730228045,
+      "canny_edges": 0.6879,
+      "zigzag": 0.8131
+    }
+  },
+  "experts": [
+    {
+      "label": "wide_resnet_tiny_raw_seed42",
+      "model_name": "wide_resnet_tiny",
+      "weight": 0.7,
+      "run": "testa_wide_resnet_tiny_raw_seed42_e60",
+      "seed": 42,
+      "testa_oof_accuracy": 0.7797142857142857
+    },
+    {
+      "label": "medium_anti1_seed2026",
+      "model_name": "medium_cnn",
+      "weight": 0.2,
+      "run": "testa_medium_v2_anti1_margin_seed2026_e60",
+      "seed": 2026,
+      "testa_oof_accuracy": 0.7451428571428571
+    },
+    {
+      "label": "medium_raw_seed3407",
+      "model_name": "medium_cnn",
+      "weight": 0.1,
+      "run": "testa_medium_v2_raw_seed3407_e60",
+      "seed": 3407,
+      "testa_oof_accuracy": 0.7471428571428571
+    }
+  ],
+  "models": [
+    {
+      "expert": "wide_resnet_tiny_raw_seed42",
+      "fold": 0,
+      "model_name": "wide_resnet_tiny",
+      "weight": 0.7,
+      "source": "outputs_runs/testa_wide_resnet_tiny_raw_seed42_e60/seed_42/fold_0/checkpoints/testa_specialist_best.pt",
+      "archive_path": "exam_final_archive_2026-06-02/models/wide_resnet_tiny_raw_seed42/fold_0/testa_specialist_best.pt"
+    },
+    {
+      "expert": "wide_resnet_tiny_raw_seed42",
+      "fold": 1,
+      "model_name": "wide_resnet_tiny",
+      "weight": 0.7,
+      "source": "outputs_runs/testa_wide_resnet_tiny_raw_seed42_e60/seed_42/fold_1/checkpoints/testa_specialist_best.pt",
+      "archive_path": "exam_final_archive_2026-06-02/models/wide_resnet_tiny_raw_seed42/fold_1/testa_specialist_best.pt"
+    },
+    {
+      "expert": "wide_resnet_tiny_raw_seed42",
+      "fold": 2,
+      "model_name": "wide_resnet_tiny",
+      "weight": 0.7,
+      "source": "outputs_runs/testa_wide_resnet_tiny_raw_seed42_e60/seed_42/fold_2/checkpoints/testa_specialist_best.pt",
+      "archive_path": "exam_final_archive_2026-06-02/models/wide_resnet_tiny_raw_seed42/fold_2/testa_specialist_best.pt"
+    },
+    {
+      "expert": "wide_resnet_tiny_raw_seed42",
+      "fold": 3,
+      "model_name": "wide_resnet_tiny",
+      "weight": 0.7,
+      "source": "outputs_runs/testa_wide_resnet_tiny_raw_seed42_e60/seed_42/fold_3/checkpoints/testa_specialist_best.pt",
+      "archive_path": "exam_final_archive_2026-06-02/models/wide_resnet_tiny_raw_seed42/fold_3/testa_specialist_best.pt"
+    },
+    {
+      "expert": "wide_resnet_tiny_raw_seed42",
+      "fold": 4,
+      "model_name": "wide_resnet_tiny",
+      "weight": 0.7,
+      "source": "outputs_runs/testa_wide_resnet_tiny_raw_seed42_e60/seed_42/fold_4/checkpoints/testa_specialist_best.pt",
+      "archive_path": "exam_final_archive_2026-06-02/models/wide_resnet_tiny_raw_seed42/fold_4/testa_specialist_best.pt"
+    },
+    {
+      "expert": "medium_anti1_seed2026",
+      "fold": 0,
+      "model_name": "medium_cnn",
+      "weight": 0.2,
+      "source": "outputs_runs/testa_medium_v2_anti1_margin_seed2026_e60/seed_2026/fold_0/checkpoints/testa_specialist_best.pt",
+      "archive_path": "exam_final_archive_2026-06-02/models/medium_anti1_seed2026/fold_0/testa_specialist_best.pt"
+    },
+    {
+      "expert": "medium_anti1_seed2026",
+      "fold": 1,
+      "model_name": "medium_cnn",
+      "weight": 0.2,
+      "source": "outputs_runs/testa_medium_v2_anti1_margin_seed2026_e60/seed_2026/fold_1/checkpoints/testa_specialist_best.pt",
+      "archive_path": "exam_final_archive_2026-06-02/models/medium_anti1_seed2026/fold_1/testa_specialist_best.pt"
+    },
+    {
+      "expert": "medium_anti1_seed2026",
+      "fold": 2,
+      "model_name": "medium_cnn",
+      "weight": 0.2,
+      "source": "outputs_runs/testa_medium_v2_anti1_margin_seed2026_e60/seed_2026/fold_2/checkpoints/testa_specialist_best.pt",
+      "archive_path": "exam_final_archive_2026-06-02/models/medium_anti1_seed2026/fold_2/testa_specialist_best.pt"
+    },
+    {
+      "expert": "medium_anti1_seed2026",
+      "fold": 3,
+      "model_name": "medium_cnn",
+      "weight": 0.2,
+      "source": "outputs_runs/testa_medium_v2_anti1_margin_seed2026_e60/seed_2026/fold_3/checkpoints/testa_specialist_best.pt",
+      "archive_path": "exam_final_archive_2026-06-02/models/medium_anti1_seed2026/fold_3/testa_specialist_best.pt"
+    },
+    {
+      "expert": "medium_anti1_seed2026",
+      "fold": 4,
+      "model_name": "medium_cnn",
+      "weight": 0.2,
+      "source": "outputs_runs/testa_medium_v2_anti1_margin_seed2026_e60/seed_2026/fold_4/checkpoints/testa_specialist_best.pt",
+      "archive_path": "exam_final_archive_2026-06-02/models/medium_anti1_seed2026/fold_4/testa_specialist_best.pt"
+    },
+    {
+      "expert": "medium_raw_seed3407",
+      "fold": 0,
+      "model_name": "medium_cnn",
+      "weight": 0.1,
+      "source": "outputs_runs/testa_medium_v2_raw_seed3407_e60/seed_3407/fold_0/checkpoints/testa_specialist_best.pt",
+      "archive_path": "exam_final_archive_2026-06-02/models/medium_raw_seed3407/fold_0/testa_specialist_best.pt"
+    },
+    {
+      "expert": "medium_raw_seed3407",
+      "fold": 1,
+      "model_name": "medium_cnn",
+      "weight": 0.1,
+      "source": "outputs_runs/testa_medium_v2_raw_seed3407_e60/seed_3407/fold_1/checkpoints/testa_specialist_best.pt",
+      "archive_path": "exam_final_archive_2026-06-02/models/medium_raw_seed3407/fold_1/testa_specialist_best.pt"
+    },
+    {
+      "expert": "medium_raw_seed3407",
+      "fold": 2,
+      "model_name": "medium_cnn",
+      "weight": 0.1,
+      "source": "outputs_runs/testa_medium_v2_raw_seed3407_e60/seed_3407/fold_2/checkpoints/testa_specialist_best.pt",
+      "archive_path": "exam_final_archive_2026-06-02/models/medium_raw_seed3407/fold_2/testa_specialist_best.pt"
+    },
+    {
+      "expert": "medium_raw_seed3407",
+      "fold": 3,
+      "model_name": "medium_cnn",
+      "weight": 0.1,
+      "source": "outputs_runs/testa_medium_v2_raw_seed3407_e60/seed_3407/fold_3/checkpoints/testa_specialist_best.pt",
+      "archive_path": "exam_final_archive_2026-06-02/models/medium_raw_seed3407/fold_3/testa_specialist_best.pt"
+    },
+    {
+      "expert": "medium_raw_seed3407",
+      "fold": 4,
+      "model_name": "medium_cnn",
+      "weight": 0.1,
+      "source": "outputs_runs/testa_medium_v2_raw_seed3407_e60/seed_3407/fold_4/checkpoints/testa_specialist_best.pt",
+      "archive_path": "exam_final_archive_2026-06-02/models/medium_raw_seed3407/fold_4/testa_specialist_best.pt"
+    }
+  ],
+  "dynamic_weight_systems": {
+    "fixed_weight_baseline": {
+      "weights": [
+        0.7,
+        0.2,
+        0.1
+      ],
+      "testa_accuracy": 0.7891428470611572,
+      "mnist_family_accuracy": 0.9895676970481873,
+      "mnist_c_accuracy": 0.9496374726295471,
+      "local_external_digits_accuracy": 0.5845828652381897
+    },
+    "dynamic_moe_router": {
+      "best_in_sample_accuracy": 0.7902857065200806,
+      "cv_accuracy": 0.7854285836219788,
+      "note": "OOF in-sample slightly exceeds fixed weights, but cross-validation is lower; archive as analysis/backup, not default TestA submission."
+    },
+    "domain_aware_rule_router": {
+      "hidden_b_balanced": {
+        "TestA": 0.7834285497665405,
+        "MNIST-family": 0.9927330613136292,
+        "MNIST-C": 0.9626874923706055,
+        "local/external digits": 0.6163955330848694
+      },
+      "hidden_b_easy": {
+        "TestA": 0.7831428647041321,
+        "MNIST-family": 0.992851972579956,
+        "MNIST-C": 0.963056206703186,
+        "local/external digits": 0.616540253162384
+      },
+      "note": "Improves mixed/standard robustness relative to TestA-fixed weights, at the cost of TestA accuracy."
+    },
+    "learned_router": {
+      "best_observed_family": "learned MoE / template router experiments",
+      "note": "Stored for completeness; not selected as default because final TestA objective favors fixed 0.7/0.2/0.1."
+    }
+  },
+  "do_not_submit_old_csv": "outputs_submission/predictions/submission_kfold_testA.csv",
+  "official_output_target": "outputs_runs/final_weighted_ensemble_predictions/submission_final_weighted.csv"
+}

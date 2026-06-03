@@ -1,0 +1,3575 @@
+{
+  "experts": [
+    {
+      "label": "testa_wide_resnet_tiny_raw_seed42_e60",
+      "oof_path": "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_runs\\testa_wide_resnet_tiny_raw_seed42_e60\\oof\\oof_probabilities.pt"
+    },
+    {
+      "label": "testa_preact_resnet_tiny_anti1_margin_seed42_e60",
+      "oof_path": "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_runs\\testa_preact_resnet_tiny_anti1_margin_seed42_e60\\oof\\oof_probabilities.pt"
+    },
+    {
+      "label": "testa_preact_resnet_tiny_v2_raw_seed42_e60",
+      "oof_path": "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_runs\\testa_preact_resnet_tiny_v2_raw_seed42_e60\\oof\\oof_probabilities.pt"
+    },
+    {
+      "label": "testa_medium_v2_anti1_margin_seed42_e60",
+      "oof_path": "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_runs\\testa_medium_v2_anti1_margin_seed42_e60\\oof\\oof_probabilities.pt"
+    },
+    {
+      "label": "testa_medium_v2_anti1_margin_seed2026_e60",
+      "oof_path": "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_runs\\testa_medium_v2_anti1_margin_seed2026_e60\\oof\\oof_probabilities.pt"
+    },
+    {
+      "label": "testa_medium_v2_raw_seed3407_e60",
+      "oof_path": "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_runs\\testa_medium_v2_raw_seed3407_e60\\oof\\oof_probabilities.pt"
+    }
+  ],
+  "n_experts": 6,
+  "n_samples": 3500,
+  "grid_step": null,
+  "n_weight_candidates": 1,
+  "per_expert_diagnostics": [
+    {
+      "expert": "testa_wide_resnet_tiny_raw_seed42_e60",
+      "oof_path": "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_runs\\testa_wide_resnet_tiny_raw_seed42_e60\\oof\\oof_probabilities.pt",
+      "diagnostics": {
+        "overall_accuracy": 0.7797142863273621,
+        "n_samples": 3500,
+        "true_count_by_class": [
+          316,
+          386,
+          372,
+          312,
+          356,
+          354,
+          344,
+          366,
+          331,
+          363
+        ],
+        "predicted_count_by_class": [
+          307,
+          424,
+          364,
+          286,
+          334,
+          362,
+          343,
+          376,
+          348,
+          356
+        ],
+        "predicted_true_ratio_by_class": [
+          0.9715189873417721,
+          1.0984455958549222,
+          0.978494623655914,
+          0.9166666666666666,
+          0.9382022471910112,
+          1.0225988700564972,
+          0.997093023255814,
+          1.0273224043715847,
+          1.051359516616314,
+          0.9807162534435262
+        ],
+        "class_1_overprediction_ratio": 1.0984455958549222,
+        "class_8_underprediction_ratio": 1.051359516616314,
+        "class_1_accuracy": 0.8678756476683938,
+        "class_8_accuracy": 0.7643504531722054,
+        "total_x_to_1_errors": 89,
+        "pair_errors_to_1": {
+          "8->1": 7,
+          "9->1": 12,
+          "6->1": 11,
+          "5->1": 8,
+          "3->1": 7,
+          "2->1": 9,
+          "4->1": 15
+        },
+        "per_class_accuracy": [
+          {
+            "class": 0,
+            "correct": 251,
+            "total": 316,
+            "accuracy": 0.7943037974683544
+          },
+          {
+            "class": 1,
+            "correct": 335,
+            "total": 386,
+            "accuracy": 0.8678756476683938
+          },
+          {
+            "class": 2,
+            "correct": 287,
+            "total": 372,
+            "accuracy": 0.771505376344086
+          },
+          {
+            "class": 3,
+            "correct": 230,
+            "total": 312,
+            "accuracy": 0.7371794871794872
+          },
+          {
+            "class": 4,
+            "correct": 270,
+            "total": 356,
+            "accuracy": 0.7584269662921348
+          },
+          {
+            "class": 5,
+            "correct": 265,
+            "total": 354,
+            "accuracy": 0.748587570621469
+          },
+          {
+            "class": 6,
+            "correct": 279,
+            "total": 344,
+            "accuracy": 0.811046511627907
+          },
+          {
+            "class": 7,
+            "correct": 286,
+            "total": 366,
+            "accuracy": 0.7814207650273224
+          },
+          {
+            "class": 8,
+            "correct": 253,
+            "total": 331,
+            "accuracy": 0.7643504531722054
+          },
+          {
+            "class": 9,
+            "correct": 273,
+            "total": 363,
+            "accuracy": 0.7520661157024794
+          }
+        ],
+        "top_confused_pairs": [
+          {
+            "true": 4,
+            "predicted": 9,
+            "count": 25
+          },
+          {
+            "true": 9,
+            "predicted": 7,
+            "count": 21
+          },
+          {
+            "true": 2,
+            "predicted": 7,
+            "count": 20
+          },
+          {
+            "true": 7,
+            "predicted": 9,
+            "count": 19
+          },
+          {
+            "true": 8,
+            "predicted": 5,
+            "count": 19
+          },
+          {
+            "true": 3,
+            "predicted": 5,
+            "count": 18
+          },
+          {
+            "true": 3,
+            "predicted": 2,
+            "count": 17
+          },
+          {
+            "true": 5,
+            "predicted": 3,
+            "count": 17
+          },
+          {
+            "true": 5,
+            "predicted": 6,
+            "count": 16
+          },
+          {
+            "true": 4,
+            "predicted": 1,
+            "count": 15
+          },
+          {
+            "true": 5,
+            "predicted": 8,
+            "count": 15
+          },
+          {
+            "true": 2,
+            "predicted": 3,
+            "count": 14
+          },
+          {
+            "true": 5,
+            "predicted": 0,
+            "count": 14
+          },
+          {
+            "true": 6,
+            "predicted": 5,
+            "count": 14
+          },
+          {
+            "true": 7,
+            "predicted": 1,
+            "count": 14
+          }
+        ],
+        "confusion_matrix": [
+          [
+            251,
+            6,
+            11,
+            2,
+            4,
+            9,
+            9,
+            7,
+            13,
+            4
+          ],
+          [
+            3,
+            335,
+            3,
+            3,
+            6,
+            8,
+            4,
+            9,
+            12,
+            3
+          ],
+          [
+            7,
+            9,
+            287,
+            14,
+            10,
+            9,
+            6,
+            20,
+            9,
+            1
+          ],
+          [
+            4,
+            7,
+            17,
+            230,
+            4,
+            18,
+            3,
+            7,
+            11,
+            11
+          ],
+          [
+            1,
+            15,
+            6,
+            1,
+            270,
+            8,
+            13,
+            10,
+            7,
+            25
+          ],
+          [
+            14,
+            8,
+            3,
+            17,
+            5,
+            265,
+            16,
+            5,
+            15,
+            6
+          ],
+          [
+            10,
+            11,
+            10,
+            1,
+            6,
+            14,
+            279,
+            2,
+            8,
+            3
+          ],
+          [
+            4,
+            14,
+            13,
+            7,
+            9,
+            5,
+            0,
+            286,
+            9,
+            19
+          ],
+          [
+            2,
+            7,
+            9,
+            7,
+            6,
+            19,
+            8,
+            9,
+            253,
+            11
+          ],
+          [
+            11,
+            12,
+            5,
+            4,
+            14,
+            7,
+            5,
+            21,
+            11,
+            273
+          ]
+        ]
+      }
+    },
+    {
+      "expert": "testa_preact_resnet_tiny_anti1_margin_seed42_e60",
+      "oof_path": "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_runs\\testa_preact_resnet_tiny_anti1_margin_seed42_e60\\oof\\oof_probabilities.pt",
+      "diagnostics": {
+        "overall_accuracy": 0.75685715675354,
+        "n_samples": 3500,
+        "true_count_by_class": [
+          316,
+          386,
+          372,
+          312,
+          356,
+          354,
+          344,
+          366,
+          331,
+          363
+        ],
+        "predicted_count_by_class": [
+          296,
+          444,
+          367,
+          299,
+          348,
+          354,
+          358,
+          354,
+          326,
+          354
+        ],
+        "predicted_true_ratio_by_class": [
+          0.9367088607594937,
+          1.150259067357513,
+          0.9865591397849462,
+          0.9583333333333334,
+          0.9775280898876404,
+          1.0,
+          1.0406976744186047,
+          0.9672131147540983,
+          0.9848942598187311,
+          0.9752066115702479
+        ],
+        "class_1_overprediction_ratio": 1.150259067357513,
+        "class_8_underprediction_ratio": 0.9848942598187311,
+        "class_1_accuracy": 0.8652849740932642,
+        "class_8_accuracy": 0.6948640483383686,
+        "total_x_to_1_errors": 110,
+        "pair_errors_to_1": {
+          "8->1": 13,
+          "9->1": 15,
+          "6->1": 13,
+          "5->1": 11,
+          "3->1": 9,
+          "2->1": 9,
+          "4->1": 13
+        },
+        "per_class_accuracy": [
+          {
+            "class": 0,
+            "correct": 247,
+            "total": 316,
+            "accuracy": 0.7816455696202531
+          },
+          {
+            "class": 1,
+            "correct": 334,
+            "total": 386,
+            "accuracy": 0.8652849740932642
+          },
+          {
+            "class": 2,
+            "correct": 283,
+            "total": 372,
+            "accuracy": 0.760752688172043
+          },
+          {
+            "class": 3,
+            "correct": 229,
+            "total": 312,
+            "accuracy": 0.7339743589743589
+          },
+          {
+            "class": 4,
+            "correct": 267,
+            "total": 356,
+            "accuracy": 0.75
+          },
+          {
+            "class": 5,
+            "correct": 252,
+            "total": 354,
+            "accuracy": 0.711864406779661
+          },
+          {
+            "class": 6,
+            "correct": 273,
+            "total": 344,
+            "accuracy": 0.7936046511627907
+          },
+          {
+            "class": 7,
+            "correct": 270,
+            "total": 366,
+            "accuracy": 0.7377049180327869
+          },
+          {
+            "class": 8,
+            "correct": 230,
+            "total": 331,
+            "accuracy": 0.6948640483383686
+          },
+          {
+            "class": 9,
+            "correct": 264,
+            "total": 363,
+            "accuracy": 0.7272727272727273
+          }
+        ],
+        "top_confused_pairs": [
+          {
+            "true": 4,
+            "predicted": 9,
+            "count": 23
+          },
+          {
+            "true": 2,
+            "predicted": 7,
+            "count": 22
+          },
+          {
+            "true": 5,
+            "predicted": 3,
+            "count": 22
+          },
+          {
+            "true": 7,
+            "predicted": 1,
+            "count": 20
+          },
+          {
+            "true": 7,
+            "predicted": 2,
+            "count": 20
+          },
+          {
+            "true": 3,
+            "predicted": 5,
+            "count": 19
+          },
+          {
+            "true": 5,
+            "predicted": 8,
+            "count": 19
+          },
+          {
+            "true": 7,
+            "predicted": 9,
+            "count": 19
+          },
+          {
+            "true": 5,
+            "predicted": 6,
+            "count": 18
+          },
+          {
+            "true": 8,
+            "predicted": 9,
+            "count": 18
+          },
+          {
+            "true": 8,
+            "predicted": 5,
+            "count": 17
+          },
+          {
+            "true": 9,
+            "predicted": 7,
+            "count": 17
+          },
+          {
+            "true": 3,
+            "predicted": 2,
+            "count": 16
+          },
+          {
+            "true": 8,
+            "predicted": 6,
+            "count": 16
+          },
+          {
+            "true": 9,
+            "predicted": 8,
+            "count": 16
+          }
+        ],
+        "confusion_matrix": [
+          [
+            247,
+            7,
+            12,
+            5,
+            4,
+            10,
+            14,
+            3,
+            9,
+            5
+          ],
+          [
+            0,
+            334,
+            4,
+            2,
+            7,
+            6,
+            9,
+            15,
+            6,
+            3
+          ],
+          [
+            6,
+            9,
+            283,
+            10,
+            12,
+            9,
+            8,
+            22,
+            10,
+            3
+          ],
+          [
+            6,
+            9,
+            16,
+            229,
+            8,
+            19,
+            0,
+            6,
+            8,
+            11
+          ],
+          [
+            3,
+            13,
+            9,
+            4,
+            267,
+            11,
+            13,
+            8,
+            5,
+            23
+          ],
+          [
+            11,
+            11,
+            5,
+            22,
+            7,
+            252,
+            18,
+            4,
+            19,
+            5
+          ],
+          [
+            10,
+            13,
+            8,
+            2,
+            8,
+            14,
+            273,
+            2,
+            11,
+            3
+          ],
+          [
+            0,
+            20,
+            20,
+            8,
+            11,
+            5,
+            1,
+            270,
+            12,
+            19
+          ],
+          [
+            6,
+            13,
+            5,
+            10,
+            9,
+            17,
+            16,
+            7,
+            230,
+            18
+          ],
+          [
+            7,
+            15,
+            5,
+            7,
+            15,
+            11,
+            6,
+            17,
+            16,
+            264
+          ]
+        ]
+      }
+    },
+    {
+      "expert": "testa_preact_resnet_tiny_v2_raw_seed42_e60",
+      "oof_path": "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_runs\\testa_preact_resnet_tiny_v2_raw_seed42_e60\\oof\\oof_probabilities.pt",
+      "diagnostics": {
+        "overall_accuracy": 0.7514285445213318,
+        "n_samples": 3500,
+        "true_count_by_class": [
+          316,
+          386,
+          372,
+          312,
+          356,
+          354,
+          344,
+          366,
+          331,
+          363
+        ],
+        "predicted_count_by_class": [
+          285,
+          464,
+          353,
+          304,
+          349,
+          352,
+          368,
+          357,
+          324,
+          344
+        ],
+        "predicted_true_ratio_by_class": [
+          0.9018987341772152,
+          1.2020725388601037,
+          0.9489247311827957,
+          0.9743589743589743,
+          0.9803370786516854,
+          0.9943502824858758,
+          1.069767441860465,
+          0.9754098360655737,
+          0.9788519637462235,
+          0.9476584022038568
+        ],
+        "class_1_overprediction_ratio": 1.2020725388601037,
+        "class_8_underprediction_ratio": 0.9788519637462235,
+        "class_1_accuracy": 0.8730569948186528,
+        "class_8_accuracy": 0.6918429003021148,
+        "total_x_to_1_errors": 127,
+        "pair_errors_to_1": {
+          "8->1": 15,
+          "9->1": 17,
+          "6->1": 12,
+          "5->1": 16,
+          "3->1": 9,
+          "2->1": 8,
+          "4->1": 19
+        },
+        "per_class_accuracy": [
+          {
+            "class": 0,
+            "correct": 241,
+            "total": 316,
+            "accuracy": 0.7626582278481012
+          },
+          {
+            "class": 1,
+            "correct": 337,
+            "total": 386,
+            "accuracy": 0.8730569948186528
+          },
+          {
+            "class": 2,
+            "correct": 282,
+            "total": 372,
+            "accuracy": 0.7580645161290323
+          },
+          {
+            "class": 3,
+            "correct": 228,
+            "total": 312,
+            "accuracy": 0.7307692307692307
+          },
+          {
+            "class": 4,
+            "correct": 266,
+            "total": 356,
+            "accuracy": 0.7471910112359551
+          },
+          {
+            "class": 5,
+            "correct": 244,
+            "total": 354,
+            "accuracy": 0.6892655367231638
+          },
+          {
+            "class": 6,
+            "correct": 271,
+            "total": 344,
+            "accuracy": 0.7877906976744186
+          },
+          {
+            "class": 7,
+            "correct": 272,
+            "total": 366,
+            "accuracy": 0.7431693989071039
+          },
+          {
+            "class": 8,
+            "correct": 229,
+            "total": 331,
+            "accuracy": 0.6918429003021148
+          },
+          {
+            "class": 9,
+            "correct": 260,
+            "total": 363,
+            "accuracy": 0.7162534435261708
+          }
+        ],
+        "top_confused_pairs": [
+          {
+            "true": 5,
+            "predicted": 6,
+            "count": 25
+          },
+          {
+            "true": 5,
+            "predicted": 3,
+            "count": 24
+          },
+          {
+            "true": 7,
+            "predicted": 1,
+            "count": 23
+          },
+          {
+            "true": 2,
+            "predicted": 7,
+            "count": 22
+          },
+          {
+            "true": 4,
+            "predicted": 9,
+            "count": 22
+          },
+          {
+            "true": 3,
+            "predicted": 5,
+            "count": 21
+          },
+          {
+            "true": 5,
+            "predicted": 8,
+            "count": 20
+          },
+          {
+            "true": 4,
+            "predicted": 1,
+            "count": 19
+          },
+          {
+            "true": 9,
+            "predicted": 7,
+            "count": 19
+          },
+          {
+            "true": 4,
+            "predicted": 6,
+            "count": 18
+          },
+          {
+            "true": 6,
+            "predicted": 5,
+            "count": 17
+          },
+          {
+            "true": 9,
+            "predicted": 1,
+            "count": 17
+          },
+          {
+            "true": 2,
+            "predicted": 4,
+            "count": 16
+          },
+          {
+            "true": 5,
+            "predicted": 1,
+            "count": 16
+          },
+          {
+            "true": 8,
+            "predicted": 9,
+            "count": 16
+          }
+        ],
+        "confusion_matrix": [
+          [
+            241,
+            8,
+            12,
+            3,
+            3,
+            12,
+            15,
+            5,
+            11,
+            6
+          ],
+          [
+            0,
+            337,
+            2,
+            0,
+            5,
+            8,
+            9,
+            12,
+            8,
+            5
+          ],
+          [
+            7,
+            8,
+            282,
+            10,
+            16,
+            7,
+            8,
+            22,
+            9,
+            3
+          ],
+          [
+            5,
+            9,
+            15,
+            228,
+            7,
+            21,
+            2,
+            8,
+            8,
+            9
+          ],
+          [
+            1,
+            19,
+            8,
+            3,
+            266,
+            10,
+            18,
+            5,
+            4,
+            22
+          ],
+          [
+            6,
+            16,
+            2,
+            24,
+            10,
+            244,
+            25,
+            4,
+            20,
+            3
+          ],
+          [
+            13,
+            12,
+            7,
+            3,
+            5,
+            17,
+            271,
+            1,
+            10,
+            5
+          ],
+          [
+            1,
+            23,
+            15,
+            12,
+            10,
+            5,
+            2,
+            272,
+            11,
+            15
+          ],
+          [
+            4,
+            15,
+            4,
+            15,
+            12,
+            15,
+            12,
+            9,
+            229,
+            16
+          ],
+          [
+            7,
+            17,
+            6,
+            6,
+            15,
+            13,
+            6,
+            19,
+            14,
+            260
+          ]
+        ]
+      }
+    },
+    {
+      "expert": "testa_medium_v2_anti1_margin_seed42_e60",
+      "oof_path": "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_runs\\testa_medium_v2_anti1_margin_seed42_e60\\oof\\oof_probabilities.pt",
+      "diagnostics": {
+        "overall_accuracy": 0.7474285960197449,
+        "n_samples": 3500,
+        "true_count_by_class": [
+          316,
+          386,
+          372,
+          312,
+          356,
+          354,
+          344,
+          366,
+          331,
+          363
+        ],
+        "predicted_count_by_class": [
+          296,
+          467,
+          359,
+          306,
+          364,
+          344,
+          332,
+          401,
+          286,
+          345
+        ],
+        "predicted_true_ratio_by_class": [
+          0.9367088607594937,
+          1.2098445595854923,
+          0.9650537634408602,
+          0.9807692307692307,
+          1.0224719101123596,
+          0.9717514124293786,
+          0.9651162790697675,
+          1.0956284153005464,
+          0.8640483383685801,
+          0.9504132231404959
+        ],
+        "class_1_overprediction_ratio": 1.2098445595854923,
+        "class_8_underprediction_ratio": 0.8640483383685801,
+        "class_1_accuracy": 0.8316062176165803,
+        "class_8_accuracy": 0.6797583081570997,
+        "total_x_to_1_errors": 146,
+        "pair_errors_to_1": {
+          "8->1": 18,
+          "9->1": 21,
+          "6->1": 19,
+          "5->1": 17,
+          "3->1": 10,
+          "2->1": 10,
+          "4->1": 17
+        },
+        "per_class_accuracy": [
+          {
+            "class": 0,
+            "correct": 246,
+            "total": 316,
+            "accuracy": 0.7784810126582279
+          },
+          {
+            "class": 1,
+            "correct": 321,
+            "total": 386,
+            "accuracy": 0.8316062176165803
+          },
+          {
+            "class": 2,
+            "correct": 277,
+            "total": 372,
+            "accuracy": 0.7446236559139785
+          },
+          {
+            "class": 3,
+            "correct": 228,
+            "total": 312,
+            "accuracy": 0.7307692307692307
+          },
+          {
+            "class": 4,
+            "correct": 272,
+            "total": 356,
+            "accuracy": 0.7640449438202247
+          },
+          {
+            "class": 5,
+            "correct": 250,
+            "total": 354,
+            "accuracy": 0.7062146892655368
+          },
+          {
+            "class": 6,
+            "correct": 260,
+            "total": 344,
+            "accuracy": 0.7558139534883721
+          },
+          {
+            "class": 7,
+            "correct": 277,
+            "total": 366,
+            "accuracy": 0.7568306010928961
+          },
+          {
+            "class": 8,
+            "correct": 225,
+            "total": 331,
+            "accuracy": 0.6797583081570997
+          },
+          {
+            "class": 9,
+            "correct": 260,
+            "total": 363,
+            "accuracy": 0.7162534435261708
+          }
+        ],
+        "top_confused_pairs": [
+          {
+            "true": 2,
+            "predicted": 7,
+            "count": 26
+          },
+          {
+            "true": 1,
+            "predicted": 7,
+            "count": 24
+          },
+          {
+            "true": 5,
+            "predicted": 3,
+            "count": 23
+          },
+          {
+            "true": 7,
+            "predicted": 1,
+            "count": 22
+          },
+          {
+            "true": 9,
+            "predicted": 1,
+            "count": 21
+          },
+          {
+            "true": 9,
+            "predicted": 4,
+            "count": 21
+          },
+          {
+            "true": 3,
+            "predicted": 5,
+            "count": 20
+          },
+          {
+            "true": 6,
+            "predicted": 1,
+            "count": 19
+          },
+          {
+            "true": 5,
+            "predicted": 6,
+            "count": 18
+          },
+          {
+            "true": 6,
+            "predicted": 0,
+            "count": 18
+          },
+          {
+            "true": 8,
+            "predicted": 1,
+            "count": 18
+          },
+          {
+            "true": 9,
+            "predicted": 7,
+            "count": 18
+          },
+          {
+            "true": 4,
+            "predicted": 1,
+            "count": 17
+          },
+          {
+            "true": 4,
+            "predicted": 9,
+            "count": 17
+          },
+          {
+            "true": 5,
+            "predicted": 1,
+            "count": 17
+          }
+        ],
+        "confusion_matrix": [
+          [
+            246,
+            12,
+            9,
+            4,
+            5,
+            10,
+            7,
+            9,
+            3,
+            11
+          ],
+          [
+            2,
+            321,
+            5,
+            2,
+            15,
+            3,
+            7,
+            24,
+            3,
+            4
+          ],
+          [
+            8,
+            10,
+            277,
+            13,
+            8,
+            8,
+            4,
+            26,
+            9,
+            9
+          ],
+          [
+            2,
+            10,
+            15,
+            228,
+            4,
+            20,
+            4,
+            13,
+            8,
+            8
+          ],
+          [
+            4,
+            17,
+            9,
+            6,
+            272,
+            7,
+            9,
+            12,
+            3,
+            17
+          ],
+          [
+            4,
+            17,
+            9,
+            23,
+            12,
+            250,
+            18,
+            5,
+            10,
+            6
+          ],
+          [
+            18,
+            19,
+            8,
+            3,
+            7,
+            13,
+            260,
+            5,
+            8,
+            3
+          ],
+          [
+            1,
+            22,
+            12,
+            9,
+            14,
+            7,
+            2,
+            277,
+            5,
+            17
+          ],
+          [
+            8,
+            18,
+            11,
+            16,
+            6,
+            16,
+            9,
+            12,
+            225,
+            10
+          ],
+          [
+            3,
+            21,
+            4,
+            2,
+            21,
+            10,
+            12,
+            18,
+            12,
+            260
+          ]
+        ]
+      }
+    },
+    {
+      "expert": "testa_medium_v2_anti1_margin_seed2026_e60",
+      "oof_path": "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_runs\\testa_medium_v2_anti1_margin_seed2026_e60\\oof\\oof_probabilities.pt",
+      "diagnostics": {
+        "overall_accuracy": 0.7451428771018982,
+        "n_samples": 3500,
+        "true_count_by_class": [
+          316,
+          386,
+          372,
+          312,
+          356,
+          354,
+          344,
+          366,
+          331,
+          363
+        ],
+        "predicted_count_by_class": [
+          284,
+          462,
+          364,
+          285,
+          371,
+          356,
+          341,
+          390,
+          304,
+          343
+        ],
+        "predicted_true_ratio_by_class": [
+          0.8987341772151899,
+          1.1968911917098446,
+          0.978494623655914,
+          0.9134615384615384,
+          1.0421348314606742,
+          1.0056497175141244,
+          0.9912790697674418,
+          1.0655737704918034,
+          0.918429003021148,
+          0.9449035812672176
+        ],
+        "class_1_overprediction_ratio": 1.1968911917098446,
+        "class_8_underprediction_ratio": 0.918429003021148,
+        "class_1_accuracy": 0.8238341968911918,
+        "class_8_accuracy": 0.6888217522658611,
+        "total_x_to_1_errors": 144,
+        "pair_errors_to_1": {
+          "8->1": 21,
+          "9->1": 20,
+          "6->1": 16,
+          "5->1": 15,
+          "3->1": 13,
+          "2->1": 10,
+          "4->1": 15
+        },
+        "per_class_accuracy": [
+          {
+            "class": 0,
+            "correct": 239,
+            "total": 316,
+            "accuracy": 0.7563291139240507
+          },
+          {
+            "class": 1,
+            "correct": 318,
+            "total": 386,
+            "accuracy": 0.8238341968911918
+          },
+          {
+            "class": 2,
+            "correct": 275,
+            "total": 372,
+            "accuracy": 0.739247311827957
+          },
+          {
+            "class": 3,
+            "correct": 224,
+            "total": 312,
+            "accuracy": 0.717948717948718
+          },
+          {
+            "class": 4,
+            "correct": 274,
+            "total": 356,
+            "accuracy": 0.7696629213483146
+          },
+          {
+            "class": 5,
+            "correct": 249,
+            "total": 354,
+            "accuracy": 0.7033898305084746
+          },
+          {
+            "class": 6,
+            "correct": 267,
+            "total": 344,
+            "accuracy": 0.7761627906976745
+          },
+          {
+            "class": 7,
+            "correct": 275,
+            "total": 366,
+            "accuracy": 0.7513661202185792
+          },
+          {
+            "class": 8,
+            "correct": 228,
+            "total": 331,
+            "accuracy": 0.6888217522658611
+          },
+          {
+            "class": 9,
+            "correct": 259,
+            "total": 363,
+            "accuracy": 0.7134986225895317
+          }
+        ],
+        "top_confused_pairs": [
+          {
+            "true": 9,
+            "predicted": 7,
+            "count": 25
+          },
+          {
+            "true": 1,
+            "predicted": 7,
+            "count": 23
+          },
+          {
+            "true": 7,
+            "predicted": 1,
+            "count": 23
+          },
+          {
+            "true": 2,
+            "predicted": 7,
+            "count": 21
+          },
+          {
+            "true": 8,
+            "predicted": 1,
+            "count": 21
+          },
+          {
+            "true": 9,
+            "predicted": 1,
+            "count": 20
+          },
+          {
+            "true": 3,
+            "predicted": 5,
+            "count": 19
+          },
+          {
+            "true": 7,
+            "predicted": 9,
+            "count": 19
+          },
+          {
+            "true": 5,
+            "predicted": 3,
+            "count": 18
+          },
+          {
+            "true": 5,
+            "predicted": 6,
+            "count": 18
+          },
+          {
+            "true": 6,
+            "predicted": 5,
+            "count": 18
+          },
+          {
+            "true": 1,
+            "predicted": 4,
+            "count": 16
+          },
+          {
+            "true": 3,
+            "predicted": 2,
+            "count": 16
+          },
+          {
+            "true": 6,
+            "predicted": 1,
+            "count": 16
+          },
+          {
+            "true": 8,
+            "predicted": 5,
+            "count": 16
+          }
+        ],
+        "confusion_matrix": [
+          [
+            239,
+            11,
+            14,
+            1,
+            8,
+            13,
+            8,
+            7,
+            5,
+            10
+          ],
+          [
+            2,
+            318,
+            5,
+            1,
+            16,
+            5,
+            6,
+            23,
+            4,
+            6
+          ],
+          [
+            9,
+            10,
+            275,
+            12,
+            11,
+            11,
+            7,
+            21,
+            7,
+            9
+          ],
+          [
+            0,
+            13,
+            16,
+            224,
+            8,
+            19,
+            5,
+            11,
+            10,
+            6
+          ],
+          [
+            6,
+            15,
+            10,
+            5,
+            274,
+            7,
+            8,
+            11,
+            6,
+            14
+          ],
+          [
+            4,
+            15,
+            10,
+            18,
+            13,
+            249,
+            18,
+            5,
+            15,
+            7
+          ],
+          [
+            11,
+            16,
+            8,
+            2,
+            9,
+            18,
+            267,
+            3,
+            8,
+            2
+          ],
+          [
+            1,
+            23,
+            11,
+            8,
+            11,
+            8,
+            1,
+            275,
+            9,
+            19
+          ],
+          [
+            8,
+            21,
+            11,
+            13,
+            5,
+            16,
+            9,
+            9,
+            228,
+            11
+          ],
+          [
+            4,
+            20,
+            4,
+            1,
+            16,
+            10,
+            12,
+            25,
+            12,
+            259
+          ]
+        ]
+      }
+    },
+    {
+      "expert": "testa_medium_v2_raw_seed3407_e60",
+      "oof_path": "E:\\ALL\\学习\\AI导论作业-识别手写数字\\outputs_runs\\testa_medium_v2_raw_seed3407_e60\\oof\\oof_probabilities.pt",
+      "diagnostics": {
+        "overall_accuracy": 0.7471428513526917,
+        "n_samples": 3500,
+        "true_count_by_class": [
+          316,
+          386,
+          372,
+          312,
+          356,
+          354,
+          344,
+          366,
+          331,
+          363
+        ],
+        "predicted_count_by_class": [
+          281,
+          491,
+          346,
+          299,
+          363,
+          369,
+          344,
+          384,
+          287,
+          336
+        ],
+        "predicted_true_ratio_by_class": [
+          0.8892405063291139,
+          1.2720207253886011,
+          0.9301075268817204,
+          0.9583333333333334,
+          1.0196629213483146,
+          1.0423728813559323,
+          1.0,
+          1.0491803278688525,
+          0.8670694864048338,
+          0.9256198347107438
+        ],
+        "class_1_overprediction_ratio": 1.2720207253886011,
+        "class_8_underprediction_ratio": 0.8670694864048338,
+        "class_1_accuracy": 0.8367875647668394,
+        "class_8_accuracy": 0.6918429003021148,
+        "total_x_to_1_errors": 168,
+        "pair_errors_to_1": {
+          "8->1": 22,
+          "9->1": 21,
+          "6->1": 18,
+          "5->1": 20,
+          "3->1": 14,
+          "2->1": 15,
+          "4->1": 22
+        },
+        "per_class_accuracy": [
+          {
+            "class": 0,
+            "correct": 242,
+            "total": 316,
+            "accuracy": 0.7658227848101266
+          },
+          {
+            "class": 1,
+            "correct": 323,
+            "total": 386,
+            "accuracy": 0.8367875647668394
+          },
+          {
+            "class": 2,
+            "correct": 269,
+            "total": 372,
+            "accuracy": 0.7231182795698925
+          },
+          {
+            "class": 3,
+            "correct": 228,
+            "total": 312,
+            "accuracy": 0.7307692307692307
+          },
+          {
+            "class": 4,
+            "correct": 269,
+            "total": 356,
+            "accuracy": 0.7556179775280899
+          },
+          {
+            "class": 5,
+            "correct": 257,
+            "total": 354,
+            "accuracy": 0.7259887005649718
+          },
+          {
+            "class": 6,
+            "correct": 266,
+            "total": 344,
+            "accuracy": 0.7732558139534884
+          },
+          {
+            "class": 7,
+            "correct": 273,
+            "total": 366,
+            "accuracy": 0.7459016393442623
+          },
+          {
+            "class": 8,
+            "correct": 229,
+            "total": 331,
+            "accuracy": 0.6918429003021148
+          },
+          {
+            "class": 9,
+            "correct": 259,
+            "total": 363,
+            "accuracy": 0.7134986225895317
+          }
+        ],
+        "top_confused_pairs": [
+          {
+            "true": 1,
+            "predicted": 7,
+            "count": 24
+          },
+          {
+            "true": 7,
+            "predicted": 1,
+            "count": 23
+          },
+          {
+            "true": 2,
+            "predicted": 7,
+            "count": 22
+          },
+          {
+            "true": 3,
+            "predicted": 5,
+            "count": 22
+          },
+          {
+            "true": 4,
+            "predicted": 1,
+            "count": 22
+          },
+          {
+            "true": 8,
+            "predicted": 1,
+            "count": 22
+          },
+          {
+            "true": 9,
+            "predicted": 1,
+            "count": 21
+          },
+          {
+            "true": 5,
+            "predicted": 1,
+            "count": 20
+          },
+          {
+            "true": 5,
+            "predicted": 3,
+            "count": 20
+          },
+          {
+            "true": 8,
+            "predicted": 5,
+            "count": 19
+          },
+          {
+            "true": 1,
+            "predicted": 4,
+            "count": 18
+          },
+          {
+            "true": 6,
+            "predicted": 1,
+            "count": 18
+          },
+          {
+            "true": 7,
+            "predicted": 9,
+            "count": 18
+          },
+          {
+            "true": 9,
+            "predicted": 7,
+            "count": 18
+          },
+          {
+            "true": 5,
+            "predicted": 6,
+            "count": 16
+          }
+        ],
+        "confusion_matrix": [
+          [
+            242,
+            13,
+            10,
+            2,
+            6,
+            15,
+            11,
+            7,
+            3,
+            7
+          ],
+          [
+            3,
+            323,
+            4,
+            2,
+            18,
+            3,
+            5,
+            24,
+            1,
+            3
+          ],
+          [
+            6,
+            15,
+            269,
+            12,
+            10,
+            12,
+            10,
+            22,
+            8,
+            8
+          ],
+          [
+            0,
+            14,
+            12,
+            228,
+            7,
+            22,
+            4,
+            13,
+            7,
+            5
+          ],
+          [
+            7,
+            22,
+            8,
+            6,
+            269,
+            7,
+            7,
+            11,
+            4,
+            15
+          ],
+          [
+            2,
+            20,
+            5,
+            20,
+            12,
+            257,
+            16,
+            2,
+            10,
+            10
+          ],
+          [
+            9,
+            18,
+            9,
+            4,
+            8,
+            15,
+            266,
+            4,
+            7,
+            4
+          ],
+          [
+            1,
+            23,
+            12,
+            9,
+            13,
+            7,
+            3,
+            273,
+            7,
+            18
+          ],
+          [
+            7,
+            22,
+            10,
+            14,
+            5,
+            19,
+            8,
+            10,
+            229,
+            7
+          ],
+          [
+            4,
+            21,
+            7,
+            2,
+            15,
+            12,
+            14,
+            18,
+            11,
+            259
+          ]
+        ]
+      }
+    }
+  ],
+  "candidates": [
+    {
+      "weights": [
+        0.16666666666666666,
+        0.16666666666666666,
+        0.16666666666666666,
+        0.16666666666666666,
+        0.16666666666666666,
+        0.16666666666666666
+      ],
+      "diagnostics": {
+        "overall_accuracy": 0.7788571715354919,
+        "n_samples": 3500,
+        "true_count_by_class": [
+          316,
+          386,
+          372,
+          312,
+          356,
+          354,
+          344,
+          366,
+          331,
+          363
+        ],
+        "predicted_count_by_class": [
+          284,
+          477,
+          367,
+          295,
+          356,
+          363,
+          338,
+          373,
+          310,
+          337
+        ],
+        "predicted_true_ratio_by_class": [
+          0.8987341772151899,
+          1.2357512953367875,
+          0.9865591397849462,
+          0.9455128205128205,
+          1.0,
+          1.0254237288135593,
+          0.9825581395348837,
+          1.0191256830601092,
+          0.9365558912386707,
+          0.928374655647383
+        ],
+        "class_1_overprediction_ratio": 1.2357512953367875,
+        "class_8_underprediction_ratio": 0.9365558912386707,
+        "class_1_accuracy": 0.883419689119171,
+        "class_8_accuracy": 0.7280966767371602,
+        "total_x_to_1_errors": 136,
+        "pair_errors_to_1": {
+          "8->1": 14,
+          "9->1": 20,
+          "6->1": 16,
+          "5->1": 15,
+          "3->1": 10,
+          "2->1": 10,
+          "4->1": 17
+        },
+        "per_class_accuracy": [
+          {
+            "class": 0,
+            "correct": 245,
+            "total": 316,
+            "accuracy": 0.7753164556962026
+          },
+          {
+            "class": 1,
+            "correct": 341,
+            "total": 386,
+            "accuracy": 0.883419689119171
+          },
+          {
+            "class": 2,
+            "correct": 297,
+            "total": 372,
+            "accuracy": 0.7983870967741935
+          },
+          {
+            "class": 3,
+            "correct": 238,
+            "total": 312,
+            "accuracy": 0.7628205128205128
+          },
+          {
+            "class": 4,
+            "correct": 274,
+            "total": 356,
+            "accuracy": 0.7696629213483146
+          },
+          {
+            "class": 5,
+            "correct": 267,
+            "total": 354,
+            "accuracy": 0.7542372881355932
+          },
+          {
+            "class": 6,
+            "correct": 276,
+            "total": 344,
+            "accuracy": 0.8023255813953488
+          },
+          {
+            "class": 7,
+            "correct": 281,
+            "total": 366,
+            "accuracy": 0.76775956284153
+          },
+          {
+            "class": 8,
+            "correct": 241,
+            "total": 331,
+            "accuracy": 0.7280966767371602
+          },
+          {
+            "class": 9,
+            "correct": 266,
+            "total": 363,
+            "accuracy": 0.7327823691460055
+          }
+        ],
+        "top_confused_pairs": [
+          {
+            "true": 7,
+            "predicted": 1,
+            "count": 24
+          },
+          {
+            "true": 2,
+            "predicted": 7,
+            "count": 21
+          },
+          {
+            "true": 9,
+            "predicted": 1,
+            "count": 20
+          },
+          {
+            "true": 3,
+            "predicted": 5,
+            "count": 19
+          },
+          {
+            "true": 8,
+            "predicted": 5,
+            "count": 19
+          },
+          {
+            "true": 9,
+            "predicted": 7,
+            "count": 19
+          },
+          {
+            "true": 4,
+            "predicted": 9,
+            "count": 18
+          },
+          {
+            "true": 5,
+            "predicted": 3,
+            "count": 18
+          },
+          {
+            "true": 4,
+            "predicted": 1,
+            "count": 17
+          },
+          {
+            "true": 6,
+            "predicted": 1,
+            "count": 16
+          },
+          {
+            "true": 5,
+            "predicted": 1,
+            "count": 15
+          },
+          {
+            "true": 7,
+            "predicted": 9,
+            "count": 15
+          },
+          {
+            "true": 1,
+            "predicted": 7,
+            "count": 14
+          },
+          {
+            "true": 5,
+            "predicted": 6,
+            "count": 14
+          },
+          {
+            "true": 7,
+            "predicted": 2,
+            "count": 14
+          }
+        ],
+        "confusion_matrix": [
+          [
+            245,
+            10,
+            9,
+            2,
+            5,
+            12,
+            10,
+            7,
+            8,
+            8
+          ],
+          [
+            0,
+            341,
+            4,
+            2,
+            8,
+            4,
+            5,
+            14,
+            4,
+            4
+          ],
+          [
+            6,
+            10,
+            297,
+            8,
+            11,
+            7,
+            3,
+            21,
+            8,
+            1
+          ],
+          [
+            3,
+            10,
+            12,
+            238,
+            6,
+            19,
+            2,
+            8,
+            7,
+            7
+          ],
+          [
+            4,
+            17,
+            9,
+            3,
+            274,
+            6,
+            12,
+            10,
+            3,
+            18
+          ],
+          [
+            7,
+            15,
+            4,
+            18,
+            9,
+            267,
+            14,
+            3,
+            12,
+            5
+          ],
+          [
+            9,
+            16,
+            7,
+            4,
+            7,
+            12,
+            276,
+            1,
+            9,
+            3
+          ],
+          [
+            2,
+            24,
+            14,
+            5,
+            13,
+            5,
+            0,
+            281,
+            7,
+            15
+          ],
+          [
+            3,
+            14,
+            7,
+            9,
+            9,
+            19,
+            10,
+            9,
+            241,
+            10
+          ],
+          [
+            5,
+            20,
+            4,
+            6,
+            14,
+            12,
+            6,
+            19,
+            11,
+            266
+          ]
+        ]
+      }
+    }
+  ],
+  "best_overall_accuracy": {
+    "weights": [
+      0.16666666666666666,
+      0.16666666666666666,
+      0.16666666666666666,
+      0.16666666666666666,
+      0.16666666666666666,
+      0.16666666666666666
+    ],
+    "diagnostics": {
+      "overall_accuracy": 0.7788571715354919,
+      "n_samples": 3500,
+      "true_count_by_class": [
+        316,
+        386,
+        372,
+        312,
+        356,
+        354,
+        344,
+        366,
+        331,
+        363
+      ],
+      "predicted_count_by_class": [
+        284,
+        477,
+        367,
+        295,
+        356,
+        363,
+        338,
+        373,
+        310,
+        337
+      ],
+      "predicted_true_ratio_by_class": [
+        0.8987341772151899,
+        1.2357512953367875,
+        0.9865591397849462,
+        0.9455128205128205,
+        1.0,
+        1.0254237288135593,
+        0.9825581395348837,
+        1.0191256830601092,
+        0.9365558912386707,
+        0.928374655647383
+      ],
+      "class_1_overprediction_ratio": 1.2357512953367875,
+      "class_8_underprediction_ratio": 0.9365558912386707,
+      "class_1_accuracy": 0.883419689119171,
+      "class_8_accuracy": 0.7280966767371602,
+      "total_x_to_1_errors": 136,
+      "pair_errors_to_1": {
+        "8->1": 14,
+        "9->1": 20,
+        "6->1": 16,
+        "5->1": 15,
+        "3->1": 10,
+        "2->1": 10,
+        "4->1": 17
+      },
+      "per_class_accuracy": [
+        {
+          "class": 0,
+          "correct": 245,
+          "total": 316,
+          "accuracy": 0.7753164556962026
+        },
+        {
+          "class": 1,
+          "correct": 341,
+          "total": 386,
+          "accuracy": 0.883419689119171
+        },
+        {
+          "class": 2,
+          "correct": 297,
+          "total": 372,
+          "accuracy": 0.7983870967741935
+        },
+        {
+          "class": 3,
+          "correct": 238,
+          "total": 312,
+          "accuracy": 0.7628205128205128
+        },
+        {
+          "class": 4,
+          "correct": 274,
+          "total": 356,
+          "accuracy": 0.7696629213483146
+        },
+        {
+          "class": 5,
+          "correct": 267,
+          "total": 354,
+          "accuracy": 0.7542372881355932
+        },
+        {
+          "class": 6,
+          "correct": 276,
+          "total": 344,
+          "accuracy": 0.8023255813953488
+        },
+        {
+          "class": 7,
+          "correct": 281,
+          "total": 366,
+          "accuracy": 0.76775956284153
+        },
+        {
+          "class": 8,
+          "correct": 241,
+          "total": 331,
+          "accuracy": 0.7280966767371602
+        },
+        {
+          "class": 9,
+          "correct": 266,
+          "total": 363,
+          "accuracy": 0.7327823691460055
+        }
+      ],
+      "top_confused_pairs": [
+        {
+          "true": 7,
+          "predicted": 1,
+          "count": 24
+        },
+        {
+          "true": 2,
+          "predicted": 7,
+          "count": 21
+        },
+        {
+          "true": 9,
+          "predicted": 1,
+          "count": 20
+        },
+        {
+          "true": 3,
+          "predicted": 5,
+          "count": 19
+        },
+        {
+          "true": 8,
+          "predicted": 5,
+          "count": 19
+        },
+        {
+          "true": 9,
+          "predicted": 7,
+          "count": 19
+        },
+        {
+          "true": 4,
+          "predicted": 9,
+          "count": 18
+        },
+        {
+          "true": 5,
+          "predicted": 3,
+          "count": 18
+        },
+        {
+          "true": 4,
+          "predicted": 1,
+          "count": 17
+        },
+        {
+          "true": 6,
+          "predicted": 1,
+          "count": 16
+        },
+        {
+          "true": 5,
+          "predicted": 1,
+          "count": 15
+        },
+        {
+          "true": 7,
+          "predicted": 9,
+          "count": 15
+        },
+        {
+          "true": 1,
+          "predicted": 7,
+          "count": 14
+        },
+        {
+          "true": 5,
+          "predicted": 6,
+          "count": 14
+        },
+        {
+          "true": 7,
+          "predicted": 2,
+          "count": 14
+        }
+      ],
+      "confusion_matrix": [
+        [
+          245,
+          10,
+          9,
+          2,
+          5,
+          12,
+          10,
+          7,
+          8,
+          8
+        ],
+        [
+          0,
+          341,
+          4,
+          2,
+          8,
+          4,
+          5,
+          14,
+          4,
+          4
+        ],
+        [
+          6,
+          10,
+          297,
+          8,
+          11,
+          7,
+          3,
+          21,
+          8,
+          1
+        ],
+        [
+          3,
+          10,
+          12,
+          238,
+          6,
+          19,
+          2,
+          8,
+          7,
+          7
+        ],
+        [
+          4,
+          17,
+          9,
+          3,
+          274,
+          6,
+          12,
+          10,
+          3,
+          18
+        ],
+        [
+          7,
+          15,
+          4,
+          18,
+          9,
+          267,
+          14,
+          3,
+          12,
+          5
+        ],
+        [
+          9,
+          16,
+          7,
+          4,
+          7,
+          12,
+          276,
+          1,
+          9,
+          3
+        ],
+        [
+          2,
+          24,
+          14,
+          5,
+          13,
+          5,
+          0,
+          281,
+          7,
+          15
+        ],
+        [
+          3,
+          14,
+          7,
+          9,
+          9,
+          19,
+          10,
+          9,
+          241,
+          10
+        ],
+        [
+          5,
+          20,
+          4,
+          6,
+          14,
+          12,
+          6,
+          19,
+          11,
+          266
+        ]
+      ]
+    }
+  },
+  "best_min_class_1_overprediction": {
+    "weights": [
+      0.16666666666666666,
+      0.16666666666666666,
+      0.16666666666666666,
+      0.16666666666666666,
+      0.16666666666666666,
+      0.16666666666666666
+    ],
+    "diagnostics": {
+      "overall_accuracy": 0.7788571715354919,
+      "n_samples": 3500,
+      "true_count_by_class": [
+        316,
+        386,
+        372,
+        312,
+        356,
+        354,
+        344,
+        366,
+        331,
+        363
+      ],
+      "predicted_count_by_class": [
+        284,
+        477,
+        367,
+        295,
+        356,
+        363,
+        338,
+        373,
+        310,
+        337
+      ],
+      "predicted_true_ratio_by_class": [
+        0.8987341772151899,
+        1.2357512953367875,
+        0.9865591397849462,
+        0.9455128205128205,
+        1.0,
+        1.0254237288135593,
+        0.9825581395348837,
+        1.0191256830601092,
+        0.9365558912386707,
+        0.928374655647383
+      ],
+      "class_1_overprediction_ratio": 1.2357512953367875,
+      "class_8_underprediction_ratio": 0.9365558912386707,
+      "class_1_accuracy": 0.883419689119171,
+      "class_8_accuracy": 0.7280966767371602,
+      "total_x_to_1_errors": 136,
+      "pair_errors_to_1": {
+        "8->1": 14,
+        "9->1": 20,
+        "6->1": 16,
+        "5->1": 15,
+        "3->1": 10,
+        "2->1": 10,
+        "4->1": 17
+      },
+      "per_class_accuracy": [
+        {
+          "class": 0,
+          "correct": 245,
+          "total": 316,
+          "accuracy": 0.7753164556962026
+        },
+        {
+          "class": 1,
+          "correct": 341,
+          "total": 386,
+          "accuracy": 0.883419689119171
+        },
+        {
+          "class": 2,
+          "correct": 297,
+          "total": 372,
+          "accuracy": 0.7983870967741935
+        },
+        {
+          "class": 3,
+          "correct": 238,
+          "total": 312,
+          "accuracy": 0.7628205128205128
+        },
+        {
+          "class": 4,
+          "correct": 274,
+          "total": 356,
+          "accuracy": 0.7696629213483146
+        },
+        {
+          "class": 5,
+          "correct": 267,
+          "total": 354,
+          "accuracy": 0.7542372881355932
+        },
+        {
+          "class": 6,
+          "correct": 276,
+          "total": 344,
+          "accuracy": 0.8023255813953488
+        },
+        {
+          "class": 7,
+          "correct": 281,
+          "total": 366,
+          "accuracy": 0.76775956284153
+        },
+        {
+          "class": 8,
+          "correct": 241,
+          "total": 331,
+          "accuracy": 0.7280966767371602
+        },
+        {
+          "class": 9,
+          "correct": 266,
+          "total": 363,
+          "accuracy": 0.7327823691460055
+        }
+      ],
+      "top_confused_pairs": [
+        {
+          "true": 7,
+          "predicted": 1,
+          "count": 24
+        },
+        {
+          "true": 2,
+          "predicted": 7,
+          "count": 21
+        },
+        {
+          "true": 9,
+          "predicted": 1,
+          "count": 20
+        },
+        {
+          "true": 3,
+          "predicted": 5,
+          "count": 19
+        },
+        {
+          "true": 8,
+          "predicted": 5,
+          "count": 19
+        },
+        {
+          "true": 9,
+          "predicted": 7,
+          "count": 19
+        },
+        {
+          "true": 4,
+          "predicted": 9,
+          "count": 18
+        },
+        {
+          "true": 5,
+          "predicted": 3,
+          "count": 18
+        },
+        {
+          "true": 4,
+          "predicted": 1,
+          "count": 17
+        },
+        {
+          "true": 6,
+          "predicted": 1,
+          "count": 16
+        },
+        {
+          "true": 5,
+          "predicted": 1,
+          "count": 15
+        },
+        {
+          "true": 7,
+          "predicted": 9,
+          "count": 15
+        },
+        {
+          "true": 1,
+          "predicted": 7,
+          "count": 14
+        },
+        {
+          "true": 5,
+          "predicted": 6,
+          "count": 14
+        },
+        {
+          "true": 7,
+          "predicted": 2,
+          "count": 14
+        }
+      ],
+      "confusion_matrix": [
+        [
+          245,
+          10,
+          9,
+          2,
+          5,
+          12,
+          10,
+          7,
+          8,
+          8
+        ],
+        [
+          0,
+          341,
+          4,
+          2,
+          8,
+          4,
+          5,
+          14,
+          4,
+          4
+        ],
+        [
+          6,
+          10,
+          297,
+          8,
+          11,
+          7,
+          3,
+          21,
+          8,
+          1
+        ],
+        [
+          3,
+          10,
+          12,
+          238,
+          6,
+          19,
+          2,
+          8,
+          7,
+          7
+        ],
+        [
+          4,
+          17,
+          9,
+          3,
+          274,
+          6,
+          12,
+          10,
+          3,
+          18
+        ],
+        [
+          7,
+          15,
+          4,
+          18,
+          9,
+          267,
+          14,
+          3,
+          12,
+          5
+        ],
+        [
+          9,
+          16,
+          7,
+          4,
+          7,
+          12,
+          276,
+          1,
+          9,
+          3
+        ],
+        [
+          2,
+          24,
+          14,
+          5,
+          13,
+          5,
+          0,
+          281,
+          7,
+          15
+        ],
+        [
+          3,
+          14,
+          7,
+          9,
+          9,
+          19,
+          10,
+          9,
+          241,
+          10
+        ],
+        [
+          5,
+          20,
+          4,
+          6,
+          14,
+          12,
+          6,
+          19,
+          11,
+          266
+        ]
+      ]
+    }
+  },
+  "best_max_class_8_accuracy": {
+    "weights": [
+      0.16666666666666666,
+      0.16666666666666666,
+      0.16666666666666666,
+      0.16666666666666666,
+      0.16666666666666666,
+      0.16666666666666666
+    ],
+    "diagnostics": {
+      "overall_accuracy": 0.7788571715354919,
+      "n_samples": 3500,
+      "true_count_by_class": [
+        316,
+        386,
+        372,
+        312,
+        356,
+        354,
+        344,
+        366,
+        331,
+        363
+      ],
+      "predicted_count_by_class": [
+        284,
+        477,
+        367,
+        295,
+        356,
+        363,
+        338,
+        373,
+        310,
+        337
+      ],
+      "predicted_true_ratio_by_class": [
+        0.8987341772151899,
+        1.2357512953367875,
+        0.9865591397849462,
+        0.9455128205128205,
+        1.0,
+        1.0254237288135593,
+        0.9825581395348837,
+        1.0191256830601092,
+        0.9365558912386707,
+        0.928374655647383
+      ],
+      "class_1_overprediction_ratio": 1.2357512953367875,
+      "class_8_underprediction_ratio": 0.9365558912386707,
+      "class_1_accuracy": 0.883419689119171,
+      "class_8_accuracy": 0.7280966767371602,
+      "total_x_to_1_errors": 136,
+      "pair_errors_to_1": {
+        "8->1": 14,
+        "9->1": 20,
+        "6->1": 16,
+        "5->1": 15,
+        "3->1": 10,
+        "2->1": 10,
+        "4->1": 17
+      },
+      "per_class_accuracy": [
+        {
+          "class": 0,
+          "correct": 245,
+          "total": 316,
+          "accuracy": 0.7753164556962026
+        },
+        {
+          "class": 1,
+          "correct": 341,
+          "total": 386,
+          "accuracy": 0.883419689119171
+        },
+        {
+          "class": 2,
+          "correct": 297,
+          "total": 372,
+          "accuracy": 0.7983870967741935
+        },
+        {
+          "class": 3,
+          "correct": 238,
+          "total": 312,
+          "accuracy": 0.7628205128205128
+        },
+        {
+          "class": 4,
+          "correct": 274,
+          "total": 356,
+          "accuracy": 0.7696629213483146
+        },
+        {
+          "class": 5,
+          "correct": 267,
+          "total": 354,
+          "accuracy": 0.7542372881355932
+        },
+        {
+          "class": 6,
+          "correct": 276,
+          "total": 344,
+          "accuracy": 0.8023255813953488
+        },
+        {
+          "class": 7,
+          "correct": 281,
+          "total": 366,
+          "accuracy": 0.76775956284153
+        },
+        {
+          "class": 8,
+          "correct": 241,
+          "total": 331,
+          "accuracy": 0.7280966767371602
+        },
+        {
+          "class": 9,
+          "correct": 266,
+          "total": 363,
+          "accuracy": 0.7327823691460055
+        }
+      ],
+      "top_confused_pairs": [
+        {
+          "true": 7,
+          "predicted": 1,
+          "count": 24
+        },
+        {
+          "true": 2,
+          "predicted": 7,
+          "count": 21
+        },
+        {
+          "true": 9,
+          "predicted": 1,
+          "count": 20
+        },
+        {
+          "true": 3,
+          "predicted": 5,
+          "count": 19
+        },
+        {
+          "true": 8,
+          "predicted": 5,
+          "count": 19
+        },
+        {
+          "true": 9,
+          "predicted": 7,
+          "count": 19
+        },
+        {
+          "true": 4,
+          "predicted": 9,
+          "count": 18
+        },
+        {
+          "true": 5,
+          "predicted": 3,
+          "count": 18
+        },
+        {
+          "true": 4,
+          "predicted": 1,
+          "count": 17
+        },
+        {
+          "true": 6,
+          "predicted": 1,
+          "count": 16
+        },
+        {
+          "true": 5,
+          "predicted": 1,
+          "count": 15
+        },
+        {
+          "true": 7,
+          "predicted": 9,
+          "count": 15
+        },
+        {
+          "true": 1,
+          "predicted": 7,
+          "count": 14
+        },
+        {
+          "true": 5,
+          "predicted": 6,
+          "count": 14
+        },
+        {
+          "true": 7,
+          "predicted": 2,
+          "count": 14
+        }
+      ],
+      "confusion_matrix": [
+        [
+          245,
+          10,
+          9,
+          2,
+          5,
+          12,
+          10,
+          7,
+          8,
+          8
+        ],
+        [
+          0,
+          341,
+          4,
+          2,
+          8,
+          4,
+          5,
+          14,
+          4,
+          4
+        ],
+        [
+          6,
+          10,
+          297,
+          8,
+          11,
+          7,
+          3,
+          21,
+          8,
+          1
+        ],
+        [
+          3,
+          10,
+          12,
+          238,
+          6,
+          19,
+          2,
+          8,
+          7,
+          7
+        ],
+        [
+          4,
+          17,
+          9,
+          3,
+          274,
+          6,
+          12,
+          10,
+          3,
+          18
+        ],
+        [
+          7,
+          15,
+          4,
+          18,
+          9,
+          267,
+          14,
+          3,
+          12,
+          5
+        ],
+        [
+          9,
+          16,
+          7,
+          4,
+          7,
+          12,
+          276,
+          1,
+          9,
+          3
+        ],
+        [
+          2,
+          24,
+          14,
+          5,
+          13,
+          5,
+          0,
+          281,
+          7,
+          15
+        ],
+        [
+          3,
+          14,
+          7,
+          9,
+          9,
+          19,
+          10,
+          9,
+          241,
+          10
+        ],
+        [
+          5,
+          20,
+          4,
+          6,
+          14,
+          12,
+          6,
+          19,
+          11,
+          266
+        ]
+      ]
+    }
+  },
+  "best_min_total_x_to_1": {
+    "weights": [
+      0.16666666666666666,
+      0.16666666666666666,
+      0.16666666666666666,
+      0.16666666666666666,
+      0.16666666666666666,
+      0.16666666666666666
+    ],
+    "diagnostics": {
+      "overall_accuracy": 0.7788571715354919,
+      "n_samples": 3500,
+      "true_count_by_class": [
+        316,
+        386,
+        372,
+        312,
+        356,
+        354,
+        344,
+        366,
+        331,
+        363
+      ],
+      "predicted_count_by_class": [
+        284,
+        477,
+        367,
+        295,
+        356,
+        363,
+        338,
+        373,
+        310,
+        337
+      ],
+      "predicted_true_ratio_by_class": [
+        0.8987341772151899,
+        1.2357512953367875,
+        0.9865591397849462,
+        0.9455128205128205,
+        1.0,
+        1.0254237288135593,
+        0.9825581395348837,
+        1.0191256830601092,
+        0.9365558912386707,
+        0.928374655647383
+      ],
+      "class_1_overprediction_ratio": 1.2357512953367875,
+      "class_8_underprediction_ratio": 0.9365558912386707,
+      "class_1_accuracy": 0.883419689119171,
+      "class_8_accuracy": 0.7280966767371602,
+      "total_x_to_1_errors": 136,
+      "pair_errors_to_1": {
+        "8->1": 14,
+        "9->1": 20,
+        "6->1": 16,
+        "5->1": 15,
+        "3->1": 10,
+        "2->1": 10,
+        "4->1": 17
+      },
+      "per_class_accuracy": [
+        {
+          "class": 0,
+          "correct": 245,
+          "total": 316,
+          "accuracy": 0.7753164556962026
+        },
+        {
+          "class": 1,
+          "correct": 341,
+          "total": 386,
+          "accuracy": 0.883419689119171
+        },
+        {
+          "class": 2,
+          "correct": 297,
+          "total": 372,
+          "accuracy": 0.7983870967741935
+        },
+        {
+          "class": 3,
+          "correct": 238,
+          "total": 312,
+          "accuracy": 0.7628205128205128
+        },
+        {
+          "class": 4,
+          "correct": 274,
+          "total": 356,
+          "accuracy": 0.7696629213483146
+        },
+        {
+          "class": 5,
+          "correct": 267,
+          "total": 354,
+          "accuracy": 0.7542372881355932
+        },
+        {
+          "class": 6,
+          "correct": 276,
+          "total": 344,
+          "accuracy": 0.8023255813953488
+        },
+        {
+          "class": 7,
+          "correct": 281,
+          "total": 366,
+          "accuracy": 0.76775956284153
+        },
+        {
+          "class": 8,
+          "correct": 241,
+          "total": 331,
+          "accuracy": 0.7280966767371602
+        },
+        {
+          "class": 9,
+          "correct": 266,
+          "total": 363,
+          "accuracy": 0.7327823691460055
+        }
+      ],
+      "top_confused_pairs": [
+        {
+          "true": 7,
+          "predicted": 1,
+          "count": 24
+        },
+        {
+          "true": 2,
+          "predicted": 7,
+          "count": 21
+        },
+        {
+          "true": 9,
+          "predicted": 1,
+          "count": 20
+        },
+        {
+          "true": 3,
+          "predicted": 5,
+          "count": 19
+        },
+        {
+          "true": 8,
+          "predicted": 5,
+          "count": 19
+        },
+        {
+          "true": 9,
+          "predicted": 7,
+          "count": 19
+        },
+        {
+          "true": 4,
+          "predicted": 9,
+          "count": 18
+        },
+        {
+          "true": 5,
+          "predicted": 3,
+          "count": 18
+        },
+        {
+          "true": 4,
+          "predicted": 1,
+          "count": 17
+        },
+        {
+          "true": 6,
+          "predicted": 1,
+          "count": 16
+        },
+        {
+          "true": 5,
+          "predicted": 1,
+          "count": 15
+        },
+        {
+          "true": 7,
+          "predicted": 9,
+          "count": 15
+        },
+        {
+          "true": 1,
+          "predicted": 7,
+          "count": 14
+        },
+        {
+          "true": 5,
+          "predicted": 6,
+          "count": 14
+        },
+        {
+          "true": 7,
+          "predicted": 2,
+          "count": 14
+        }
+      ],
+      "confusion_matrix": [
+        [
+          245,
+          10,
+          9,
+          2,
+          5,
+          12,
+          10,
+          7,
+          8,
+          8
+        ],
+        [
+          0,
+          341,
+          4,
+          2,
+          8,
+          4,
+          5,
+          14,
+          4,
+          4
+        ],
+        [
+          6,
+          10,
+          297,
+          8,
+          11,
+          7,
+          3,
+          21,
+          8,
+          1
+        ],
+        [
+          3,
+          10,
+          12,
+          238,
+          6,
+          19,
+          2,
+          8,
+          7,
+          7
+        ],
+        [
+          4,
+          17,
+          9,
+          3,
+          274,
+          6,
+          12,
+          10,
+          3,
+          18
+        ],
+        [
+          7,
+          15,
+          4,
+          18,
+          9,
+          267,
+          14,
+          3,
+          12,
+          5
+        ],
+        [
+          9,
+          16,
+          7,
+          4,
+          7,
+          12,
+          276,
+          1,
+          9,
+          3
+        ],
+        [
+          2,
+          24,
+          14,
+          5,
+          13,
+          5,
+          0,
+          281,
+          7,
+          15
+        ],
+        [
+          3,
+          14,
+          7,
+          9,
+          9,
+          19,
+          10,
+          9,
+          241,
+          10
+        ],
+        [
+          5,
+          20,
+          4,
+          6,
+          14,
+          12,
+          6,
+          19,
+          11,
+          266
+        ]
+      ]
+    }
+  }
+}

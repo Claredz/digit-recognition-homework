@@ -1,0 +1,158 @@
+{
+  "ensemble": [
+    {
+      "label": "wide_resnet_tiny_raw_seed42",
+      "weight": 0.7,
+      "n_folds": 5
+    },
+    {
+      "label": "medium_anti1_seed2026",
+      "weight": 0.2,
+      "n_folds": 5
+    },
+    {
+      "label": "medium_raw_seed3407",
+      "weight": 0.1,
+      "n_folds": 5
+    }
+  ],
+  "groups": {
+    "MNIST-family": {
+      "accuracy": 0.9895676985035146,
+      "num_samples": 67291,
+      "children": [
+        {
+          "accuracy": 0.9902,
+          "num_samples": 10000,
+          "dataset": "MNIST test"
+        },
+        {
+          "accuracy": 0.9901,
+          "num_samples": 40000,
+          "dataset": "EMNIST Digits test"
+        },
+        {
+          "accuracy": 0.9902,
+          "num_samples": 10000,
+          "dataset": "QMNIST test10k"
+        },
+        {
+          "accuracy": 0.9849129063228638,
+          "num_samples": 7291,
+          "dataset": "USPS train (local)"
+        }
+      ]
+    },
+    "local/external digits": {
+      "accuracy": 0.5845828750072367,
+      "num_samples": 34546,
+      "children": [
+        {
+          "accuracy": 0.5885795730228045,
+          "num_samples": 32976,
+          "dataset": "penbased_rendered"
+        },
+        {
+          "accuracy": 0.3911764705882353,
+          "num_samples": 1020,
+          "dataset": "hasyv2_digits"
+        },
+        {
+          "accuracy": 0.7036363636363636,
+          "num_samples": 550,
+          "dataset": "chars74k_digits"
+        }
+      ]
+    },
+    "TestA": {
+      "accuracy": 0.7891428470611572,
+      "num_samples": 3500
+    },
+    "MNIST-C": {
+      "accuracy": 0.9496375,
+      "num_samples": 160000,
+      "children": [
+        {
+          "accuracy": 0.9812,
+          "num_samples": 10000,
+          "dataset": "brightness"
+        },
+        {
+          "accuracy": 0.6879,
+          "num_samples": 10000,
+          "dataset": "canny_edges"
+        },
+        {
+          "accuracy": 0.979,
+          "num_samples": 10000,
+          "dataset": "dotted_line"
+        },
+        {
+          "accuracy": 0.9698,
+          "num_samples": 10000,
+          "dataset": "fog"
+        },
+        {
+          "accuracy": 0.9747,
+          "num_samples": 10000,
+          "dataset": "glass_blur"
+        },
+        {
+          "accuracy": 0.9902,
+          "num_samples": 10000,
+          "dataset": "identity"
+        },
+        {
+          "accuracy": 0.979,
+          "num_samples": 10000,
+          "dataset": "impulse_noise"
+        },
+        {
+          "accuracy": 0.9795,
+          "num_samples": 10000,
+          "dataset": "motion_blur"
+        },
+        {
+          "accuracy": 0.9699,
+          "num_samples": 10000,
+          "dataset": "rotate"
+        },
+        {
+          "accuracy": 0.9754,
+          "num_samples": 10000,
+          "dataset": "scale"
+        },
+        {
+          "accuracy": 0.9844,
+          "num_samples": 10000,
+          "dataset": "shear"
+        },
+        {
+          "accuracy": 0.9801,
+          "num_samples": 10000,
+          "dataset": "shot_noise"
+        },
+        {
+          "accuracy": 0.9798,
+          "num_samples": 10000,
+          "dataset": "spatter"
+        },
+        {
+          "accuracy": 0.964,
+          "num_samples": 10000,
+          "dataset": "stripe"
+        },
+        {
+          "accuracy": 0.9862,
+          "num_samples": 10000,
+          "dataset": "translate"
+        },
+        {
+          "accuracy": 0.8131,
+          "num_samples": 10000,
+          "dataset": "zigzag"
+        }
+      ]
+    }
+  }
+}
