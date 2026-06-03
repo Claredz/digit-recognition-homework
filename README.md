@@ -8,15 +8,27 @@
 
 ### 5 专家阵容
 
-| # | 专家 | 架构 | 类型 | 说明 |
-|---|---|---|---|---|
-| 1 | `wide_resnet_tiny_raw_seed42` | WideResNetTiny (~2.8M) | 5-fold TestA 专家 | 旧 TestA 最强单体，与 robust_v1 高度互补 |
-| 2 | `medium_anti1_seed2026` | MediumCNN | 5-fold anti1 专家 | 抑制 class-1 过度预测 |
-| 3 | `medium_raw_seed3407` | MediumCNN | 5-fold TestA 专家 | 标准训练，稳定基线 |
-| 4 | `robust_v1` | MediumCNN | 单 checkpoint | 数据增强鲁棒训练，错误模式独特 |
-| 5 | `MNIST_clean` | MediumCNN | 单 checkpoint | MNIST 纯净训练，标准域锚点 |
+| # | 专家 | 架构 | 类型 | 新 TestA | 旧 TestA OOF | 标准域均值 |
+|---|---|---|---|---|---|---|
+| 1 | `wide_resnet_tiny_raw_seed42` | WideResNetTiny (~2.8M) | 5-fold ×5 | **92.43%** | **77.97%** | 98.36% |
+| 2 | `medium_anti1_seed2026` | MediumCNN | 5-fold ×5 | **93.26%** | 74.51% | 99.34% |
+| 3 | `medium_raw_seed3407` | MediumCNN | 5-fold ×5 | **93.23%** | 74.71% | 99.34% |
+| 4 | `robust_v1` | MediumCNN | 单 checkpoint | **92.80%** | — | — |
+| 5 | `MNIST_clean` | MediumCNN | 单 checkpoint | 76.57% | — | ~99.7% |
 
-### Router 对比：新 TestA（教师发布版，TTA=8）
+> 新 TestA 为 TTA=1 单专家独立评估。5-fold 专家提交时取 5 折概率均值，实际集成准确率更高。
+> 旧 TestA OOF 排名 WideResNet(1st) > MediumCNN(4th-6th)，新 TestA 排名 MediumCNN(1st-3rd) > WideResNet(6th)。
+> WideResNet + robust_v1 错误重叠仅 47%（最互补），MediumCNN 同种子间错误重叠 88-97%（高度冗余）。
+
+### 各专家多域独立准确率（TTA=1）
+
+| 专家 | MNIST-family | MNIST-C | local/external |
+|---|---|---|---|
+| `wide_resnet_tiny_raw_seed42` | 98.36% | 93.33% | 53.67% |
+| `medium_anti1_seed2026` | 99.34% | 96.65% | 63.91% |
+| `medium_raw_seed3407` | 99.34% | 96.70% | 62.89% |
+
+### Router 对比：新 TestA（教师发布版，3500 样本，TTA=8，5 专家集成）
 
 | Router | 准确率 | 说明 |
 |---|---|---|
@@ -38,22 +50,16 @@
 
 ### 训练分布 TestA OOF（5-fold 交叉验证，3500 样本，类不均衡）
 
+提交中使用的专家及其旧分布表现：
+
 | 模型 | OOF Accuracy | 说明 |
 |---|---|---|
-| 3-expert ensemble (0.7/0.2/0.1) | **0.7891** | 原始最终提交 |
-| WideResNetTiny | 0.7797 | 最强单专家 |
+| 3-expert ensemble (0.7/0.2/0.1) | **0.7891** | 原始 3 专家固定权重最优 |
+| WideResNetTiny | **0.7797** | 旧分布最强单专家 → 5 专家第 1 位 |
 | PreActResNetTiny (anti1) | 0.7569 | |
 | PreActResNetTiny (raw) | 0.7514 | |
-| MediumCNN v2 anti1 ×3 种子 | 0.7451–0.7477 | |
-| MediumCNN v2 raw ×3 种子 | 0.7449–0.7471 | |
-
-### 多域评估（3 专家固定权重 0.7/0.2/0.1）
-
-| 域 | 样本数 | 准确率 |
-|---|---|---|
-| MNIST-family | 67,291 | 98.96% |
-| MNIST-C | 160,000 | 94.96% |
-| local/external digits | 34,546 | 58.46% |
+| MediumCNN v2 raw ×3 种子 | 0.7449–0.7471 | → 5 专家第 2、3 位 (seed3407/seed2026) |
+| MediumCNN v2 anti1 ×3 种子 | 0.7451–0.7477 | → 5 专家第 2 位 (seed2026) |
 
 ---
 
@@ -95,19 +101,19 @@ softmax 归一化后得逐样本权重，全自动，无需任何标签。
 
 训练分布 (旧 TestA OOF) vs 新 TestA 的排名完全反转，说明两个分布存在实质性差异。
 
-| 排名 | 专家 | 新 TestA | vs 旧 TestA OOF | 架构 |
-|---|---|---|---|---|
-| 1 | medium_v2_raw_seed777 | 93.31% | +18.8% | MediumCNN |
-| 2 | medium_anti1_seed2026 | 93.26% | +18.8% | MediumCNN |
-| 3 | medium_raw_seed3407 | 93.23% | +18.5% | MediumCNN |
-| 4 | partial_init_mixup | 93.06% | +18.9% | MediumCNN |
-| 5 | robust_v1 | 92.80% | — | MediumCNN |
-| 6 | wide_resnet_tiny | 92.43% | +14.5% | WideResNetTiny |
-| 7 | robust_kfold_ens | 91.97% | — | MediumCNN×5 |
-| 8 | preact_resnet_anti1 | 91.26% | +15.6% | PreActResNet |
-| 9 | preact_resnet_raw | 91.11% | +16.0% | PreActResNet |
-| 10 | large_cnn_v2 | 86.94% | +18.7% | LargeCNN |
-| — | MNIST_clean | 76.57% | — | MediumCNN |
+| 排名 | 专家 | 新 TestA | vs 旧 TestA OOF | 架构 | 提交 |
+|---|---|---|---|---|---|---|
+| 1 | medium_v2_raw_seed777 | 93.31% | +18.8% | MediumCNN | |
+| 2 | medium_anti1_seed2026 | 93.26% | +18.8% | MediumCNN | ✓ |
+| 3 | medium_raw_seed3407 | 93.23% | +18.5% | MediumCNN | ✓ |
+| 4 | partial_init_mixup | 93.06% | +18.9% | MediumCNN | |
+| 5 | robust_v1 | 92.80% | — | MediumCNN | ✓ |
+| 6 | wide_resnet_tiny | 92.43% | +14.5% | WideResNetTiny | ✓ |
+| 7 | robust_kfold_ens | 91.97% | — | MediumCNN×5 | |
+| 8 | preact_resnet_anti1 | 91.26% | +15.6% | PreActResNet | |
+| 9 | preact_resnet_raw | 91.11% | +16.0% | PreActResNet | |
+| 10 | large_cnn_v2 | 86.94% | +18.7% | LargeCNN | |
+| — | MNIST_clean | 76.57% | — | MediumCNN | ✓ |
 
 > MediumCNN 在新 TestA 上超越 WideResNet (+0.9%)，旧 TestA 上 WideResNet 领先 (+3.5%)。
 
